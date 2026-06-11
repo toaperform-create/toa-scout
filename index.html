@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ToaPerform AI Pro | Nöromüsküler Yaş | Sakatlık Zaman Makinesi | AI Transfer</title>
-    <meta name="description" content="Dünyada ilk: Nöromüsküler Yaş Analizi, Sakatlık Zaman Makinesi, AI Transfer Simülasyonu - Fenerbahçe-Galatasaray seviyesinde sporcu analiz platformu">
+    <title>ToaPerform AI Pro | Nöromüsküler Yaş | Sakatlık Zaman Makinesi | ToaPredict Index</title>
+    <meta name="description" content="Dünyada ilk: Nöromüsküler Yaş Analizi, Sakatlık Zaman Makinesi, ToaPredict Index - 10-30 yaş norm sistemi">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -79,55 +79,27 @@
             margin-top: 8px;
             font-family: monospace;
         }
-        .json-view {
-            background: #1e293b;
-            color: #a5f3c3;
-            font-family: monospace;
-            font-size: 11px;
-            padding: 16px;
-            border-radius: 16px;
-            max-height: 400px;
-            overflow: auto;
-            white-space: pre-wrap;
-        }
-        .radar-container {
-            background: white;
-            border-radius: 20px;
-            padding: 16px;
-            margin-top: 20px;
-        }
-        canvas#radarChart { max-height: 350px; width: 100%; }
-        .metric-tag {
-            background: #e2e8f0;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            display: inline-block;
-            margin: 2px;
-        }
-        .score-card {
-            background: linear-gradient(135deg, #e03a3a10, #f5b04210);
-            border-radius: 16px;
-            padding: 16px;
-            text-align: center;
-            margin: 8px 0;
-        }
-        .score-number { font-size: 48px; font-weight: bold; color: #e03a3a; }
         .flex { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 12px 0; }
         .status-success { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
         .status-warning { background: #fef3c7; color: #92400e; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
         .status-critical { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
-        .league-comparison { background: #f1f5f9; border-radius: 16px; padding: 16px; margin: 12px 0; }
         .progress-bar { background: #e2e8f0; border-radius: 10px; height: 8px; overflow: hidden; margin: 8px 0; }
         .progress-fill { background: #e03a3a; height: 100%; width: 0%; transition: width 0.5s; }
+        .metric-tag { background: #e2e8f0; padding: 4px 12px; border-radius: 20px; font-size: 11px; display: inline-block; margin: 2px; }
+        .loading { display: inline-block; width: 20px; height: 20px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Index Card Styles */
+        .index-card { background: linear-gradient(135deg, #1a3a5c, #0f2a44); color: white; border-radius: 20px; padding: 20px; margin: 16px 0; }
         .neuro-card { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 16px; border-radius: 16px; margin: 12px 0; }
         .injury-card { background: linear-gradient(135deg, #ff4757, #c0392b); color: white; padding: 16px; border-radius: 16px; margin: 12px 0; }
         .sim-card { background: linear-gradient(135deg, #00b894, #009432); color: white; padding: 16px; border-radius: 16px; margin: 12px 0; }
-        .loading { display: inline-block; width: 20px; height: 20px; border: 2px solid white; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .api-status { font-size: 11px; margin-top: 8px; padding: 8px; border-radius: 12px; }
-        .api-status.active { background: #10b98120; color: #10b981; }
-        .api-status.error { background: #ef444420; color: #ef4444; }
+        .norm-card { background: #1e293b; border-radius: 20px; padding: 20px; margin: 16px 0; }
+        .score-card { background: linear-gradient(135deg, #e03a3a10, #f5b04210); border-radius: 16px; padding: 16px; text-align: center; margin: 8px 0; }
+        .score-number { font-size: 48px; font-weight: bold; color: #e03a3a; }
+        .radar-container { background: white; border-radius: 20px; padding: 16px; margin-top: 20px; }
+        canvas#radarChart { max-height: 350px; width: 100%; }
+        .league-comparison { background: #f1f5f9; border-radius: 16px; padding: 16px; margin: 12px 0; }
     </style>
 </head>
 <body>
@@ -135,9 +107,9 @@
 <div class="header">
     <div>
         <h1>⚡ ToaPerform AI <span style="font-size: 14px;">| PROFESYONEL SPORCU ANALİZ PLATFORMU</span>
-            <span class="pro-badge">🔬 NEURO AGE™ | ⚡ INJURY TIME MACHINE™ | 🧠 GPT-3.5</span>
+            <span class="pro-badge">🔬 NEURO AGE™ | ⚡ INJURY TIME MACHINE™ | 📊 TOAPREDICT INDEX™</span>
         </h1>
-        <p style="font-size: 12px; opacity: 0.8; margin-top: 8px;">Dünyada ilk: Nöromüsküler Yaş | Sakatlık Zaman Makinesi | AI Transfer Simülasyonu | Patent Pending</p>
+        <p style="font-size: 12px; opacity: 0.8; margin-top: 8px;">Dünyada ilk: 10-30 Yaş Norm Sistemi | Nöromüsküler Yaş | Sakatlık Zaman Makinesi | ToaPredict Index</p>
     </div>
     <div class="logo-badge">
         <span class="fb-badge">FB</span>
@@ -154,16 +126,13 @@
         </div>
         <div id="pdfStatus" style="font-size: 12px; margin-top: 8px; color: #64748b;"></div>
         
-        <!-- API KEY Konfigürasyonu -->
         <div class="api-config">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="color: white; font-size: 12px;">🔑 OpenAI API Key (GPT-3.5 Turbo)</span>
                 <span id="apiStatus" style="font-size: 10px; color: #888;"></span>
             </div>
             <input type="password" id="openaiApiKey" placeholder="sk-proj-... veya sk-..." value="">
-            <div style="font-size: 10px; color: #888; margin-top: 8px;">
-                💡 Kaydetmek için Enter'a basın | AI Analiz için gerekli
-            </div>
+            <div style="font-size: 10px; color: #888; margin-top: 8px;">💡 AI Derin Analiz için gerekli</div>
         </div>
         
         <div id="playerInfo" style="margin-top: 16px; display: none;">
@@ -176,7 +145,7 @@
         </div>
         
         <div class="flex" id="actionButtons" style="margin-top: 16px; display: none;">
-            <button id="analyzeBtn" class="primary">🚀 ToaPredict ELITE Analiz</button>
+            <button id="analyzeBtn" class="primary">🚀 ToaPredict PRO Analiz</button>
             <button id="aiAnalyzeBtn">🧠 GPT-3.5 Deep Analysis</button>
         </div>
     </div>
@@ -186,7 +155,7 @@
         <div id="reportArea" style="min-height: 400px; background: #f8fafc; border-radius: 16px; padding: 16px; margin-top: 12px; overflow-y: auto; max-height: 600px;">
             <div style="text-align: center; padding: 40px; color: #64748b;">
                 📁 Bir VALD PDF yükleyin veya örnek veriyi test edin<br>
-                ⚡ Pro özellikler: Nöromüsküler Yaş, Sakatlık Tahmini, AI Transfer Simülasyonu
+                ⚡ Pro özellikler: 10-30 Yaş Normu, ToaPredict Index, Nöromüsküler Yaş, Sakatlık Tahmini
             </div>
         </div>
     </div>
@@ -206,7 +175,37 @@
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
     
-    // ========== SPORCU VERİTABANI (Süper Lig) ==========
+    // ========== 10-30 YAŞ NORM SİSTEMİ ==========
+    const ageNormDB = {
+        cmj: { 10:24,11:26,12:28,13:32,14:35,15:38,16:41,17:44,18:47,19:49,20:51,21:52,22:53,23:53,24:54,25:54,26:53,27:52,28:51,29:50,30:49 },
+        rsi: { 10:0.90,11:1.00,12:1.10,13:1.20,14:1.30,15:1.45,16:1.60,17:1.75,18:1.90,19:2.00,20:2.10,21:2.15,22:2.18,23:2.20,24:2.22,25:2.20,26:2.18,27:2.15,28:2.10,29:2.05,30:2.00 },
+        rfd: { 10:1200,11:1400,12:1600,13:1800,14:2200,15:2600,16:3000,17:3500,18:4000,19:4400,20:4800,21:5000,22:5100,23:5150,24:5200,25:5150,26:5100,27:5000,28:4900,29:4800,30:4700 },
+        asymmetry: { 10:14,11:13,12:12,13:12,14:11,15:10,16:9,17:8,18:7,19:7,20:6,21:6,22:6,23:6,24:6,25:7,26:7,27:8,28:8,29:9,30:9 },
+        
+        getTier: function(metric, value, age) {
+            const norm = this[metric][age];
+            if (!norm || !value) return { label: "Veri yok", color: "#94a3b8", percent: 0 };
+            let percent, label, color;
+            if (metric === 'asymmetry') {
+                percent = Math.min(100, Math.round((norm / value) * 100));
+                if (value <= norm * 0.6) { label = "🌟 Elit Simetri"; color = "#10b981"; }
+                else if (value <= norm * 0.8) { label = "⚽ Profesyonel"; color = "#3b82f6"; }
+                else if (value <= norm) { label = "📈 İyi"; color = "#f59e0b"; }
+                else if (value <= norm * 1.3) { label = "📊 Orta"; color = "#f97316"; }
+                else { label = "⚠️ Yüksek Risk"; color = "#ef4444"; }
+            } else {
+                percent = Math.min(100, Math.round((value / norm) * 100));
+                if (percent >= 115) { label = "🌟 Elit"; color = "#10b981"; }
+                else if (percent >= 100) { label = "⚽ Profesyonel"; color = "#3b82f6"; }
+                else if (percent >= 85) { label = "📈 İyi"; color = "#f59e0b"; }
+                else if (percent >= 70) { label = "📊 Orta"; color = "#f97316"; }
+                else { label = "⚠️ Gelişmeli"; color = "#ef4444"; }
+            }
+            return { label, color, percent };
+        }
+    };
+    
+    // ========== SPORCU VERİTABANI ==========
     const playerDatabase = {
         "Arda Güler": { cmj: 44, rsi: 2.1, rfd: 3900, style: "Kreatif Kanat", position: "WING" },
         "Kerem Aktürkoğlu": { cmj: 46, rsi: 1.95, rfd: 3700, style: "İçe Katlanan", position: "WING" },
@@ -215,43 +214,202 @@
         "Barış Alper Yılmaz": { cmj: 50, rsi: 2.15, rfd: 4100, style: "Atletik Forvet", position: "FWD" }
     };
     
-    // Norm veritabanı
-    const normDB = {
-        cmj: { ages: { 13: 32, 14: 35, 15: 38, 16: 41, 17: 44, 18: 47, 19: 49, 20: 51, 21: 52, 22: 53, 23: 53, 24: 54, 25: 54, 26: 53, 27: 52, 28: 51, 29: 50, 30: 49 }, leagues: { academy_tr: 39, superlig_tr: 44, elite_eu: 48 }, positions: { GK: 0.85, DEF: 1.0, MID: 1.05, WING: 1.1, FWD: 1.08 } },
-        rsi: { ages: { 13: 1.2, 14: 1.3, 15: 1.45, 16: 1.6, 17: 1.75, 18: 1.9, 19: 2.0, 20: 2.1, 21: 2.15, 22: 2.18, 23: 2.2, 24: 2.22, 25: 2.2, 26: 2.18, 27: 2.15, 28: 2.1, 29: 2.05, 30: 2.0 } },
-        rfd: { ages: { 13: 1800, 14: 2200, 15: 2600, 16: 3000, 17: 3500, 18: 4000, 19: 4400, 20: 4800, 21: 5000, 22: 5100, 23: 5150, 24: 5200, 25: 5150, 26: 5100, 27: 5000, 28: 4900, 29: 4800, 30: 4700 } }
-    };
-    
     let currentData = { name: "", age: 16, cmj: null, rsi: null, rfd: null, asymmetry: null, position: "MID", history: [] };
     let radarChart = null;
     let openaiApiKey = localStorage.getItem('openai_api_key') || '';
+    let globalAthleteDatabase = [];
     
     // API Key yönetimi
     const apiKeyInput = document.getElementById('openaiApiKey');
     apiKeyInput.value = openaiApiKey;
-    updateApiStatus();
-    
     apiKeyInput.addEventListener('change', () => {
         openaiApiKey = apiKeyInput.value;
         localStorage.setItem('openai_api_key', openaiApiKey);
-        updateApiStatus();
+        document.getElementById('apiStatus').innerHTML = openaiApiKey ? '✅ API Ready' : '🔑 API Key girilmedi';
     });
     
-    function updateApiStatus() {
-        const statusEl = document.getElementById('apiStatus');
-        if (openaiApiKey && (openaiApiKey.startsWith('sk-') || openaiApiKey.startsWith('sk-proj-'))) {
-            statusEl.innerHTML = '✅ API Ready';
-            statusEl.style.color = '#10b981';
-        } else if (openaiApiKey) {
-            statusEl.innerHTML = '⚠️ Geçersiz format';
-            statusEl.style.color = '#f59e0b';
-        } else {
-            statusEl.innerHTML = '🔑 API Key girilmedi';
-            statusEl.style.color = '#ef4444';
-        }
+    // ========== VERİ TOPLAMA AĞI (Anonim Veritabanı) ==========
+    function loadAnonymousDatabase() {
+        const stored = localStorage.getItem('toapredict_anonymous_db');
+        if (stored) { globalAthleteDatabase = JSON.parse(stored); }
+        else { globalAthleteDatabase = []; }
     }
     
-    // ========== VALD PDF OKUMA ==========
+    function addToAnonymousDatabase() {
+        if (!currentData.cmj && !currentData.rsi) return false;
+        const potential = calculatePotential();
+        const newEntry = {
+            id: Date.now(),
+            age: currentData.age || 16,
+            position: currentData.position,
+            cmj: currentData.cmj,
+            rsi: currentData.rsi,
+            rfd: currentData.rfd,
+            asymmetry: currentData.asymmetry,
+            toaScore: potential.totalScore,
+            date: new Date().toISOString()
+        };
+        globalAthleteDatabase.push(newEntry);
+        if (globalAthleteDatabase.length > 500) globalAthleteDatabase = globalAthleteDatabase.slice(-500);
+        localStorage.setItem('toapredict_anonymous_db', JSON.stringify(globalAthleteDatabase));
+        return true;
+    }
+    
+    // ========== TOAPREDICT INDEX (BIST 100 gibi) ==========
+    function calculateToaPredictIndex() {
+        loadAnonymousDatabase();
+        if (globalAthleteDatabase.length === 0) {
+            return { index: 100, change: 0, interpretation: "Veri toplanıyor...", percentile: 50, totalAthletes: 0, currentAvgScore: 65, topScore: 0 };
+        }
+        const now = new Date();
+        const last30Days = globalAthleteDatabase.filter(a => new Date(a.date) > new Date(now - 30*24*60*60*1000));
+        const previous30Days = globalAthleteDatabase.filter(a => {
+            const date = new Date(a.date);
+            return date <= new Date(now - 30*24*60*60*1000) && date > new Date(now - 60*24*60*60*1000);
+        });
+        const currentAvg = last30Days.length > 0 ? last30Days.reduce((sum, a) => sum + (a.toaScore || 50), 0) / last30Days.length : 65;
+        const previousAvg = previous30Days.length > 0 ? previous30Days.reduce((sum, a) => sum + (a.toaScore || 50), 0) / previous30Days.length : 65;
+        const index = Math.round((currentAvg / 65) * 100);
+        const change = ((currentAvg - previousAvg) / previousAvg * 100).toFixed(1);
+        const currentScore = calculatePotential().totalScore;
+        const betterCount = globalAthleteDatabase.filter(a => (a.toaScore || 50) < currentScore).length;
+        const percentile = globalAthleteDatabase.length > 0 ? Math.round((betterCount / globalAthleteDatabase.length) * 100) : 50;
+        let interpretation = change > 5 ? "📈 INDEX YÜKSELİYOR" : (change < -5 ? "📉 INDEX DÜŞÜYOR" : "📊 INDEX STABİL");
+        return { index, change: parseFloat(change), interpretation, percentile, totalAthletes: globalAthleteDatabase.length, currentAvgScore: Math.round(currentAvg), topScore: Math.max(...globalAthleteDatabase.map(a => a.toaScore || 0), 0) };
+    }
+    
+    // ========== NÖROMÜSKÜLER YAŞ ==========
+    function neuromuscularAge() {
+        if (!currentData.cmj && !currentData.rsi) return null;
+        const age = currentData.age || 16;
+        const cmjNorm = ageNormDB.cmj[Math.min(30, Math.max(10, age))] || 44;
+        const rsiNorm = ageNormDB.rsi[Math.min(30, Math.max(10, age))] || 1.9;
+        const cmjRatio = (currentData.cmj || 40) / cmjNorm;
+        const rsiRatio = (currentData.rsi || 1.6) / rsiNorm;
+        const neuroScore = ((cmjRatio * 0.6) + (rsiRatio * 0.4)) * 100;
+        let neuroAge = age;
+        if (neuroScore > 115) neuroAge = age - 4;
+        else if (neuroScore > 105) neuroAge = age - 2;
+        else if (neuroScore > 95) neuroAge = age;
+        else if (neuroScore > 85) neuroAge = age + 1;
+        else if (neuroScore > 75) neuroAge = age + 2;
+        else neuroAge = age + 3;
+        neuroAge = Math.max(10, Math.min(40, neuroAge));
+        let interpretation = neuroAge < age ? `🌟 Nöromüsküler olarak ${age - neuroAge} yıl GENÇ!` : (neuroAge > age ? `⚠️ Nöromüsküler yaş ${neuroAge - age} yıl İLERİDE` : `✅ Nöromüsküler yaş takvim yaşıyla uyumlu`);
+        return { biological: age, neuromuscular: neuroAge, difference: neuroAge - age, neuroScore: Math.round(neuroScore), interpretation, percentile: neuroScore > 110 ? "Top %5" : neuroScore > 95 ? "Top %25" : "Ortalama" };
+    }
+    
+    // ========== SAKATLIK ZAMAN MAKİNESİ ==========
+    function predictInjuryTimeline() {
+        const asym = currentData.asymmetry || 5;
+        const rsi = currentData.rsi || 1.6;
+        let riskScore = 0, riskFactors = [];
+        if (asym > 20) { riskScore += 35; riskFactors.push("🔴 Ciddi asimetri"); }
+        else if (asym > 12) { riskScore += 25; riskFactors.push("🟠 Orta asimetri"); }
+        else if (asym > 8) { riskScore += 15; riskFactors.push("🟡 Hafif asimetri"); }
+        if (rsi < 1.3) { riskScore += 30; riskFactors.push("🔴 Çok düşük RSI"); }
+        else if (rsi < 1.6) { riskScore += 20; riskFactors.push("🟠 Düşük RSI"); }
+        else if (rsi < 1.9) { riskScore += 10; riskFactors.push("🟡 Orta RSI"); }
+        riskScore = Math.min(95, riskScore);
+        let predictedWeeks, severity, recommendation, mostVulnerable;
+        if (riskScore > 70) { predictedWeeks = 2; severity = "ÇOK YÜKSEK RİSK"; recommendation = "🛑 ACİL! Yük yönetimi şart."; mostVulnerable = "Hamstring"; }
+        else if (riskScore > 50) { predictedWeeks = 6; severity = "YÜKSEK RİSK"; recommendation = "⚠️ Antrenman yükü %30 azaltılmalı"; mostVulnerable = "Kas tendon"; }
+        else if (riskScore > 30) { predictedWeeks = 12; severity = "ORTA RİSK"; recommendation = "📊 Haftalık takip önerilir"; mostVulnerable = "Alt ekstremite"; }
+        else { predictedWeeks = 26; severity = "DÜŞÜK RİSK"; recommendation = "✅ Mevcut program devam"; mostVulnerable = "Belirlenmedi"; }
+        return { riskScore, severity, predictedWeeks, mostVulnerable, recommendation, riskFactors };
+    }
+    
+    // ========== TRANSFER SİMÜLASYONU ==========
+    function simulateTransferValue() {
+        const potential = calculatePotential();
+        const neuro = neuromuscularAge();
+        let baseValue = (potential.totalScore / 100) * 15;
+        let ageFactor = currentData.age < 21 ? 1.5 : (currentData.age < 24 ? 1.2 : (currentData.age > 28 ? 0.7 : 1));
+        if (neuro && neuro.neuromuscular < currentData.age) ageFactor *= 1.3;
+        let marketValue = Math.round((baseValue * ageFactor) * 10) / 10;
+        let valueTier = marketValue >= 10 ? "🌟 Dünya Yıldızı" : (marketValue >= 5 ? "⭐ Süper Lig Yıldızı" : (marketValue >= 2 ? "📈 Gelişen Oyuncu" : "🎯 Potansiyel Transfer"));
+        let interestedLeagues = marketValue >= 8 ? ["Premier League", "La Liga"] : (marketValue >= 4 ? ["Süper Lig Top 4", "Hollanda"] : ["Süper Lig Orta", "1. Lig"]);
+        return { marketValueMillion: marketValue, valueTier, interestedLeagues };
+    }
+    
+    // ========== BENZER SPORCULAR ==========
+    function findSimilarPlayers() {
+        if (!currentData.cmj || !currentData.rsi) return [];
+        let similarities = [];
+        for (let [name, data] of Object.entries(playerDatabase)) {
+            const cmjDiff = Math.abs((currentData.cmj - data.cmj) / data.cmj) * 100;
+            const rsiDiff = Math.abs((currentData.rsi - data.rsi) / data.rsi) * 100;
+            const similarity = Math.max(0, 100 - ((cmjDiff + rsiDiff) / 2));
+            similarities.push({ name, similarity: Math.round(similarity), style: data.style });
+        }
+        return similarities.sort((a,b) => b.similarity - a.similarity).slice(0,3);
+    }
+    
+    // ========== TEMEL POTANSİYEL ==========
+    function calculatePotential() {
+        const age = Math.min(30, Math.max(10, currentData.age || 16));
+        const cmjNorm = ageNormDB.cmj[age] || 44;
+        const rsiNorm = ageNormDB.rsi[age] || 1.9;
+        const rfdNorm = ageNormDB.rfd[age] || 3500;
+        const cmjScore = currentData.cmj ? Math.min(100, (currentData.cmj / cmjNorm) * 100) : 50;
+        const rsiScore = currentData.rsi ? Math.min(100, (currentData.rsi / rsiNorm) * 100) : 50;
+        const rfdScore = currentData.rfd ? Math.min(100, (currentData.rfd / rfdNorm) * 100) : 50;
+        const asymmetryPenalty = currentData.asymmetry ? Math.min(30, currentData.asymmetry) : 0;
+        let totalScore = (cmjScore * 0.35) + (rsiScore * 0.35) + (rfdScore * 0.3);
+        totalScore = Math.max(0, totalScore - (asymmetryPenalty * 0.3));
+        let prediction = { level1: "", level2: "", level3: "", confidence: 70 };
+        if (totalScore >= 85) prediction = { level1: "Avrupa Elit", level2: "Süper Lig Yıldız", level3: "Milli Takım", confidence: 85 };
+        else if (totalScore >= 75) prediction = { level1: "Süper Lig", level2: "1. Lig", level3: "Avrupa", confidence: 75 };
+        else if (totalScore >= 65) prediction = { level1: "1. Lig", level2: "2. Lig", level3: "TFF Akademi", confidence: 70 };
+        else if (totalScore >= 55) prediction = { level1: "2. Lig", level2: "3. Lig", level3: "Bölgesel", confidence: 65 };
+        else prediction = { level1: "Gelişim Lig", level2: "Akademi", level3: "Gelişim Gerekli", confidence: 60 };
+        return { totalScore: Math.round(totalScore), cmjScore, rsiScore, rfdScore, prediction };
+    }
+    
+    // ========== YAŞ NORM RAPORU HTML ==========
+    function renderAgeNormReport() {
+        const age = Math.min(30, Math.max(10, currentData.age || 16));
+        const metrics = [
+            { key: 'cmj', name: 'CMJ (Dikey Sıçrama)', unit: 'cm', value: currentData.cmj },
+            { key: 'rsi', name: 'RSI (Reaktif Kuvvet)', unit: '', value: currentData.rsi },
+            { key: 'rfd', name: 'RFD (Kuvvet Gelişimi)', unit: 'N/s', value: currentData.rfd },
+            { key: 'asymmetry', name: 'Asimetri', unit: '%', value: currentData.asymmetry }
+        ];
+        let html = `<div class="norm-card"><h3 style="color: white; margin-bottom: 16px;">📊 10-30 Yaş Norm Karşılaştırması</h3><div style="background: #334155; border-radius: 12px; padding: 8px 16px; margin-bottom: 16px; display: inline-block;">🎂 Yaş: <strong style="color: #f5b042;">${age}</strong></div>`;
+        let totalPercent = 0, metricCount = 0;
+        for (let m of metrics) {
+            if (m.value && m.value > 0) {
+                const norm = ageNormDB[m.key][age];
+                const tier = ageNormDB.getTier(m.key, m.value, age);
+                const percent = tier.percent;
+                totalPercent += percent; metricCount++;
+                html += `<div style="background: #0f172a; border-radius: 16px; padding: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; margin-bottom: 8px;">
+                        <div><strong style="color: white;">${m.name}</strong></div>
+                        <div><span style="color: #94a3b8;">Norm:</span> <strong style="color: white;">${norm} ${m.unit}</strong></div>
+                        <div><span style="color: #94a3b8;">Sporcu:</span> <strong style="color: #f5b042;">${m.value} ${m.unit}</strong></div>
+                        <div><span style="color: #94a3b8;">%:</span> <strong style="color: ${tier.color};">${percent}%</strong></div>
+                    </div>
+                    <div class="progress-bar" style="background: #334155;"><div class="progress-fill" style="width: ${percent}%; background: ${tier.color};"></div></div>
+                    <div style="margin-top: 8px;"><span style="background: ${tier.color}20; color: ${tier.color}; padding: 4px 12px; border-radius: 20px; font-size: 12px;">${tier.label}</span></div>
+                </div>`;
+            }
+        }
+        const avgPercent = metricCount > 0 ? Math.round(totalPercent / metricCount) : 0;
+        let overallLabel = avgPercent >= 110 ? "🌟 ELİT SEVİYE" : (avgPercent >= 95 ? "⚽ PROFESYONEL" : (avgPercent >= 80 ? "📈 GELİŞİMDE" : (avgPercent >= 65 ? "📊 ORTA" : "⚠️ GELİŞMELİ")));
+        html += `<div style="background: linear-gradient(135deg, #1a3a5c, #0f2a44); border-radius: 16px; padding: 16px; text-align: center;"><div style="font-size: 36px; font-weight: bold; color: #f5b042;">${avgPercent}%</div><div>${overallLabel}</div><div style="font-size: 11px;">📊 ${metricCount} metrik üzerinden</div></div></div>`;
+        return html;
+    }
+    
+    // ========== TOAPREDICT INDEX HTML ==========
+    function renderIndexCard() {
+        const idx = calculateToaPredictIndex();
+        const currentScore = calculatePotential().totalScore;
+        const vsIndex = currentScore - idx.currentAvgScore;
+        return `<div class="index-card"><div style="display: flex; justify-content: space-between; flex-wrap: wrap;"><div><h3 style="font-size: 14px; opacity: 0.8;">📊 TOAPREDICT INDEX™</h3><div style="font-size: 48px; font-weight: bold;">${idx.index}</div><div style="font-size: 12px;">${idx.change > 0 ? '▲' : '▼'} ${Math.abs(idx.change)}% (30 gün)</div></div><div style="text-align: right;"><div style="font-size: 12px;">Türkiye Sporcu Endeksi</div><div style="font-size: 11px;">${idx.totalAthletes} sporcu verisi</div><div style="font-size: 11px;">Ortalama: ${idx.currentAvgScore}</div></div></div><div style="margin-top: 16px; display: flex; gap: 20px; flex-wrap: wrap;"><div><span style="font-size: 11px;">🏆 En Yüksek</span><br><strong>${idx.topScore}</strong></div><div><span style="font-size: 11px;">📈 Sporcunuz</span><br><strong>${currentScore}</strong></div><div><span style="font-size: 11px;">📊 Fark</span><br><strong style="color: ${vsIndex >= 0 ? '#10b981' : '#f59e0b'}">${vsIndex >= 0 ? '+' : ''}${vsIndex}</strong></div><div><span style="font-size: 11px;">🎯 Persentil</span><br><strong>Top ${100-idx.percentile}%</strong></div></div><div class="progress-bar" style="background: rgba(255,255,255,0.3);"><div class="progress-fill" style="width: ${idx.percentile}%; background: #10b981;"></div></div><div style="margin-top: 12px; font-size: 11px;">${idx.interpretation}</div></div>`;
+    }
+    
+    // ========== PDF OKUMA ==========
     async function readPDF(file) {
         try {
             const ab = await file.arrayBuffer();
@@ -270,36 +428,27 @@
     function extractData(text) {
         const nameMatch = text.match(/(?:Profile|Name|İsim|Athlete)\s*[:=]\s*([A-Za-zğüşıöçĞÜŞİÖÇ\s\.]+?)(?=\s+(?:Report|Age|Date|$))/i);
         if (nameMatch) currentData.name = nameMatch[1].trim();
-        
         const ageMatch = text.match(/Age\s*[:=]\s*(\d+)/i);
-        if (ageMatch) currentData.age = parseInt(ageMatch[1]);
-        
+        if (ageMatch) currentData.age = Math.min(30, Math.max(10, parseInt(ageMatch[1])));
         const cmjMatch = text.match(/(\d+\.?\d*)\s*cm/i);
         if (cmjMatch) currentData.cmj = parseFloat(cmjMatch[1]);
-        
         const rsiMatch = text.match(/RSI[\s\S]*?(\d+\.?\d+)/i);
         if (rsiMatch) currentData.rsi = parseFloat(rsiMatch[1]);
-        
         const rfdMatch = text.match(/(\d+)\s*N\/s/i);
         if (rfdMatch) currentData.rfd = parseInt(rfdMatch[1]);
-        
         const asymMatch = text.match(/(\d+(?:\.\d+)?)%/i);
         if (asymMatch) currentData.asymmetry = parseFloat(asymMatch[1]);
-        
-        // Pozisyon tahmini (değerlere göre)
         if (currentData.cmj && currentData.rsi) {
             if (currentData.cmj > 48 && currentData.rsi > 2.0) currentData.position = "FWD";
             else if (currentData.cmj > 45 && currentData.rsi > 1.9) currentData.position = "WING";
             else if (currentData.cmj > 42) currentData.position = "MID";
             else currentData.position = "DEF";
         }
-        
         const existing = JSON.parse(localStorage.getItem('toa_history_' + currentData.name) || '[]');
         existing.push({ date: new Date().toLocaleDateString(), cmj: currentData.cmj, rsi: currentData.rsi, rfd: currentData.rfd });
         if (existing.length > 10) existing.shift();
         localStorage.setItem('toa_history_' + currentData.name, JSON.stringify(existing));
         currentData.history = existing;
-        
         updateUI();
     }
     
@@ -308,371 +457,16 @@
         document.getElementById('actionButtons').style.display = 'flex';
         document.getElementById('playerName').innerHTML = currentData.name || 'İsim bulunamadı';
         document.getElementById('playerAge').innerHTML = `Yaş: ${currentData.age || '?'} | Pozisyon: ${currentData.position}`;
-        
         let metricsHtml = "";
         if (currentData.cmj) metricsHtml += `<span class="metric-tag">CMJ: ${currentData.cmj} cm</span>`;
         if (currentData.rsi) metricsHtml += `<span class="metric-tag">RSI: ${currentData.rsi}</span>`;
         if (currentData.rfd) metricsHtml += `<span class="metric-tag">RFD: ${currentData.rfd} N/s</span>`;
         if (currentData.asymmetry) metricsHtml += `<span class="metric-tag">Asimetri: %${currentData.asymmetry}</span>`;
         document.getElementById('playerMetrics').innerHTML = metricsHtml;
-        
         if (currentData.history.length > 1) {
             document.getElementById('historyContainer').style.display = 'block';
             renderHistoryChart();
         }
-    }
-    
-    // ========== 1. NÖROMÜSKÜLER YAŞ ANALİZİ (Dünyada İlk) ==========
-    function neuromuscularAge() {
-        if (!currentData.cmj || !currentData.rsi) return null;
-        
-        const cmj = currentData.cmj;
-        const rsi = currentData.rsi;
-        const rfd = currentData.rfd || 3000;
-        
-        // Patent başvurusu yapılabilecek algoritma
-        const normCmj = normDB.cmj.ages[Math.min(30, Math.max(13, currentData.age))] || 44;
-        const normRsi = normDB.rsi.ages[Math.min(30, Math.max(13, currentData.age))] || 1.9;
-        
-        const cmjRatio = cmj / normCmj;
-        const rsiRatio = rsi / normRsi;
-        
-        const neuroScore = ((cmjRatio * 0.6) + (rsiRatio * 0.4)) * 100;
-        
-        let neuroAge = currentData.age;
-        if (neuroScore > 115) neuroAge = currentData.age - 4;
-        else if (neuroScore > 105) neuroAge = currentData.age - 2;
-        else if (neuroScore > 95) neuroAge = currentData.age - 0;
-        else if (neuroScore > 85) neuroAge = currentData.age + 1;
-        else if (neuroScore > 75) neuroAge = currentData.age + 2;
-        else neuroAge = currentData.age + 3;
-        
-        neuroAge = Math.max(13, Math.min(40, neuroAge));
-        
-        let interpretation = "";
-        if (neuroAge < currentData.age) interpretation = `🌟 Nöromüsküler olarak ${currentData.age - neuroAge} yıl GENÇ! Olağanüstü patlayıcılık potansiyeli.`;
-        else if (neuroAge > currentData.age) interpretation = `⚠️ Nöromüsküler yaş ${neuroAge - currentData.age} yıl İLERİDE. Yüklenme yönetimi ve iyileşme stratejileri önerilir.`;
-        else interpretation = `✅ Nöromüsküler yaş takvim yaşıyla uyumlu.`;
-        
-        return {
-            biological: currentData.age,
-            neuromuscular: neuroAge,
-            difference: neuroAge - currentData.age,
-            neuroScore: Math.round(neuroScore),
-            interpretation: interpretation,
-            percentile: neuroScore > 110 ? "Top %5" : neuroScore > 95 ? "Top %25" : neuroScore > 85 ? "Ortalama" : "Gelişim Alanı"
-        };
-    }
-    
-    // ========== 2. SAKATLIK ZAMAN MAKİNESİ (Dünyada İlk) ==========
-    function predictInjuryTimeline() {
-        const neuro = neuromuscularAge();
-        const asym = currentData.asymmetry || 5;
-        const rsi = currentData.rsi || 1.6;
-        const age = currentData.age || 20;
-        
-        let riskScore = 0;
-        let riskFactors = [];
-        
-        // Asimetri riski
-        if (asym > 20) { riskScore += 35; riskFactors.push("🔴 Ciddi asimetri (>20%)"); }
-        else if (asym > 12) { riskScore += 25; riskFactors.push("🟠 Orta asimetri (12-20%)"); }
-        else if (asym > 8) { riskScore += 15; riskFactors.push("🟡 Hafif asimetri (8-12%)"); }
-        
-        // Düşük RSI (reaktif kuvvet eksikliği)
-        if (rsi < 1.3) { riskScore += 30; riskFactors.push("🔴 Çok düşük reaktif kuvvet (RSI<1.3)"); }
-        else if (rsi < 1.6) { riskScore += 20; riskFactors.push("🟠 Düşük reaktif kuvvet (RSI<1.6)"); }
-        else if (rsi < 1.9) { riskScore += 10; riskFactors.push("🟡 Orta reaktif kuvvet"); }
-        
-        // Nöromüsküler yaş farkı
-        if (neuro && neuro.difference > 2) { riskScore += 20; riskFactors.push("🔴 Nöromüsküler yaş >2 yıl ileride"); }
-        else if (neuro && neuro.difference > 1) { riskScore += 10; riskFactors.push("🟡 Nöromüsküler yaş uyumsuz"); }
-        
-        // Yaş faktörü
-        if (age > 28) { riskScore += 15; riskFactors.push("🟠 Yaş faktörü (>28)"); }
-        else if (age < 18 && rsi < 1.7) { riskScore += 10; riskFactors.push("🟡 Genç sporcu - yüklenme riski"); }
-        
-        riskScore = Math.min(95, riskScore);
-        
-        let predictedWeeks, severity, recommendation, mostVulnerable;
-        
-        if (riskScore > 70) {
-            predictedWeeks = 2;
-            severity = "ÇOK YÜKSEK RİSK";
-            recommendation = "🛑 ACİL DURDUR! Yük yönetimi ve rehabilitasyon hemen başlamalı.";
-            mostVulnerable = asym > 12 ? "Hamstring / Uyluk arkası" : "Aşil tendonu / Diz";
-        } else if (riskScore > 50) {
-            predictedWeeks = 6;
-            severity = "YÜKSEK RİSK";
-            recommendation = "⚠️ Antrenman yükü %30 azaltılmalı, koruyucu egzersizler eklenmeli.";
-            mostVulnerable = "Kas tendon birleşim bölgesi";
-        } else if (riskScore > 30) {
-            predictedWeeks = 12;
-            severity = "ORTA RİSK";
-            recommendation = "📊 Haftalık takip ve önleyici program önerilir.";
-            mostVulnerable = "Alt ekstremite genel";
-        } else {
-            predictedWeeks = 26;
-            severity = "DÜŞÜK RİSK";
-            recommendation = "✅ Mevcut program devam, aylık kontrol yeterli.";
-            mostVulnerable = "Belirlenmedi";
-        }
-        
-        return {
-            riskScore: riskScore,
-            severity: severity,
-            predictedWeeks: predictedWeeks,
-            predictedMonths: (predictedWeeks / 4).toFixed(1),
-            mostVulnerable: mostVulnerable,
-            recommendation: recommendation,
-            riskFactors: riskFactors,
-            confidence: riskScore > 70 ? "Yüksek" : "Orta"
-        };
-    }
-    
-    // ========== 3. RAKİP BENZERLİK MATRİSİ ==========
-    function findSimilarPlayers() {
-        if (!currentData.cmj || !currentData.rsi) return [];
-        
-        let similarities = [];
-        for (let [name, data] of Object.entries(playerDatabase)) {
-            const cmjDiff = Math.abs((currentData.cmj - data.cmj) / data.cmj) * 100;
-            const rsiDiff = Math.abs((currentData.rsi - data.rsi) / data.rsi) * 100;
-            const similarity = Math.max(0, 100 - ((cmjDiff + rsiDiff) / 2));
-            similarities.push({ 
-                name, 
-                similarity: Math.round(similarity), 
-                style: data.style,
-                cmj: data.cmj,
-                rsi: data.rsi
-            });
-        }
-        return similarities.sort((a,b) => b.similarity - a.similarity).slice(0,3);
-    }
-    
-    // ========== 4. AI TRANSFER SİMÜLASYONU ==========
-    function simulateTransferValue() {
-        const potential = calculatePotential();
-        const neuro = neuromuscularAge();
-        
-        let baseValue = (potential.totalScore / 100) * 15; // 15M€ max
-        let ageFactor = 1;
-        
-        if (currentData.age < 21) ageFactor = 1.5;
-        else if (currentData.age < 24) ageFactor = 1.2;
-        else if (currentData.age > 28) ageFactor = 0.7;
-        else if (currentData.age > 32) ageFactor = 0.4;
-        
-        if (neuro && neuro.neuromuscular < currentData.age) ageFactor *= 1.3;
-        
-        let marketValue = baseValue * ageFactor;
-        marketValue = Math.round(marketValue * 10) / 10;
-        
-        let valueTier = "";
-        if (marketValue >= 10) valueTier = "🌟 Dünya Yıldızı";
-        else if (marketValue >= 5) valueTier = "⭐ Süper Lig Yıldızı";
-        else if (marketValue >= 2) valueTier = "📈 Gelişen Oyuncu";
-        else valueTier = "🎯 Potansiyel Transfer";
-        
-        let interestedLeagues = [];
-        if (marketValue >= 8) interestedLeagues = ["Premier League", "La Liga", "Serie A", "Bundesliga"];
-        else if (marketValue >= 4) interestedLeagues = ["Süper Lig Top 4", "Hollanda", "Portekiz"];
-        else if (marketValue >= 2) interestedLeagues = ["Süper Lig Orta", "1. Lig", "Polonya"];
-        else interestedLeagues = ["Gelişim Akademileri", "Alt Ligler"];
-        
-        return {
-            marketValueMillion: marketValue,
-            valueTier: valueTier,
-            ageFactor: ageFactor,
-            interestedLeagues: interestedLeagues,
-            transferRecommendation: marketValue >= 5 ? "Hemen satış veya kiralama düşünülebilir" : "Gelişim için 1-2 sezon daha beklenmeli"
-        };
-    }
-    
-    // ========== 5. TEMEL POTANSİYEL HESABI ==========
-    function calculatePotential() {
-        const age = currentData.age || 16;
-        const cmjNorm = normDB.cmj.ages[Math.min(30, Math.max(13, age))] || 44;
-        const rsiNorm = normDB.rsi.ages[Math.min(30, Math.max(13, age))] || 1.9;
-        const rfdNorm = normDB.rfd.ages[Math.min(30, Math.max(13, age))] || 3500;
-        
-        const cmjScore = currentData.cmj ? Math.min(100, (currentData.cmj / cmjNorm) * 100) : 50;
-        const rsiScore = currentData.rsi ? Math.min(100, (currentData.rsi / rsiNorm) * 100) : 50;
-        const rfdScore = currentData.rfd ? Math.min(100, (currentData.rfd / rfdNorm) * 100) : 50;
-        const asymmetryPenalty = currentData.asymmetry ? Math.min(30, currentData.asymmetry) : 0;
-        
-        let totalScore = (cmjScore * 0.35) + (rsiScore * 0.35) + (rfdScore * 0.3);
-        totalScore = Math.max(0, totalScore - (asymmetryPenalty * 0.3));
-        
-        let prediction = { level1: "", level2: "", level3: "", confidence: 70 };
-        if (totalScore >= 85) prediction = { level1: "Avrupa Elit", level2: "Süper Lig Yıldız", level3: "Milli Takım", confidence: 85 };
-        else if (totalScore >= 75) prediction = { level1: "Süper Lig", level2: "1. Lig", level3: "Avrupa", confidence: 75 };
-        else if (totalScore >= 65) prediction = { level1: "1. Lig", level2: "2. Lig", level3: "TFF Akademi", confidence: 70 };
-        else if (totalScore >= 55) prediction = { level1: "2. Lig", level2: "3. Lig", level3: "Bölgesel", confidence: 65 };
-        else prediction = { level1: "Gelişim Lig", level2: "Akademi", level3: "Gelişim Gerekli", confidence: 60 };
-        
-        return { totalScore: Math.round(totalScore), cmjScore, rsiScore, rfdScore, prediction };
-    }
-    
-    function compareToLeagues() {
-        if (!currentData.cmj) return null;
-        const academy = normDB.cmj.leagues.academy_tr;
-        const superlig = normDB.cmj.leagues.superlig_tr;
-        const elite = normDB.cmj.leagues.elite_eu;
-        const posMulti = normDB.cmj.positions[currentData.position] || 1.0;
-        
-        const adjustedCmj = currentData.cmj * posMulti;
-        
-        return {
-            academy: { value: academy, diff: ((adjustedCmj - academy) / academy * 100).toFixed(1), status: adjustedCmj >= academy ? "Üstünde" : "Altında" },
-            superlig: { value: superlig, diff: ((adjustedCmj - superlig) / superlig * 100).toFixed(1), status: adjustedCmj >= superlig ? "Üstünde" : "Altında" },
-            elite: { value: elite, diff: ((adjustedCmj - elite) / elite * 100).toFixed(1), status: adjustedCmj >= elite ? "Üstünde" : "Altında" }
-        };
-    }
-    
-    function generateTrainingPlan() {
-        const plan = [];
-        const injury = predictInjuryTimeline();
-        const neuro = neuromuscularAge();
-        
-        if (currentData.asymmetry && currentData.asymmetry > 15) plan.push("🔴 Tek bacak kuvvet çalışması (3x8-10 Nordic curl)");
-        if (currentData.asymmetry && currentData.asymmetry > 8) plan.push("🟡 Denge ve stabilizasyon (Tek ayak üzerinde squat)");
-        if (currentData.rsi && currentData.rsi < 1.5) plan.push("🟡 Drop jump plyometrik (3x5, 30cm) - 48 saat ara ile");
-        if (currentData.rsi && currentData.rsi < 1.2) plan.push("🔴 ÖNCE temel kuvvet, sonra plyometrik - Fizyoterapist kontrolünde");
-        if (currentData.rfd && currentData.rfd < 2500) plan.push("🟠 İzometrik squat + sprint başlangıçları (2x/hafta)");
-        if (currentData.cmj && currentData.cmj < 35) plan.push("🔵 Squat jump + box jump (3x5) - Haftada 2 kez");
-        
-        if (injury.riskScore > 50) plan.push(`🛑 SAKATLIK RİSKİ ${injury.riskScore}% - Yüklenme ${injury.predictedWeeks} hafta azaltılmalı`);
-        
-        if (neuro && neuro.difference > 1) plan.push("🧠 Nöromüsküler yaş farkı - Rejenerasyon protokolü (soğuk su/sauna)");
-        
-        if (plan.length === 0) plan.push("✅ Mevcut seviyeyi korumak için haftada 2x patlayıcılık + 1x rejenerasyon");
-        
-        return plan;
-    }
-    
-    // ========== 6. GPT-3.5 TURBO DEEP ANALYSIS ==========
-    async function openAIAnalysis() {
-        if (!openaiApiKey || (!openaiApiKey.startsWith('sk-') && !openaiApiKey.startsWith('sk-proj-'))) {
-            alert("Lütfen geçerli bir OpenAI API Key girin!");
-            return;
-        }
-        
-        const reportDiv = document.getElementById('reportArea');
-        reportDiv.innerHTML += `<div style="padding: 16px; background: #1e293b; border-radius: 16px; margin-top: 12px; color: white;">
-            <div class="loading" style="margin-right: 10px;"></div> 🧠 GPT-3.5 Turbo Derin Analiz yapıyor...
-        </div>`;
-        
-        const neuro = neuromuscularAge();
-        const injury = predictInjuryTimeline();
-        const potential = calculatePotential();
-        const transfer = simulateTransferValue();
-        const similar = findSimilarPlayers();
-        
-        const prompt = `
-Sporcu Analiz Raporu için yapay zeka yorumu:
-
-SPORCU: ${currentData.name || "İsimsiz Sporcu"}
-YAŞ: ${currentData.age}
-POZİSYON: ${currentData.position}
-
-FİZİKSEL VERİLER:
-- CMJ (Counter Movement Jump): ${currentData.cmj || "Veri yok"} cm
-- RSI (Reactive Strength Index): ${currentData.rsi || "Veri yok"}
-- RFD (Rate of Force Development): ${currentData.rfd || "Veri yok"} N/s
-- Asimetri: ${currentData.asymmetry || "Veri yok"}%
-
-NÖROMÜSKÜLER YAŞ ANALİZİ:
-- Takvim Yaşı: ${neuro?.biological}
-- Nöromüsküler Yaş: ${neuro?.neuromuscular}
-- Yorum: ${neuro?.interpretation}
-
-SAKATLIK RİSK ANALİZİ:
-- Risk Skoru: ${injury.riskScore}/100
-- Tahmini Sakatlık Zamanı: ${injury.predictedWeeks} hafta
-- Hassas Bölge: ${injury.mostVulnerable}
-- Öneri: ${injury.recommendation}
-
-POTANSİYEL SKORU: ${potential.totalScore}/100
-TAHMİNİ TRANSFER DEĞERİ: ${transfer.marketValueMillion} M€
-
-Bu sporcu için profesyonel bir yorum yap. Güçlü yönleri, gelişime açık alanları, antrenman önerileri ve kariyer tavsiyesi ver. Türkçe, samimi ama profesyonel bir dille yaz. 6-8 cümle olsun.`;
-        
-        try {
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${openaiApiKey}`
-                },
-                body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',
-                    messages: [
-                        { role: 'system', content: 'Sen dünyanın en iyi spor bilimci ve futbol scoutusun. Sporcu analizleri konusunda uzmansın.' },
-                        { role: 'user', content: prompt }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 500
-                })
-            });
-            
-            const data = await response.json();
-            const aiComment = data.choices?.[0]?.message?.content || "AI analizi alınamadı.";
-            
-            const aiHtml = `
-                <div style="background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 16px; padding: 20px; margin-top: 12px; border-left: 4px solid #10b981;">
-                    <h4 style="color: #10b981; margin-bottom: 12px;">🧠 GPT-3.5 Turbo Derin Analiz</h4>
-                    <p style="color: #e2e8f0; line-height: 1.6;">${aiComment}</p>
-                    <div style="margin-top: 12px; font-size: 10px; color: #64748b;">Analiz OpenAI GPT-3.5 Turbo ile yapılmıştır</div>
-                </div>
-            `;
-            
-            // Önceki loading'i kaldır, AI analizini ekle
-            const loadingDiv = reportDiv.querySelector('.loading')?.parentElement;
-            if (loadingDiv) loadingDiv.remove();
-            reportDiv.innerHTML += aiHtml;
-            
-        } catch (error) {
-            const loadingDiv = reportDiv.querySelector('.loading')?.parentElement;
-            if (loadingDiv) loadingDiv.remove();
-            reportDiv.innerHTML += `<div style="background: #fee2e2; padding: 16px; border-radius: 16px; margin-top: 12px; color: #991b1b;">
-                ❌ AI Analiz hatası: ${error.message}<br>API Key'inizi kontrol edin veya bakiyenizi kontrol edin.
-            </div>`;
-        }
-    }
-    
-    // ========== RADAR GRAFİK ==========
-    function renderRadar() {
-        const ctx = document.getElementById('radarChart').getContext('2d');
-        const potential = calculatePotential();
-        if (radarChart) radarChart.destroy();
-        radarChart = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: ['Patlayıcı Güç', 'Reaktif Kuvvet', 'Hız Gelişimi', 'Nöromüsküler', 'Simetri', 'Transfer Değeri'],
-                datasets: [{
-                    label: `${currentData.name || 'Sporcu'} Profili`,
-                    data: [potential.cmjScore, potential.rsiScore, potential.rfdScore, 
-                           neuromuscularAge()?.neuroScore || 70, 
-                           currentData.asymmetry ? 100 - currentData.asymmetry : 85,
-                           simulateTransferValue().marketValueMillion * 5],
-                    backgroundColor: 'rgba(224, 58, 58, 0.2)',
-                    borderColor: '#e03a3a',
-                    borderWidth: 2,
-                    pointBackgroundColor: '#e03a3a'
-                }, {
-                    label: 'Süper Lig Ortalaması',
-                    data: [70, 70, 70, 70, 85, 30],
-                    backgroundColor: 'rgba(245, 176, 66, 0.1)',
-                    borderColor: '#f5b042',
-                    borderWidth: 2,
-                    borderDash: [5, 5],
-                    pointRadius: 0
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: true, scales: { r: { beginAtZero: true, max: 100 } } }
-        });
-        document.getElementById('radarContainer').style.display = 'block';
     }
     
     function renderHistoryChart() {
@@ -680,164 +474,112 @@ Bu sporcu için profesyonel bir yorum yap. Güçlü yönleri, gelişime açık a
         const cmjValues = history.map(h => h.cmj || 0);
         const change = ((cmjValues[cmjValues.length-1] - cmjValues[0]) / cmjValues[0] * 100) || 0;
         const changeColor = change >= 0 ? '#10b981' : '#ef4444';
-        const html = `<div class="progress-bar"><div class="progress-fill" style="width: ${Math.abs(change)}%; background: ${changeColor};"></div></div>
+        document.getElementById('historyChartArea').innerHTML = `<div class="progress-bar"><div class="progress-fill" style="width: ${Math.abs(change)}%; background: ${changeColor};"></div></div>
                       <div>📈 ${cmjValues[0]} cm → ${cmjValues[cmjValues.length-1]} cm (${change.toFixed(1)}% değişim)</div>`;
-        document.getElementById('historyChartArea').innerHTML = html;
         document.getElementById('historyList').innerHTML = history.map(h => `${h.date}: ${h.cmj} cm`).join(' → ');
     }
     
-    // ========== FULL REPORT (Tüm devrimsel özellikler) ==========
+    function renderRadar() {
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const potential = calculatePotential();
+        if (radarChart) radarChart.destroy();
+        radarChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Patlayıcı Güç', 'Reaktif Kuvvet', 'Hız Gelişimi', 'Nöromüsküler', 'Simetri', 'Transfer'],
+                datasets: [{
+                    label: `${currentData.name || 'Sporcu'} Profili`,
+                    data: [potential.cmjScore, potential.rsiScore, potential.rfdScore, neuromuscularAge()?.neuroScore || 70, currentData.asymmetry ? 100 - currentData.asymmetry : 85, simulateTransferValue().marketValueMillion * 5],
+                    backgroundColor: 'rgba(224, 58, 58, 0.2)', borderColor: '#e03a3a', borderWidth: 2, pointBackgroundColor: '#e03a3a'
+                }, {
+                    label: 'Yaş Normu', data: [70, 70, 70, 70, 85, 30], backgroundColor: 'rgba(245, 176, 66, 0.1)', borderColor: '#f5b042', borderWidth: 2, borderDash: [5, 5], pointRadius: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: true, scales: { r: { beginAtZero: true, max: 100 } } }
+        });
+        document.getElementById('radarContainer').style.display = 'block';
+    }
+    
+    // ========== ANA RAPOR ==========
     async function generateFullReport() {
         if (!currentData.cmj && !currentData.rsi) {
-            document.getElementById('reportArea').innerHTML = '<div style="padding: 40px; text-align: center;">⚠️ Yeterli veri yok. Lütfen geçerli bir VALD PDF yükleyin veya örnek veriyi deneyin.</div>';
+            document.getElementById('reportArea').innerHTML = '<div style="padding: 40px; text-align: center;">⚠️ Yeterli veri yok. Lütfen VALD PDF yükleyin.</div>';
             return;
         }
-        
+        addToAnonymousDatabase();
         const potential = calculatePotential();
-        const leagueComp = compareToLeagues();
-        const trainingPlan = generateTrainingPlan();
         const neuro = neuromuscularAge();
         const injury = predictInjuryTimeline();
-        const similar = findSimilarPlayers();
         const transfer = simulateTransferValue();
-        
-        let leagueHtml = '';
-        if (leagueComp) {
-            leagueHtml = `
-                <div class="league-comparison">
-                    <h4>📊 Lig Karşılaştırması (CMJ - ${currentData.position} pozisyonu)</h4>
-                    <div>Türkiye Akademi (${leagueComp.academy.value} cm): ${leagueComp.academy.status} (${leagueComp.academy.diff}%)</div>
-                    <div>Süper Lig (${leagueComp.superlig.value} cm): ${leagueComp.superlig.status} (${leagueComp.superlig.diff}%)</div>
-                    <div>Avrupa Elit (${leagueComp.elite.value} cm): ${leagueComp.elite.status} (${leagueComp.elite.diff}%)</div>
-                    <div style="margin-top: 8px; font-weight: bold;">${currentData.cmj >= 48 ? '🌟 Avrupa Elit seviyesinde!' : (currentData.cmj >= 44 ? '⚽ Süper Lig seviyesinde' : '📈 Gelişim potansiyeli yüksek')}</div>
-                </div>
-            `;
-        }
-        
-        const similarHtml = similar.length > 0 ? `
-            <div style="background: #e0e7ff; border-radius: 16px; padding: 16px; margin: 12px 0;">
-                <h4>🎭 Benzer Sporcu Profilleri</h4>
-                ${similar.map(s => `<div>• ${s.name}: %${s.similarity} benzerlik (${s.style})</div>`).join('')}
-            </div>
-        ` : '';
-        
-        const neuroHtml = neuro ? `
-            <div class="neuro-card">
-                <h4>🧬 NÖROMÜSKÜLER YAŞ ANALİZİ™ <span style="font-size: 10px;">Patent Pending</span></h4>
-                <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-                    <div>📅 Takvim Yaşı: <strong>${neuro.biological}</strong></div>
-                    <div>⚡ Nöromüsküler Yaş: <strong>${neuro.neuromuscular}</strong></div>
-                    <div>📊 Skor: <strong>${neuro.neuroScore}/100</strong></div>
-                    <div>📈 Persentil: <strong>${neuro.percentile}</strong></div>
-                </div>
-                <div style="margin-top: 12px; font-size: 14px;">${neuro.interpretation}</div>
-            </div>
-        ` : '';
-        
-        const injuryHtml = `
-            <div class="injury-card">
-                <h4>⚠️ SAKATLIK ZAMAN MAKİNESİ™ <span style="font-size: 10px;">Patent Pending</span></h4>
-                <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-                    <div>🎯 Risk Skoru: <strong>${injury.riskScore}/100</strong></div>
-                    <div>📊 Seviye: <strong>${injury.severity}</strong></div>
-                    <div>⏰ Tahmin: <strong>${injury.predictedWeeks} hafta (${injury.predictedMonths} ay)</strong></div>
-                </div>
-                <div style="margin-top: 8px;">📍 Hassas Bölge: ${injury.mostVulnerable}</div>
-                <div style="margin-top: 8px; font-size: 13px;">💡 ${injury.recommendation}</div>
-                <div style="margin-top: 8px; font-size: 11px;">Risk Faktörleri: ${injury.riskFactors.join(', ')}</div>
-            </div>
-        `;
-        
-        const transferHtml = `
-            <div class="sim-card">
-                <h4>💰 AI TRANSFER SİMÜLASYONU™</h4>
-                <div style="font-size: 32px; font-weight: bold;">€${transfer.marketValueMillion}M</div>
-                <div>${transfer.valueTier}</div>
-                <div style="margin-top: 8px;">🎯 İlgili Ligler: ${transfer.interestedLeagues.join(', ')}</div>
-                <div style="margin-top: 8px; font-size: 12px;">📌 ${transfer.transferRecommendation}</div>
-                <div style="margin-top: 4px; font-size: 10px;">Yaş faktörü: ${transfer.ageFactor.toFixed(1)}x çarpan</div>
-            </div>
-        `;
+        const similar = findSimilarPlayers();
         
         const reportHTML = `
-            <div class="score-card">
-                <div class="score-number">${potential.totalScore}/100</div>
-                <div>ToaPredict ELITE Skoru</div>
-                <div class="progress-bar"><div class="progress-fill" style="width: ${potential.totalScore}%;"></div></div>
-            </div>
-            
+            ${renderIndexCard()}
+            ${renderAgeNormReport()}
+            <div class="score-card"><div class="score-number">${potential.totalScore}/100</div><div>ToaPredict ELITE Skoru</div><div class="progress-bar"><div class="progress-fill" style="width: ${potential.totalScore}%;"></div></div></div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0;">
-                <div class="${potential.cmjScore >= 70 ? 'status-success' : 'status-warning'}">💪 CMJ Güç: ${Math.round(potential.cmjScore)}/100</div>
-                <div class="${potential.rsiScore >= 70 ? 'status-success' : 'status-warning'}">⚡ RSI Patlayıcılık: ${Math.round(potential.rsiScore)}/100</div>
-                <div class="${potential.rfdScore >= 70 ? 'status-success' : 'status-warning'}">🏃 RFD Hız: ${Math.round(potential.rfdScore)}/100</div>
+                <div class="${potential.cmjScore >= 70 ? 'status-success' : 'status-warning'}">💪 CMJ: ${Math.round(potential.cmjScore)}/100</div>
+                <div class="${potential.rsiScore >= 70 ? 'status-success' : 'status-warning'}">⚡ RSI: ${Math.round(potential.rsiScore)}/100</div>
+                <div class="${potential.rfdScore >= 70 ? 'status-success' : 'status-warning'}">🏃 RFD: ${Math.round(potential.rfdScore)}/100</div>
                 <div class="${(currentData.asymmetry || 0) <= 10 ? 'status-success' : 'status-warning'}">🎯 Simetri: ${currentData.asymmetry ? 100 - currentData.asymmetry : 85}/100</div>
             </div>
-            
-            ${leagueHtml}
-            ${neuroHtml}
-            ${injuryHtml}
-            ${transferHtml}
-            ${similarHtml}
-            
-            <div style="background: #fef3c7; border-radius: 16px; padding: 16px; margin: 12px 0;">
-                <h4>🏋️ AI Antrenman Planı</h4>
-                <ul style="margin-left: 20px;">${trainingPlan.map(p => `<li>${p}</li>`).join('')}</ul>
-                <div style="margin-top: 12px; font-size: 12px;">📅 4 Haftalık periyodizasyon: Hafta1-2 yüklenme, Hafta3 şiddetlendirme, Hafta4 dinlenme+test</div>
-            </div>
-            
-            <div style="background: #dcfce7; border-radius: 16px; padding: 16px; margin: 12px 0;">
-                <h4>🏆 Kariyer Tahmini</h4>
-                <div>1 yıl: ${potential.prediction.level1}</div>
-                <div>3 yıl: ${potential.prediction.level2}</div>
-                <div>5 yıl: ${potential.prediction.level3}</div>
-                <div class="progress-bar"><div class="progress-fill" style="width: ${potential.prediction.confidence}%; background: #10b981;"></div></div>
-                <div style="font-size: 11px;">Tahmin güven aralığı: ±${100 - potential.prediction.confidence}%</div>
-            </div>
+            ${neuro ? `<div class="neuro-card"><h4>🧬 NÖROMÜSKÜLER YAŞ™</h4><div>📅 Takvim: ${neuro.biological} | ⚡ Nöro: ${neuro.neuromuscular}</div><div>${neuro.interpretation}</div><div>📊 Skor: ${neuro.neuroScore}/100 | ${neuro.percentile}</div></div>` : ''}
+            <div class="injury-card"><h4>⚠️ SAKATLIK ZAMAN MAKİNESİ™</h4><div>Risk: ${injury.riskScore}/100 (${injury.severity})</div><div>📅 Tahmin: ${injury.predictedWeeks} hafta içinde</div><div>📍 ${injury.mostVulnerable}</div><div>💡 ${injury.recommendation}</div></div>
+            <div class="sim-card"><h4>💰 AI TRANSFER SİMÜLASYONU™</h4><div style="font-size: 32px; font-weight: bold;">€${transfer.marketValueMillion}M</div><div>${transfer.valueTier}</div><div>🎯 ${transfer.interestedLeagues.join(', ')}</div></div>
+            ${similar.length > 0 ? `<div style="background: #e0e7ff; border-radius: 16px; padding: 16px;"><h4>🎭 Benzer Sporcular</h4>${similar.map(s => `• ${s.name}: %${s.similarity} (${s.style})`).join('')}</div>` : ''}
+            <div style="background: #fef3c7; border-radius: 16px; padding: 16px;"><h4>🏆 Kariyer Tahmini</h4><div>1 yıl: ${potential.prediction.level1}</div><div>3 yıl: ${potential.prediction.level2}</div><div>5 yıl: ${potential.prediction.level3}</div><div class="progress-bar"><div class="progress-fill" style="width: ${potential.prediction.confidence}%; background: #10b981;"></div></div></div>
         `;
-        
         document.getElementById('reportArea').innerHTML = reportHTML;
         renderRadar();
     }
     
-    // ========== ÖRNEK VERİ YÜKLE ==========
-    function loadExample() {
-        currentData = {
-            name: "Arda Güler (Örnek)",
-            age: 17,
-            cmj: 46,
-            rsi: 1.85,
-            rfd: 3800,
-            asymmetry: 8,
-            position: "WING",
-            history: [{ date: "Ocak", cmj: 40 }, { date: "Mart", cmj: 43 }, { date: "Haziran", cmj: 46 }]
-        };
-        localStorage.setItem('toa_history_Arda Güler', JSON.stringify(currentData.history));
-        updateUI();
-        generateFullReport();
-        document.getElementById('pdfStatus').innerHTML = "✅ Örnek sporcu verisi yüklendi (Arda Güler profili)";
+    // ========== GPT ANALİZ ==========
+    async function openAIAnalysis() {
+        if (!openaiApiKey) { alert("Lütfen OpenAI API Key girin!"); return; }
+        const reportDiv = document.getElementById('reportArea');
+        reportDiv.innerHTML += `<div style="padding: 16px; background: #1e293b; border-radius: 16px; margin-top: 12px;"><div class="loading"></div> 🧠 GPT-3.5 Analiz yapıyor...</div>`;
+        const neuro = neuromuscularAge();
+        const injury = predictInjuryTimeline();
+        const potential = calculatePotential();
+        const transfer = simulateTransferValue();
+        const prompt = `Sporcu: ${currentData.name || "Sporcu"}, Yaş: ${currentData.age}, CMJ: ${currentData.cmj || "?"} cm, RSI: ${currentData.rsi || "?"}, Asimetri: ${currentData.asymmetry || "?"}%. Nöromüsküler yaş: ${neuro?.neuromuscular}, Sakatlık riski: ${injury.riskScore}%. Bu sporcu için profesyonel yorum yap. Güçlü yönler, zayıflar, öneriler. Türkçe, 6 cümle.`;
+        try {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${openaiApiKey}` },
+                body: JSON.stringify({ model: 'gpt-3.5-turbo', messages: [{ role: 'system', content: 'Spor bilimcisi ve scout.' }, { role: 'user', content: prompt }], temperature: 0.7, max_tokens: 400 })
+            });
+            const data = await response.json();
+            const aiComment = data.choices?.[0]?.message?.content || "Analiz alınamadı.";
+            document.querySelector('#reportArea .loading')?.parentElement?.remove();
+            reportDiv.innerHTML += `<div style="background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 16px; padding: 20px; margin-top: 12px; border-left: 4px solid #10b981;"><h4 style="color: #10b981;">🧠 GPT-3.5 Turbo Analizi</h4><p style="color: #e2e8f0;">${aiComment}</p></div>`;
+        } catch(e) { document.querySelector('#reportArea .loading')?.parentElement?.remove(); reportDiv.innerHTML += `<div style="background: #fee2e2; padding: 16px; border-radius: 16px;">❌ Hata: ${e.message}</div>`; }
     }
     
-    // ========== EVENT LİSTENERLAR ==========
+    function loadExample() {
+        currentData = { name: "Arda Güler (Örnek)", age: 17, cmj: 46, rsi: 1.85, rfd: 3800, asymmetry: 8, position: "WING", history: [{ date: "Ocak", cmj: 40 }, { date: "Mart", cmj: 43 }, { date: "Haziran", cmj: 46 }] };
+        updateUI(); generateFullReport();
+        document.getElementById('pdfStatus').innerHTML = "✅ Örnek sporcu verisi yüklendi";
+    }
+    
+    // Event listeners
     document.getElementById('uploadArea').onclick = () => document.getElementById('valdFile').click();
     document.getElementById('valdFile').onchange = (e) => { if(e.target.files[0]) readPDF(e.target.files[0]); };
     document.getElementById('analyzeBtn').onclick = generateFullReport;
     document.getElementById('aiAnalyzeBtn').onclick = openAIAnalysis;
-    
     const exampleBtn = document.createElement('button');
     exampleBtn.innerHTML = '📋 Örnek Sporcu Yükle (Arda Güler)';
     exampleBtn.style.background = '#f5b042';
     exampleBtn.onclick = loadExample;
     document.querySelector('.upload-area').after(exampleBtn);
     
-    console.log("✅ ToaPerform AI Pro - Tüm devrimsel özellikler aktif! | Nöromüsküler Yaş | Sakatlık Zaman Makinesi | AI Transfer Simülasyonu");
+    loadAnonymousDatabase();
+    console.log("✅ ToaPerform AI Pro - Tüm özellikler aktif! | 10-30 Yaş Normu | ToaPredict Index | Neuro Age | Injury Time Machine");
 </script>
 
 <p style="margin-top: 20px; font-size: 11px; color: #64748b; text-align: center;">
-    🏆 ToaPredict PRO | Nöromüsküler Yaş™ | Sakatlık Zaman Makinesi™ | AI Transfer Simülasyon™ | Patent Pending
+    🏆 ToaPredict PRO | 10-30 Yaş Norm Sistemi | ToaPredict Index™ | Nöromüsküler Yaş™ | Sakatlık Zaman Makinesi™ | AI Transfer Simülasyon™
     <br>
     ⚡ Fenerbahçe • Galatasaray • Beşiktaş • Milli Takım Seviyesinde Teknoloji
-    <br>
-    🔑 OpenAI API Key (GPT-3.5 Turbo) ile derin AI analizi aktive edin
 </p>
 </body>
 </html>
