@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>TOAPERFORM AI | Gerçek Öğrenen AI + Vektör Hafıza + Düzeltme Sistemi + Gelişmiş Prompt Mühendisliği + RAG</title>
+    <title>TOAPERFORM AI | OpenAI GPT-3.5 + Gerçek Embedding (Transformers.js) + RAG</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <!-- Transformers.js - Ücretsiz local embedding için -->
+    <script type="importmap">
+        {
+            "imports": {
+                "@xenova/transformers": "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.11.2/dist/transformers.min.js"
+            }
+        }
+    </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -70,22 +78,22 @@
 <body>
 
 <div class="header">
-    <h1>⚽ TOAPERFORM AI <span style="font-size: 14px;">| 🧠 GERÇEK ÖĞRENEN AI (384 Boyutlu Embedding) | RAG Aktif | Vektör Hafıza | Düzeltme Sistemi</span></h1>
-    <div class="badge-onprem">🔒 On-Prem | KVKK | SOC 2 | 7 Agent | Gerçek Embedding | RAG | Cosine Similarity</div>
+    <h1>⚽ TOAPERFORM AI <span style="font-size: 14px;">| OpenAI GPT-3.5 + Gerçek Embedding (Transformers.js) + RAG</span></h1>
+    <div class="badge-onprem">🔒 On-Prem | KVKK | OpenAI Chat | Ücretsiz Local Embedding | 7 Agent | RAG</div>
 </div>
 
 <div class="api-status">
-    <strong>🤖 AI Motoru: OpenAI (GERÇEK ÖĞRENEN - 384 Boyutlu Embedding + RAG)</strong>
+    <strong>🤖 AI Motoru: OpenAI GPT-3.5 (Sohbet) + Transformers.js (Embedding - Ücretsiz)</strong>
     <input type="text" id="apiKey" placeholder="OpenAI API Anahtarı (sk-...)" style="width: 350px;">
     <button id="saveApiBtn">✅ Kaydet</button>
     <span class="prompt-badge">🧠 CoT Aktif</span>
     <span class="prompt-badge">📝 Few-Shot</span>
     <span class="prompt-badge">🚫 Negatif Prompt</span>
     <span class="prompt-badge">📐 JSON Hazır</span>
-    <span class="rag-badge">🔍 RAG Aktif (Gerçek Embedding)</span>
+    <span class="rag-badge">🔍 RAG Aktif (384 Boyutlu Embedding - Ücretsiz)</span>
 </div>
 
-<!-- ÖĞRENME KANIT EKRANI + YENİ ÖZELLİKLER -->
+<!-- ÖĞRENME KANIT EKRANI -->
 <div class="learning-panel">
     <h3>🧠 GERÇEK ÖĞRENME SİSTEMİ 
         <span class="feature-badge">384 Boyutlu Embedding</span>
@@ -111,18 +119,15 @@
         Öğrenme kayıtları burada görünecek...
     </div>
     
-    <!-- KONUŞMA GEÇMİŞİ -->
     <div id="conversationHistory" class="chat-history" style="margin-top: 12px; display: none;">
         <strong>💬 Konuşma Geçmişi (Hatırlanan)</strong>
         <div id="historyList"></div>
     </div>
     
-    <!-- GERÇEK VEKTÖR BENZERLİK GÖSTERGESİ -->
     <div id="vectorMatchIndicator" class="vector-match" style="display: none;">
         🔍 <strong>Gerçek Embedding ile Bulundu:</strong> <span id="vectorMatchText"></span>
     </div>
     
-    <!-- RAG GÖSTERGESİ -->
     <div id="ragMatchIndicator" class="vector-match" style="display: none; background: #8b5cf620; border-left-color: #8b5cf6;">
         🧠 <strong>RAG ile Anlamlı Bellek:</strong> <span id="ragMatchText"></span>
     </div>
@@ -171,9 +176,9 @@
     </div>
 
     <div class="vald-panel">
-        <h2>💜 Zoe AI - Nöromüsküler Uzman (Gelişmiş + RAG)</h2>
+        <h2>💜 Zoe AI - Nöromüsküler Uzman (GPT-3.5 + RAG)</h2>
         <div id="zoeComment" style="background: #f3e8ff; border-radius: 16px; padding: 16px; min-height: 200px; font-size: 14px; line-height: 1.5;">
-            💜 PDF yükleyin - Zoe gerçek embedding ve RAG ile derinlemesine analiz yapacak
+            💜 PDF yükleyin - Zoe GPT-3.5 ve gerçek embedding ile derinlemesine analiz yapacak
         </div>
         <div style="margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap;">
             <input type="text" id="zoeQuestion" placeholder="Zoe'ye soru sor..." style="flex: 1;">
@@ -206,16 +211,18 @@
     </div>
 </div>
 
-<h2>🤖 AI Agent'lar (Senkronize Öğrenen + RAG Zenginleştirmeli)</h2>
+<h2>🤖 AI Agent'lar (OpenAI GPT-3.5 + RAG Zenginleştirmeli)</h2>
 <div class="agent-grid" id="agentGrid"></div>
 
 <h2>📜 Audit Trail</h2>
 <div class="audit-log" id="auditLog">
-    [Sistem] GERÇEK ÖĞRENEN AI - 384 Boyutlu Embedding + RAG başlatıldı<br>
-    [Sistem] Transformers.js ile gerçek embedding modeli yükleniyor...<br>
+    [Sistem] TOAPERFORM AI - OpenAI GPT-3.5 + Transformers.js Embedding başlatıldı<br>
+    [Sistem] Gerçek embedding modeli yükleniyor (ücretsiz, local)...<br>
 </div>
 
-<script>
+<script type="module">
+    import { pipeline } from '@xenova/transformers';
+    
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
     
     let openaiKey = "";
@@ -225,296 +232,24 @@
         asymmetry: null, fatigue: null, contactTime: null, power: null
     };
     
-    // ========== YENİ: 1. CHAIN-OF-THOUGHT ŞABLONU ==========
-    function addChainOfThought(agentRole, question, data) {
-        return `\n\n🔍 ADIM ADIM DÜŞÜN (Chain-of-Thought):
-ADIM 1 - Veri Analizi: Şu anki ${data.cmj ? `CMJ:${data.cmj}cm` : 'CMJ verisi yok'}, ${data.rsi ? `RSI:${data.rsi}` : 'RSI verisi yok'}, ${data.asymmetry ? `Asimetri:%${data.asymmetry}` : 'Asimetri verisi yok'}. Bu değerleri yaş/mevki normlarıyla karşılaştır.
-ADIM 2 - Kritik Bulgular: En önemli 3 risk faktörünü belirle.
-ADIM 3 - Bilimsel Dayanak: Neden bu öneriyi yaptığını açıkla (literatür referansı ver).
-ADIM 4 - Aksiyon Planı: Hemen yapılacaklar, bu hafta yapılacaklar, 1 ay sonra hedefler.
-ADIM 5 - Uyarılar: Hangi durumlarda DUR denmeli? Kontrendikasyonlar nelerdir?
-
-Şimdi bu adımları takip ederek cevap ver:`;
-    }
-    
-    // ========== YENİ: 2. FEW-SHOT ÖRNEKLER ==========
-    function getFewShotExamples(agentRole) {
-        const examples = {
-            'Teknik Direktör': `\n\n📝 ÖRNEK CEVAP FORMATI (Few-Shot):
-Örnek 1 - İyi Cevap:
-"📊 VERİ ANALİZİ: CMJ 42cm (yaş grubuna göre %70 persentil), Asimetri %18 (yüksek)
-⚠️ KRİTİK BULGU: Sağ-sol farkı, sol ayakla bitişlerde sakatlık riski oluşturuyor
-💡 TAKTİK ÖNERİ: Maç içinde sol ayağını daha fazla kullanan bölgede oynat
-📅 HAFTALIK PLAN: 2 gün sol bacak ağırlıklı, 1 gün simetri çalışması"
-
-Örnek 2 - Kötü Cevap (YAPMA):
-"Her şey iyi görünüyor, normal antrenmana devam" ❌ (çok genel, veri yok)
-
-Sen de bu formatı takip ederek detaylı cevap ver:`,
-            
-            'Nöromüsküler Uzman': `\n\n📝 ÖRNEK CEVAP FORMATI (Few-Shot):
-Örnek 1 - Analiz:
-"🔬 NÖROMÜSKÜLER ANALİZ:
-• Kas aktivasyonu: %78 (iyi)
-• Reaksiyon zamanı: 0.24 sn (gelişmeli)
-• Propriyosepsiyon: Sağ bacak %82, sol %64
-
-🏋️ EGZERSİZ REÇETESİ:
-1. Propriyosepsiyon için: Bosu topu üzerinde tek bacak duruş (3x30sn)
-2. Reaksiyon için: Işık sistemi ile pivot drill (3x10 tekrar)
-
-⚠️ UYARI: Ağrı varsa plyometrik yapmayın"
-
-Sen de bu bilimsel ve detaylı formatı kullan:`
-        };
-        return examples[agentRole] || `\n\n📝 ÖRNEK CEVAP FORMATI:
-✅ İyi Cevap: Veri + Analiz + Öneri + Uyarı
-❌ Kötü Cevap: "İyi" veya "Kötü" gibi tek kelimelik cevaplar
-
-Bu formatı takip et:`;
-    }
-    
-    // ========== YENİ: 3. NEGATİF PROMPTING ==========
-    function getNegativePrompting() {
-        return `\n\n🚫 YAPMAMAN GEREKENLER (Negative Prompting):
-1. ASLA "bilmiyorum", "veri yok" gibi kaçamak cevaplar verme - veri yoksa en iyi uygulamalara göre tahmini öneri yap.
-2. ASLA "her şey normal" veya "sorun yok" gibi genel ifadeler kullanma - her zaman spesifik ol.
-3. ASLA kesin iyileşme süresi verme (örn: "3 haftada geçer") - bunun yerine aralık ver (örn: "3-5 hafta").
-4. ASLA tek cümlelik cevap verme - minimum 5 cümle.
-5. ASLA başka bir doktor/antrenörün önerisini eleştirme - sadece kendi önerini yap.
-6. ASLA korkutucu ifadeler kullanma ("sakatlanırsan bitersin") - yapıcı ol.
-7. ASLA marka veya ürün önerme (Nike, Adidas vb.) - egzersiz ismi ver.`;
-    }
-    
-    // ========== YENİ: 4. STRUCTURED OUTPUT JSON HAZIRLAMA ==========
-    function getStructuredOutputInstruction() {
-        return `\n\n📐 CEVAP FORMATI - Mümkünse şu yapıyı kullan (JSON benzeri):
----
-📊 VERİ ANALİZİ: [verileri yorumla]
-⚠️ KRİTİK BULGULAR: [3 madde]
-💡 ÖNERİLER: [maddeler halinde]
-📅 ZAMAN ÇİZELGESİ: [kısa/orta/uzun vade]
-🚫 KONTRENDİKASYONLAR: [yapılmaması gerekenler]
----
-Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
-    }
-    
-    // ========== YENİ: 5. DİNAMİK TEMPERATURE AYARI ==========
-    function getDynamicTemperature(agentId, masteryLevel) {
-        const analyticAgents = ['medical', 'performance', 'scout'];
-        const creativeAgents = ['zoe', 'mental', 'nutrition'];
-        
-        if (analyticAgents.includes(agentId)) {
-            return masteryLevel > 70 ? 0.2 : 0.3;
-        } else if (creativeAgents.includes(agentId)) {
-            return masteryLevel > 70 ? 0.9 : 0.7;
-        }
-        return 0.7;
-    }
-    
-    // ========== YENİ: 6. GELİŞMİŞ PROMPT BİRLEŞTİRİCİ ==========
-    function buildAdvancedPrompt(basePrompt, agentRole, agentId, question, currentData, masteryLevel) {
-        let advancedPrompt = basePrompt;
-        advancedPrompt += getFewShotExamples(agentRole);
-        advancedPrompt += addChainOfThought(agentRole, question, currentData);
-        advancedPrompt += getNegativePrompting();
-        advancedPrompt += getStructuredOutputInstruction();
-        if (masteryLevel > 80) {
-            advancedPrompt += "\n\n🎓 UZMANLIK SEVİYESİ YÜKSEK: İleri düzey bilimsel terimler kullan, çalışma referansları ver (örn: 'Journal of Sports Sciences 2023'e göre...').";
-        } else if (masteryLevel < 30) {
-            advancedPrompt += "\n\n📖 BAŞLANGIÇ SEVİYESİ: Basit ve anlaşılır dil kullan, çok teknik terimlerden kaçın, her terimi açıkla.";
-        }
-        return advancedPrompt;
-    }
-    
-    // ========== VEKTÖR HAFIZA SİSTEMİ (Basit) - KORUNDU ==========
-    let vectorMemory = [];
-    let correctionPairs = [];
-    
-    function simpleStringToVector(text) {
-        let vector = new Array(50).fill(0);
-        let words = text.toLowerCase().split(/\s+/);
-        for (let i = 0; i < words.length; i++) {
-            let hash = 0;
-            for (let j = 0; j < words[i].length; j++) {
-                hash = ((hash << 5) - hash) + words[i].charCodeAt(j);
-                hash |= 0;
-            }
-            let index = Math.abs(hash) % 50;
-            vector[index] += 1;
-        }
-        let magnitude = Math.sqrt(vector.reduce((sum, val) => sum + val * val, 0));
-        if (magnitude > 0) {
-            vector = vector.map(v => v / magnitude);
-        }
-        return vector;
-    }
-    
-    function cosineSimilarity(vecA, vecB) {
-        let dot = 0;
-        for (let i = 0; i < vecA.length; i++) {
-            dot += vecA[i] * vecB[i];
-        }
-        return dot;
-    }
-    
-    function findSimilarInMemory(query, threshold = 0.3) {
-        const queryVec = simpleStringToVector(query);
-        let bestMatch = null;
-        let bestScore = 0;
-        for (let item of vectorMemory) {
-            const score = cosineSimilarity(queryVec, item.embedding);
-            if (score > bestScore && score > threshold) {
-                bestScore = score;
-                bestMatch = item;
-            }
-        }
-        return { match: bestMatch, score: bestScore };
-    }
-    
-    function findCorrectionForWrongInfo(wrongText, threshold = 0.35) {
-        const queryVec = simpleStringToVector(wrongText);
-        let bestMatch = null;
-        let bestScore = 0;
-        for (let pair of correctionPairs) {
-            const score = cosineSimilarity(queryVec, pair.embeddingWrong);
-            if (score > bestScore && score > threshold) {
-                bestScore = score;
-                bestMatch = pair;
-            }
-        }
-        return { match: bestMatch, score: bestScore };
-    }
-    
-    function addToVectorMemory(text, type = "knowledge") {
-        const embedding = simpleStringToVector(text);
-        vectorMemory.push({
-            id: vectorMemory.length + 1,
-            embedding: embedding,
-            text: text.substring(0, 200),
-            type: type,
-            timestamp: new Date().toLocaleTimeString()
-        });
-        if (vectorMemory.length > 200) vectorMemory.shift();
-        saveVectorMemory();
-        document.getElementById('vectorCount').innerText = vectorMemory.length;
-        addAudit(`🧠 VEKTÖR HAFIZA: "${text.substring(0, 50)}..." eklendi (${type})`);
-    }
-    
-    function addCorrectionPair(wrong, correct) {
-        const existingIndex = correctionPairs.findIndex(p => p.wrong === wrong);
-        if (existingIndex !== -1) {
-            correctionPairs[existingIndex] = {
-                wrong: wrong,
-                correct: correct,
-                embeddingWrong: simpleStringToVector(wrong),
-                embeddingCorrect: simpleStringToVector(correct),
-                timestamp: new Date().toLocaleTimeString()
-            };
-        } else {
-            correctionPairs.push({
-                id: correctionPairs.length + 1,
-                wrong: wrong,
-                correct: correct,
-                embeddingWrong: simpleStringToVector(wrong),
-                embeddingCorrect: simpleStringToVector(correct),
-                timestamp: new Date().toLocaleTimeString()
-            });
-        }
-        if (correctionPairs.length > 100) correctionPairs.shift();
-        saveVectorMemory();
-        addAudit(`📚 DÜZELTME ÇİFTİ: "${wrong.substring(0, 40)}" → "${correct.substring(0, 40)}"`);
-        addToVectorMemory(`DOĞRU BİLGİ: ${correct} (${wrong} yerine)`, "correction");
-    }
-    
-    function trainFromCorrections() {
-        for (let pair of correctionPairs) {
-            addToVectorMemory(`ÖNEMLİ: ${pair.correct} (Asla şunu söyleme: ${pair.wrong})`, "trained");
-        }
-        addAudit(`🎓 ${correctionPairs.length} düzeltme çiftinden öğrenme tamamlandı`);
-        alert(`✅ ${correctionPairs.length} adet düzeltme çifti vektör hafızaya işlendi. Artık aynı hataları tekrarlamayacağım!`);
-        updateVectorDisplay();
-    }
-    
-    function enrichPromptWithLearning(rawPrompt) {
-        let enrichedPrompt = rawPrompt;
-        let correctionsNote = "";
-        let vectorNote = "";
-        
-        const correctionMatch = findCorrectionForWrongInfo(rawPrompt);
-        if (correctionMatch.match && correctionMatch.score > 0.35) {
-            correctionsNote = `\n\n❗ ÖNEMLİ HATIRLATMA - DAHA ÖNCE YANLIŞ ÖĞRENDİM:\nYanlış bilgi: "${correctionMatch.match.wrong}"\nDoğru bilgi: "${correctionMatch.match.correct}"\nLütfen bu hatayı TEKRARLAMA ve doğru bilgiyi kullan.`;
-            const indicator = document.getElementById('vectorMatchIndicator');
-            const textSpan = document.getElementById('vectorMatchText');
-            textSpan.innerHTML = `Düzeltme çifti eşleşti: "${correctionMatch.match.wrong.substring(0, 40)}" → "${correctionMatch.match.correct.substring(0, 40)}" (benzerlik: ${(correctionMatch.score * 100).toFixed(0)}%)`;
-            indicator.style.display = 'block';
-            setTimeout(() => { indicator.style.display = 'none'; }, 5000);
-        }
-        
-        const vectorMatch = findSimilarInMemory(rawPrompt);
-        if (vectorMatch.match && vectorMatch.score > 0.3) {
-            vectorNote = `\n\n📚 HATIRLADIĞIM BİLGİ (Vektör hafızamdan):\n${vectorMatch.match.text}\nBu bilgiyi dikkate alarak cevap ver.`;
-        }
-        
-        enrichedPrompt += correctionsNote + vectorNote;
-        return enrichedPrompt;
-    }
-    
-    function saveVectorMemory() {
-        localStorage.setItem('toaperform_vector_memory', JSON.stringify(vectorMemory));
-        localStorage.setItem('toaperform_correction_pairs', JSON.stringify(correctionPairs));
-    }
-    
-    function loadVectorMemory() {
-        const savedVector = localStorage.getItem('toaperform_vector_memory');
-        if (savedVector) {
-            vectorMemory = JSON.parse(savedVector);
-            document.getElementById('vectorCount').innerText = vectorMemory.length;
-        }
-        const savedPairs = localStorage.getItem('toaperform_correction_pairs');
-        if (savedPairs) {
-            correctionPairs = JSON.parse(savedPairs);
-        }
-        updateVectorDisplay();
-    }
-    
-    function updateVectorDisplay() {
-        const vectorDiv = document.getElementById('vectorCount');
-        if (vectorDiv) vectorDiv.innerText = vectorMemory.length;
-    }
-    
-    // ========== MEVCUT HAFIZA SİSTEMLERİ ==========
-    let learningMemory = [];
-    let conversationHistory = [];
-    let agentSharedKnowledge = {};
-    let corrections = [];
-    
-    // ========== GERÇEK EMBEDDING VE RAG SİSTEMİ ==========
-    let realEmbeddingPipeline = null;
+    // ========== GERÇEK EMBEDDING (Transformers.js - Ücretsiz) ==========
+    let embeddingPipeline = null;
     let realVectorMemory = { vectors: [], ids: [] };
     let realEmbeddingReady = false;
     
     async function initRealEmbedding() {
-        addAudit("🧠 Gerçek embedding modeli yükleniyor (384 boyutlu)...");
+        addAudit("🧠 Gerçek embedding modeli yükleniyor (all-MiniLM-L6-v2, 384 boyutlu - ÜCRETSİZ)...");
         try {
-            if (typeof transformers === 'undefined') {
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.11.2/dist/transformers.min.js';
-                await new Promise((resolve) => { script.onload = resolve; document.head.appendChild(script); });
-            }
-            const { pipeline } = transformers;
-            realEmbeddingPipeline = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+            embeddingPipeline = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
             realEmbeddingReady = true;
-            addAudit("✅ Gerçek embedding modeli yüklendi! (384 boyutlu, all-MiniLM-L6-v2)");
-            
+            addAudit("✅ Gerçek embedding modeli yüklendi! (384 boyutlu, ücretsiz, local)");
             loadRealVectorMemory();
             upgradeExistingMemoryToReal();
-            
             const ragCountSpan = document.getElementById('ragCount');
             if (ragCountSpan) ragCountSpan.innerText = realVectorMemory.vectors.length;
         } catch(e) {
-            console.error("Real embedding yüklenemedi:", e);
-            addAudit("⚠️ Gerçek embedding yüklenemedi, basit sistem devam ediyor");
+            console.error("Embedding yüklenemedi:", e);
+            addAudit("⚠️ Embedding yüklenemedi, basit sistem devam ediyor");
         }
     }
     
@@ -530,9 +265,9 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
     }
     
     async function addToRealVectorMemory(text, type = 'knowledge') {
-        if (!realEmbeddingReady || !realEmbeddingPipeline) return;
+        if (!realEmbeddingReady || !embeddingPipeline) return;
         try {
-            const embedding = await realEmbeddingPipeline(text, { pooling: 'mean', normalize: true });
+            const embedding = await embeddingPipeline(text, { pooling: 'mean', normalize: true });
             const vector = Array.from(embedding.data);
             realVectorMemory.vectors.push(vector);
             realVectorMemory.ids.push({ text: text.substring(0, 300), type: type, timestamp: new Date().toISOString() });
@@ -543,15 +278,15 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
             saveRealVectorMemory();
             const ragCountSpan = document.getElementById('ragCount');
             if (ragCountSpan) ragCountSpan.innerText = realVectorMemory.vectors.length;
-        } catch(e) { console.error("Real embedding hatası:", e); }
+        } catch(e) { console.error("Embedding hatası:", e); }
     }
     
     async function ragSearch(query, topK = 5) {
-        if (!realEmbeddingReady || !realEmbeddingPipeline || realVectorMemory.vectors.length === 0) {
+        if (!realEmbeddingReady || !embeddingPipeline || realVectorMemory.vectors.length === 0) {
             return { results: [], hasRealEmbedding: false };
         }
         try {
-            const queryEmbedding = await realEmbeddingPipeline(query, { pooling: 'mean', normalize: true });
+            const queryEmbedding = await embeddingPipeline(query, { pooling: 'mean', normalize: true });
             const queryVector = Array.from(queryEmbedding.data);
             const similarities = realVectorMemory.vectors.map((vec, idx) => ({
                 id: realVectorMemory.ids[idx],
@@ -587,19 +322,19 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
     }
     
     function saveRealVectorMemory() {
-        localStorage.setItem('toaperform_real_vector_memory_v2', JSON.stringify({
+        localStorage.setItem('toaperform_real_vector_memory_v3', JSON.stringify({
             vectors: realVectorMemory.vectors,
             ids: realVectorMemory.ids,
-            version: '2.0-real-embedding-384'
+            version: '3.0-transformers-embedding'
         }));
     }
     
     function loadRealVectorMemory() {
-        const saved = localStorage.getItem('toaperform_real_vector_memory_v2');
+        const saved = localStorage.getItem('toaperform_real_vector_memory_v3');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
-                if (data.version === '2.0-real-embedding-384') {
+                if (data.version === '3.0-transformers-embedding') {
                     realVectorMemory.vectors = data.vectors || [];
                     realVectorMemory.ids = data.ids || [];
                     addAudit(`✅ ${realVectorMemory.vectors.length} gerçek embedding yüklendi!`);
@@ -622,21 +357,368 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
         addAudit(`🎉 ${realVectorMemory.vectors.length} bellek gerçek embedding'e dönüştürüldü!`);
     }
     
-    // ========== SCOUT VERİTABANI ==========
+    // ========== VEKTÖR HAFIZA SİSTEMİ (Basit - Fallback) ==========
+    let vectorMemory = [];
+    let correctionPairs = [];
+    let learningMemory = [];
+    let conversationHistory = [];
+    let agentSharedKnowledge = {};
+    let corrections = [];
     let scoutPlayers = [];
+    
+    function simpleStringToVector(text) {
+        let vector = new Array(50).fill(0);
+        let words = text.toLowerCase().split(/\s+/);
+        for (let i = 0; i < words.length; i++) {
+            let hash = 0;
+            for (let j = 0; j < words[i].length; j++) {
+                hash = ((hash << 5) - hash) + words[i].charCodeAt(j);
+                hash |= 0;
+            }
+            let index = Math.abs(hash) % 50;
+            vector[index] += 1;
+        }
+        let magnitude = Math.sqrt(vector.reduce((sum, val) => sum + val * val, 0));
+        if (magnitude > 0) vector = vector.map(v => v / magnitude);
+        return vector;
+    }
+    
+    function cosineSimilarity(vecA, vecB) {
+        let dot = 0;
+        for (let i = 0; i < vecA.length; i++) dot += vecA[i] * vecB[i];
+        return dot;
+    }
+    
+    function findSimilarInMemory(query, threshold = 0.3) {
+        const queryVec = simpleStringToVector(query);
+        let bestMatch = null, bestScore = 0;
+        for (let item of vectorMemory) {
+            const score = cosineSimilarity(queryVec, item.embedding);
+            if (score > bestScore && score > threshold) { bestScore = score; bestMatch = item; }
+        }
+        return { match: bestMatch, score: bestScore };
+    }
+    
+    function findCorrectionForWrongInfo(wrongText, threshold = 0.35) {
+        const queryVec = simpleStringToVector(wrongText);
+        let bestMatch = null, bestScore = 0;
+        for (let pair of correctionPairs) {
+            const score = cosineSimilarity(queryVec, pair.embeddingWrong);
+            if (score > bestScore && score > threshold) { bestScore = score; bestMatch = pair; }
+        }
+        return { match: bestMatch, score: bestScore };
+    }
+    
+    function addToVectorMemory(text, type = "knowledge") {
+        const embedding = simpleStringToVector(text);
+        vectorMemory.push({ id: vectorMemory.length + 1, embedding: embedding, text: text.substring(0, 200), type: type, timestamp: new Date().toLocaleTimeString() });
+        if (vectorMemory.length > 200) vectorMemory.shift();
+        saveVectorMemory();
+        document.getElementById('vectorCount').innerText = vectorMemory.length;
+        addAudit(`🧠 VEKTÖR HAFIZA: "${text.substring(0, 50)}..." eklendi (${type})`);
+        if (realEmbeddingReady) addToRealVectorMemory(text, type);
+    }
+    
+    function addCorrectionPair(wrong, correct) {
+        const existingIndex = correctionPairs.findIndex(p => p.wrong === wrong);
+        if (existingIndex !== -1) {
+            correctionPairs[existingIndex] = { wrong: wrong, correct: correct, embeddingWrong: simpleStringToVector(wrong), embeddingCorrect: simpleStringToVector(correct), timestamp: new Date().toLocaleTimeString() };
+        } else {
+            correctionPairs.push({ id: correctionPairs.length + 1, wrong: wrong, correct: correct, embeddingWrong: simpleStringToVector(wrong), embeddingCorrect: simpleStringToVector(correct), timestamp: new Date().toLocaleTimeString() });
+        }
+        if (correctionPairs.length > 100) correctionPairs.shift();
+        saveVectorMemory();
+        addAudit(`📚 DÜZELTME ÇİFTİ: "${wrong.substring(0, 40)}" → "${correct.substring(0, 40)}"`);
+        addToVectorMemory(`DOĞRU BİLGİ: ${correct} (${wrong} yerine)`, "correction");
+    }
+    
+    function trainFromCorrections() {
+        for (let pair of correctionPairs) addToVectorMemory(`ÖNEMLİ: ${pair.correct} (Asla şunu söyleme: ${pair.wrong})`, "trained");
+        addAudit(`🎓 ${correctionPairs.length} düzeltme çiftinden öğrenme tamamlandı`);
+        alert(`✅ ${correctionPairs.length} adet düzeltme çifti vektör hafızaya işlendi!`);
+        updateVectorDisplay();
+    }
+    
+    function enrichPromptWithLearning(rawPrompt) {
+        let enrichedPrompt = rawPrompt;
+        const correctionMatch = findCorrectionForWrongInfo(rawPrompt);
+        if (correctionMatch.match && correctionMatch.score > 0.35) {
+            const correctionsNote = `\n\n❗ ÖNEMLİ HATIRLATMA - DAHA ÖNCE YANLIŞ ÖĞRENDİM:\nYanlış bilgi: "${correctionMatch.match.wrong}"\nDoğru bilgi: "${correctionMatch.match.correct}"\nLütfen bu hatayı TEKRARLAMA ve doğru bilgiyi kullan.`;
+            enrichedPrompt += correctionsNote;
+            const indicator = document.getElementById('vectorMatchIndicator');
+            const textSpan = document.getElementById('vectorMatchText');
+            if (indicator) {
+                textSpan.innerHTML = `Düzeltme çifti eşleşti: "${correctionMatch.match.wrong.substring(0, 40)}" → "${correctionMatch.match.correct.substring(0, 40)}" (benzerlik: ${(correctionMatch.score * 100).toFixed(0)}%)`;
+                indicator.style.display = 'block';
+                setTimeout(() => { indicator.style.display = 'none'; }, 5000);
+            }
+        }
+        const vectorMatch = findSimilarInMemory(rawPrompt);
+        if (vectorMatch.match && vectorMatch.score > 0.3) {
+            enrichedPrompt += `\n\n📚 HATIRLADIĞIM BİLGİ (Vektör hafızamdan):\n${vectorMatch.match.text}\nBu bilgiyi dikkate alarak cevap ver.`;
+        }
+        return enrichedPrompt;
+    }
+    
+    function saveVectorMemory() {
+        localStorage.setItem('toaperform_vector_memory', JSON.stringify(vectorMemory));
+        localStorage.setItem('toaperform_correction_pairs', JSON.stringify(correctionPairs));
+    }
+    
+    function loadVectorMemory() {
+        const savedVector = localStorage.getItem('toaperform_vector_memory');
+        if (savedVector) { vectorMemory = JSON.parse(savedVector); document.getElementById('vectorCount').innerText = vectorMemory.length; }
+        const savedPairs = localStorage.getItem('toaperform_correction_pairs');
+        if (savedPairs) correctionPairs = JSON.parse(savedPairs);
+        updateVectorDisplay();
+    }
+    
+    function updateVectorDisplay() {
+        const vectorDiv = document.getElementById('vectorCount');
+        if (vectorDiv) vectorDiv.innerText = vectorMemory.length;
+    }
     
     // ========== AGENT'LAR ==========
     const agents = [
-        { id: "coach", name: "🎯 Head Coach", role: "Teknik Direktör", systemPrompt: "Sen bir profesyonel futbol teknik direktörüsün. Taktiksel zekan yüksek, oyun okuma yeteneğin güçlü. Verilere dayalı kararlar verirsin.", q: "Nöromüsküler verilere göre taktik ve antrenman planı?", color: "coach" },
-        { id: "performance", name: "📊 Performance", role: "Performans Antrenörü", systemPrompt: "Sen bir performans antrenörüsün. Yorgunluk yönetimi, yüklenme takibi ve toparlanma stratejileri konusunda uzmansın.", q: "Tendon, kas fibril, sinir sistemi açısından güçlü/zayıf yönler?", color: "performance" },
-        { id: "medical", name: "🩺 Medical", role: "Takım Doktoru", systemPrompt: "Sen bir spor hekimisin. Sakatlık riski analizi, rehabilitasyon süresi ve önleyici egzersizler konusunda uzmansın.", q: "Aşil tendonu ve nöromüsküler sakatlık riski?", color: "medical" },
-        { id: "scout", name: "🔍 Scout", role: "Scout / Gözlemci", systemPrompt: "Sen bir futbol scout'usun. Oyuncu potansiyelini değerlendirir, transfer değeri tahmini yapar ve mevki uygunluğunu analiz edersin.", q: "Nöromüsküler profil analizi ve mevki uygunluğu?", color: "scout" },
-        { id: "zoe", name: "💜 Zoe AI", role: "Nöromüsküler Uzman", systemPrompt: "Sen Zoe, dünyaca ünlü bir nöromüsküler performans uzmanısın. Sporcuların VALD verilerini derinlemesine analiz eder, güçlü/zayıf yönlerini söyler, mevki önerisi yapar, egzersiz reçetesi yazarsın ve gelişim hedefleri belirlersin. ÇÖZÜM ODAKLI ve DETAYLI cevap verirsin.", q: "Bu sonuçları detaylı analiz et, mevki öner, egzersiz ver, gelişim hedefi belirle.", color: "zoe" },
-        { id: "mental", name: "🧠 Mental Coach", role: "Mental Antrenör", systemPrompt: "Sen bir mental performans koçusun. Motivasyon, odaklanma, baskı yönetimi ve özgüven geliştirme konularında uzmansın.", q: "Maç öncesi kaygı nasıl yönetilir? Odaklanma için 3 teknik öner.", color: "mental", new: true },
-        { id: "nutrition", name: "🍽️ Nutritionist", role: "Beslenme Uzmanı", systemPrompt: "Sen bir spor beslenme uzmanısın. Maç öncesi, maç sırası ve toparlanma beslenmesi konularında detaylı öneriler verirsin.", q: "Sprint performansı için maçtan 2 gün önce nasıl beslenmeli? Maç içi hidrasyon stratejisi?", color: "nutrition", new: true }
+        { id: "coach", name: "🎯 Head Coach", role: "Teknik Direktör", systemPrompt: "Sen bir profesyonel futbol teknik direktörüsün.", q: "Nöromüsküler verilere göre taktik ve antrenman planı?", color: "coach" },
+        { id: "performance", name: "📊 Performance", role: "Performans Antrenörü", systemPrompt: "Sen bir performans antrenörüsün.", q: "Tendon, kas fibril, sinir sistemi açısından güçlü/zayıf yönler?", color: "performance" },
+        { id: "medical", name: "🩺 Medical", role: "Takım Doktoru", systemPrompt: "Sen bir spor hekimisin.", q: "Aşil tendonu ve nöromüsküler sakatlık riski?", color: "medical" },
+        { id: "scout", name: "🔍 Scout", role: "Scout / Gözlemci", systemPrompt: "Sen bir futbol scout'usun.", q: "Nöromüsküler profil analizi ve mevki uygunluğu?", color: "scout" },
+        { id: "zoe", name: "💜 Zoe AI", role: "Nöromüsküler Uzman", systemPrompt: "Sen Zoe, dünyaca ünlü bir nöromüsküler performans uzmanısın.", q: "Bu sonuçları detaylı analiz et, mevki öner, egzersiz ver, gelişim hedefi belirle.", color: "zoe" },
+        { id: "mental", name: "🧠 Mental Coach", role: "Mental Antrenör", systemPrompt: "Sen bir mental performans koçusun.", q: "Maç öncesi kaygı nasıl yönetilir? Odaklanma için 3 teknik öner.", color: "mental", new: true },
+        { id: "nutrition", name: "🍽️ Nutritionist", role: "Beslenme Uzmanı", systemPrompt: "Sen bir spor beslenme uzmanısın.", q: "Sprint performansı için maçtan 2 gün önce nasıl beslenmeli?", color: "nutrition", new: true }
     ];
     
-    // ========== MEVCUT FONKSİYONLAR ==========
+    // ========== OPENAI GPT-3.5 ÇAĞRISI ==========
+    async function callOpenAI(prompt, agentName = "AI", systemPrompt = null) {
+        if (!openaiKey) return "❌ OpenAI anahtarı girin.";
+        
+        let enrichedPrompt = enrichPromptWithLearning(prompt);
+        if (realEmbeddingReady) enrichedPrompt = await enrichWithRAG(enrichedPrompt);
+        
+        const agent = agents.find(a => a.name === agentName || a.id === agentName);
+        const masteryLevel = parseInt(document.getElementById('masteryLevel').innerText) || 0;
+        
+        let systemMessage = "Sen bir spor bilimleri uzmanısın. Detaylı ve veriye dayalı cevap ver. Önceki hatalarından ders çıkaran, sürekli öğrenen bir yapay zekasın.";
+        if (systemPrompt) systemMessage = systemPrompt;
+        
+        const temperature = agent ? (['medical','performance','scout'].includes(agent.id) ? 0.3 : 0.7) : 0.7;
+        let maxTokens = 800;
+        if (masteryLevel > 70) maxTokens = 1200;
+        else if (masteryLevel < 30) maxTokens = 500;
+        
+        try {
+            const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${openaiKey}` },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [{ role: "system", content: systemMessage }, { role: "user", content: enrichedPrompt }],
+                    max_tokens: maxTokens, temperature: temperature, top_p: 0.92, frequency_penalty: 0.3, presence_penalty: 0.2
+                })
+            });
+            const data = await response.json();
+            let result = data.choices?.[0]?.message?.content || "Yanıt alınamadı";
+            addAudit(`🎯 OpenAI çağrısı: ${agent?.role || 'AI'} | RAG:${realEmbeddingReady ? 'Aktif' : 'Pasif'}`);
+            return result;
+        } catch (e) { return `Hata: ${e.message}`; }
+    }
+    
+    // ========== FEW-SHOT, CoT, NEGATIVE PROMPT ==========
+    function addChainOfThought(agentRole, question, data) {
+        return `\n\n🔍 ADIM ADIM DÜŞÜN (Chain-of-Thought):
+ADIM 1 - Veri Analizi: Şu anki ${data.cmj ? `CMJ:${data.cmj}cm` : 'CMJ verisi yok'}, ${data.rsi ? `RSI:${data.rsi}` : 'RSI verisi yok'}, ${data.asymmetry ? `Asimetri:%${data.asymmetry}` : 'Asimetri verisi yok'}.
+ADIM 2 - Kritik Bulgular: En önemli 3 risk faktörünü belirle.
+ADIM 3 - Bilimsel Dayanak: Neden bu öneriyi yaptığını açıkla.
+ADIM 4 - Aksiyon Planı: Hemen yapılacaklar, bu hafta yapılacaklar.
+ADIM 5 - Uyarılar: Hangi durumlarda DUR denmeli?
+Şimdi bu adımları takip ederek cevap ver:`;
+    }
+    
+    function getFewShotExamples(agentRole) {
+        if (agentRole === 'Teknik Direktör') {
+            return `\n\n📝 ÖRNEK CEVAP FORMATI (Few-Shot):
+"📊 VERİ ANALİZİ: CMJ 42cm, Asimetri %18 (yüksek)
+⚠️ KRİTİK BULGU: Sağ-sol farkı sakatlık riski oluşturuyor
+💡 TAKTİK ÖNERİ: Sol ayağını daha fazla kullanan bölgede oynat
+📅 HAFTALIK PLAN: 2 gün sol bacak ağırlıklı"`;
+        }
+        return `\n\n📝 ÖRNEK CEVAP FORMATI: Veri + Analiz + Öneri + Uyarı şeklinde cevap ver.`;
+    }
+    
+    function getNegativePrompting() {
+        return `\n\n🚫 YAPMAMAN GEREKENLER:
+1. ASLA "bilmiyorum", "veri yok" gibi kaçamak cevaplar verme
+2. ASLA "her şey normal" gibi genel ifadeler kullanma
+3. ASLA tek cümlelik cevap verme - minimum 5 cümle
+4. ASLA korkutucu ifadeler kullanma - yapıcı ol`;
+    }
+    
+    function getStructuredOutputInstruction() {
+        return `\n\n📐 CEVAP FORMATI:
+---
+📊 VERİ ANALİZİ: [verileri yorumla]
+⚠️ KRİTİK BULGULAR: [3 madde]
+💡 ÖNERİLER: [maddeler halinde]
+📅 ZAMAN ÇİZELGESİ: [kısa/orta/uzun vade]
+🚫 KONTRENDİKASYONLAR: [yapılmaması gerekenler]
+---`;
+    }
+    
+    function buildAdvancedPrompt(basePrompt, agentRole, agentId, question, currentData, masteryLevel) {
+        let advanced = basePrompt;
+        advanced += getFewShotExamples(agentRole);
+        advanced += addChainOfThought(agentRole, question, currentData);
+        advanced += getNegativePrompting();
+        advanced += getStructuredOutputInstruction();
+        if (masteryLevel > 80) advanced += "\n\n🎓 UZMANLIK SEVİYESİ YÜKSEK: İleri düzey bilimsel terimler kullan.";
+        else if (masteryLevel < 30) advanced += "\n\n📖 BAŞLANGIÇ SEVİYESİ: Basit ve anlaşılır dil kullan.";
+        return advanced;
+    }
+    
+    // ========== VALD VERİ ÇIKARMA ==========
+    function extractRealVALDData(text) {
+        const data = { name: "", cmj: null, dj: null, rsi: null, rfd: null, asymmetry: null, contactTime: null, power: null };
+        const nameMatch = text.match(/Pro[=:]?le\s*:\s*([A-Z][a-zçğıöşü]+\s+[A-Z][a-zçğıöşü]+)/i);
+        if (nameMatch) data.name = nameMatch[1];
+        const cmjMatch = text.match(/Countermovement Jump[\s\S]*?(\d+\.?\d*)\s*cm/i);
+        if (cmjMatch) data.cmj = parseFloat(cmjMatch[1]);
+        const rsiMatch = text.match(/RSI[\s\S]*?(\d+\.?\d*)/gi);
+        if (rsiMatch) { const vals = rsiMatch.map(m => parseFloat(m.match(/(\d+\.?\d*)/)[1])).filter(v => v > 0.5 && v < 3); if (vals.length) data.rsi = vals[0]; }
+        const rfdMatch = text.match(/(\d+)\s*N\/s/gi);
+        if (rfdMatch) { const vals = rfdMatch.map(m => parseInt(m.match(/(\d+)/)[1])); if (vals.length) data.rfd = Math.max(...vals); }
+        const asymMatch = text.match(/(\d+(?:\.\d+)?)\%\s*(?:Asymmetry|Asym)/gi);
+        if (asymMatch) { const vals = asymMatch.map(m => parseFloat(m.match(/(\d+(?:\.\d+)?)/)[1])); data.asymmetry = Math.max(...vals); }
+        return data;
+    }
+    
+    function generateDetailedTrainingPlan(data) {
+        let plan = "";
+        plan += `<div class="plan-detail"><span class="plan-title">🔬 TENDON GELİŞİMİ:</span><br>`;
+        if (data.rfd && data.rfd > 800) plan += `• RFD değeriniz (${data.rfd} N/s) yüksek.<br>`;
+        else plan += `• RFD gelişimi için izometrik tendon egzersizleri.<br>`;
+        plan += `• Aşil tendonu için: Tek bacak baldır kaldırma (3x12).<br></div>`;
+        plan += `<div class="plan-detail"><span class="plan-title">💪 KAS FİBRİL TİPİ GELİŞİMİ:</span><br>`;
+        if (data.cmj && data.cmj > 45) plan += `• Tip II lifler baskın. Patlayıcılık korunmalı.<br>`;
+        else plan += `• Tip II lif gelişimi için sprint, box jump.<br>`;
+        plan += `</div>`;
+        if (data.asymmetry && data.asymmetry > 20) plan += `<div class="plan-detail"><span class="plan-title">⚠️ ASİMETRİ UYARISI:</span><br>• Sağ-sol farkını kapatmak için tek bacak çalışmaları ekleyin.<br></div>`;
+        return plan;
+    }
+    
+    // ========== PDF OKUMA ==========
+    async function readPDF(file) {
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = "";
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                fullText += textContent.items.map(item => item.str).join(" ") + "\n";
+            }
+            currentPdfText = fullText;
+            currentData = extractRealVALDData(fullText);
+            document.getElementById('pdfStatus').innerHTML = `✅ OKUNDU: ${pdf.numPages} sayfa | ${currentData.name || 'İsim bulunamadı'}`;
+            document.getElementById('namesList').innerHTML = currentData.name || "İsim bulunamadı";
+            let paramsHtml = "";
+            if (currentData.cmj) paramsHtml += `CMJ: ${currentData.cmj} cm `;
+            if (currentData.rsi) paramsHtml += `RSI: ${currentData.rsi} `;
+            if (currentData.rfd) paramsHtml += `RFD: ${currentData.rfd} N/s `;
+            if (currentData.asymmetry) paramsHtml += `Asimetri: %${currentData.asymmetry} `;
+            document.getElementById('paramsList').innerHTML = paramsHtml || "Veri bulunamadı";
+            document.getElementById('fullPdfText').textContent = fullText.substring(0, 1500);
+            document.getElementById('fullPdfContainer').style.display = "block";
+            document.getElementById('extractedInfo').style.display = "block";
+            document.getElementById('valdMetrics').style.display = "block";
+            getInjuryRiskScore();
+            addLearning("Sistem", "PDF Okuma", `${currentData.name || 'Sporcu'} verileri işlendi`);
+            await zoeComment();
+        } catch (error) {
+            document.getElementById('pdfStatus').innerHTML = `❌ Hata: ${error.message}`;
+        }
+    }
+    
+    async function zoeComment() {
+        if (!currentPdfText) return;
+        const commentDiv = document.getElementById('zoeComment');
+        commentDiv.innerHTML = "💜 Zoe AI analiz yapıyor...<br>🧠 Chain-of-Thought + RAG aktif...";
+        
+        const prompt = `Sen Zoe AI. Aşağıdaki sporcu verilerini analiz et.
+
+=== SPORCU VERİLERİ ===
+İsim: ${currentData.name || 'Belirtilmemiş'}
+CMJ: ${currentData.cmj || '?'} cm
+RSI: ${currentData.rsi || '?'}
+RFD: ${currentData.rfd || '?'} N/s
+Asimetri: %${currentData.asymmetry || '?'}
+
+LÜTFEN CEVAP VER:
+1. GÜÇLÜ ve ZAYIF YÖNLER
+2. MEVKİ ÖNERİSİ
+3. SAKATLIK RİSKİ ANALİZİ
+4. EGZERSİZ REÇETESİ
+5. 3 AYLIK GELİŞİM HEDEFİ`;
+
+        const answer = await callOpenAI(prompt, "Zoe AI");
+        commentDiv.innerHTML = `💜 <strong>Zoe AI Analizi (GPT-3.5 + RAG)</strong><br><br>${answer.replace(/\n/g, '<br>')}`;
+        addToHistory("Zoe AI", "DERİN ANALİZ", answer.substring(0, 400));
+        addLearning("Zoe AI", "Derin Analiz", `${currentData.name} için analiz yapıldı`);
+    }
+    
+    async function askZoe() {
+        const q = document.getElementById('zoeQuestion').value;
+        if (!q) return;
+        const commentDiv = document.getElementById('zoeComment');
+        commentDiv.innerHTML = "💜 Zoe AI düşünüyor... (GPT-3.5 + RAG)";
+        const prompt = `Sen Zoe AI. Kullanıcının sorusu: "${q}" Mevcut veriler: CMJ: ${currentData.cmj || '?'} cm, RSI: ${currentData.rsi || '?'}, RFD: ${currentData.rfd || '?'} N/s, Asimetri: %${currentData.asymmetry || '?'}. Bu verilere dayanarak cevapla.`;
+        const answer = await callOpenAI(prompt, "Zoe AI");
+        commentDiv.innerHTML = `💜 <strong>Zoe AI Cevaplıyor:</strong><br><br>${answer.replace(/\n/g, '<br>')}`;
+        addToHistory("Zoe AI", q, answer);
+        addLearning("Zoe AI", "Soru", q);
+    }
+    
+    function showTrainingPlan() {
+        const panel = document.getElementById('trainingPlanPanel');
+        const content = document.getElementById('trainingPlanContent');
+        content.innerHTML = generateDetailedTrainingPlan(currentData);
+        panel.style.display = "block";
+        addLearning("Sistem", "Antrenman Planı", "Plan oluşturuldu");
+    }
+    
+    async function askAgent(agent, question, responseDiv) {
+        const agentPrompt = `Sen bir ${agent.role} olarak görev yapıyorsun. ${question}\n\nVERİLER: CMJ:${currentData.cmj || '?'}cm, RSI:${currentData.rsi || '?'}, RFD:${currentData.rfd || '?'}N/s, Asimetri:%${currentData.asymmetry || '?'}\n\nDetaylı cevap ver:`;
+        const masteryLevel = parseInt(document.getElementById('masteryLevel').innerText) || 0;
+        const finalPrompt = buildAdvancedPrompt(agentPrompt, agent.role, agent.id, question, currentData, masteryLevel);
+        responseDiv.innerHTML = "🧠 Analiz ediyor... (GPT-3.5 + RAG)";
+        const answer = await callOpenAI(finalPrompt, agent.name, agent.systemPrompt);
+        responseDiv.innerHTML = `💬 ${answer}`;
+        addToHistory(agent.name, question, answer);
+        addLearning(agent.name, "Sorgu", question);
+    }
+    
+    function buildAgents() {
+        const grid = document.getElementById('agentGrid');
+        grid.innerHTML = '';
+        agents.forEach(agent => {
+            const card = document.createElement('div');
+            card.className = `agent-card agent-${agent.color}`;
+            const newBadge = agent.new ? '<span class="new-badge">YENİ</span>' : '';
+            card.innerHTML = `<div class="agent-title">${agent.name} ${newBadge} <span style="font-size:10px;background:#8b5cf6;padding:2px 6px;border-radius:10px;">GPT-3.5+RAG</span></div><input type="text" class="agent-question" id="q-${agent.id}" value="${agent.q.replace(/"/g, '&quot;')}"><button class="agent-ask-btn" data-id="${agent.id}">🔮 Analiz Yap</button><div class="agent-response" id="r-${agent.id}">Cevap burada...</div>`;
+            grid.appendChild(card);
+        });
+        document.querySelectorAll('.agent-ask-btn').forEach(btn => {
+            btn.onclick = async () => {
+                const id = btn.getAttribute('data-id');
+                const agent = agents.find(a => a.id === id);
+                const question = document.getElementById(`q-${id}`).value;
+                const respDiv = document.getElementById(`r-${id}`);
+                await askAgent(agent, question, respDiv);
+            };
+        });
+    }
+    
+    // ========== HAFIZA FONKSİYONLARI ==========
     function getInjuryRiskScore() {
         let riskScore = 2;
         if (currentData.asymmetry) { if (currentData.asymmetry > 30) riskScore += 4; else if (currentData.asymmetry > 20) riskScore += 2; else if (currentData.asymmetry > 10) riskScore += 1; }
@@ -651,8 +733,7 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
     
     function calculateMasteryLevel() {
         let total = learningMemory.length + vectorMemory.length + (realVectorMemory?.vectors?.length || 0);
-        let uniqueTopics = new Set(learningMemory.map(l => l.topic || l.agent)).size;
-        let level = Math.min(100, Math.floor((total * 1.2) + (uniqueTopics * 2)));
+        let level = Math.min(100, Math.floor(total * 1.5));
         document.getElementById('masteryLevel').innerText = level;
         document.getElementById('masteryFill').style.width = level + "%";
         return level;
@@ -689,9 +770,7 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
         saveMemory();
         addAudit(`📚 ÖĞRENDİ: ${agent} - ${action}`);
         addToVectorMemory(`${agent}: ${action} - ${summary.substring(0, 100)}`, "learning");
-        if (realEmbeddingReady) {
-            addToRealVectorMemory(`${agent}: ${action} - ${summary.substring(0, 200)}`, "learning");
-        }
+        if (realEmbeddingReady) addToRealVectorMemory(`${agent}: ${action} - ${summary.substring(0, 200)}`, "learning");
     }
     
     function addToHistory(agent, question, answer) {
@@ -704,21 +783,18 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
         if (conversationHistory.length === 0) return "Henüz konuşma geçmişi yok.";
         let history = "📜 Son konuşmalar:\n";
         for (let i = 0; i < Math.min(5, conversationHistory.length); i++) {
-            history += `[${conversationHistory[i].time}] ${conversationHistory[i].agent}: "${conversationHistory[i].question}"\n   Cevap: ${conversationHistory[i].answer.substring(0, 80)}...\n\n`;
+            history += `[${conversationHistory[i].time}] ${conversationHistory[i].agent}: "${conversationHistory[i].question}"\n`;
         }
-        return history;
+        alert(history);
     }
     
     function syncAgents() {
-        let syncMessage = "🔄 AGENT SENKRONİZASYONU BİLDİRİMİ\n\n";
+        let syncMessage = "🔄 AGENT SENKRONİZASYONU\n";
         for (const [agent, knowledge] of Object.entries(agentSharedKnowledge)) {
-            if (knowledge.length > 0) {
-                syncMessage += `📌 ${agent} şunları öğrendi:\n`;
-                syncMessage += knowledge.slice(-3).map(k => `   • ${k.info}`).join('\n') + '\n\n';
-            }
+            if (knowledge.length > 0) syncMessage += `📌 ${agent}: ${knowledge.slice(-2).map(k => k.info).join(', ')}\n`;
         }
-        addAudit("Agent'lar senkronize edildi - tüm agent'lar birbirinin öğrendiklerini gördü");
-        return syncMessage;
+        alert(syncMessage);
+        addAudit("Agent'lar senkronize edildi");
     }
     
     function correctLearning(wrongInfo, correctInfo) {
@@ -726,15 +802,15 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
         saveMemory();
         addCorrectionPair(wrongInfo, correctInfo);
         addAudit(`✏️ Yanlış öğrenme düzeltildi: "${wrongInfo.substring(0, 50)}" → "${correctInfo.substring(0, 50)}"`);
-        return `✅ Düzeltme kaydedildi ve VEKTÖR HAFIZAMA İŞLENDİ. Artık "${wrongInfo}" yerine "${correctInfo}" bilgisini asla unutmayacağım.`;
+        return `✅ Düzeltme kaydedildi!`;
     }
     
     function updateLearningDisplay() {
         document.getElementById('learnCount').innerText = learningMemory.length;
         const recentDiv = document.getElementById('recentLearns');
-        if (learningMemory.length === 0) { recentDiv.innerHTML = 'Henüz öğrenme kaydı yok. Agent\'lara soru sorun.'; }
+        if (learningMemory.length === 0) { recentDiv.innerHTML = 'Henüz öğrenme kaydı yok.'; }
         else { recentDiv.innerHTML = learningMemory.slice(0, 8).map(l => `🧠 [${l.time}] ${l.agent}: ${l.action.substring(0, 50)}...`).join('<br>'); }
-        if (learningMemory.length > 0) { document.getElementById('lastLearn').innerText = learningMemory[0].time; }
+        if (learningMemory.length > 0) document.getElementById('lastLearn').innerText = learningMemory[0].time;
         const historyDiv = document.getElementById('historyList');
         if (conversationHistory.length > 0) { historyDiv.innerHTML = conversationHistory.slice(0, 5).map(h => `[${h.time}] <strong>${h.agent}</strong>: "${h.question.substring(0, 40)}"`).join('<br>'); }
         updateVectorDisplay();
@@ -745,234 +821,6 @@ Bu yapıya uymaya çalış, ancak doğal akışı bozma.`;
         const time = new Date().toLocaleTimeString();
         log.innerHTML += `[${time}] ${msg}<br>`;
         log.scrollTop = log.scrollTop;
-    }
-    
-    // ========== GELİŞMİŞ OPENAI ÇAĞRISI (RAG ile zenginleştirilmiş) ==========
-    async function callOpenAI(prompt, agentName = "AI", systemPrompt = null) {
-        if (!openaiKey) return "❌ OpenAI anahtarı girin.";
-        
-        let enrichedPrompt = enrichPromptWithLearning(prompt);
-        
-        if (realEmbeddingReady) {
-            enrichedPrompt = await enrichWithRAG(enrichedPrompt);
-        }
-        
-        const agent = agents.find(a => a.name === agentName || a.id === agentName);
-        const masteryLevel = parseInt(document.getElementById('masteryLevel').innerText) || 0;
-        
-        if (agent) {
-            enrichedPrompt = buildAdvancedPrompt(enrichedPrompt, agent.role, agent.id, prompt, currentData, masteryLevel);
-        }
-        
-        let systemMessage = "Sen bir spor bilimleri uzmanısın. Detaylı ve veriye dayalı cevap ver. Önceki hatalarından ders çıkaran, sürekli öğrenen bir yapay zekasın. Adım adım düşün, bilimsel dayanak göster ve asla genel geçer cevaplar verme. Gerçek embedding ve RAG ile geçmiş öğrenmelerden faydalanıyorsun.";
-        if (systemPrompt) systemMessage = systemPrompt;
-        
-        const temperature = agent ? getDynamicTemperature(agent.id, masteryLevel) : 0.7;
-        let maxTokens = 800;
-        if (masteryLevel > 70) maxTokens = 1200;
-        else if (masteryLevel < 30) maxTokens = 500;
-        
-        try {
-            const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${openaiKey}` },
-                body: JSON.stringify({
-                    model: "gpt-3.5-turbo",
-                    messages: [
-                        { role: "system", content: systemMessage },
-                        { role: "user", content: enrichedPrompt }
-                    ],
-                    max_tokens: maxTokens,
-                    temperature: temperature,
-                    top_p: 0.92,
-                    frequency_penalty: 0.3,
-                    presence_penalty: 0.2
-                })
-            });
-            const data = await response.json();
-            let result = data.choices?.[0]?.message?.content || "Yanıt alınamadı";
-            addAudit(`🎯 Prompt Müh. Aktif: ${agent?.role || 'AI'} | RAG:${realEmbeddingReady ? 'Aktif' : 'Pasif'}`);
-            return result;
-        } catch (e) {
-            return `Hata: ${e.message}`;
-        }
-    }
-    
-    // ========== VALD VERİ ÇIKARMA ==========
-    function extractRealVALDData(text) {
-        const data = { name: "", cmj: null, dj: null, rsi: null, rfd: null, asymmetry: null, fatigue: null, contactTime: null, power: null };
-        const nameMatch = text.match(/Pro[=:]?le\s*:\s*([A-Z][a-zçğıöşü]+\s+[A-Z][a-zçğıöşü]+)/i);
-        if (nameMatch) data.name = nameMatch[1];
-        const cmjMatch = text.match(/Countermovement Jump[\s\S]*?(\d+\.?\d*)\s*cm/i);
-        if (cmjMatch) data.cmj = parseFloat(cmjMatch[1]);
-        const djMatch = text.match(/Single Leg Drop Jump[\s\S]*?(\d+\.?\d*)\s*cm/i);
-        if (djMatch) data.dj = parseFloat(djMatch[1]);
-        const rsiMatch = text.match(/RSI[\s\S]*?(\d+\.?\d*)/gi);
-        if (rsiMatch) { const vals = rsiMatch.map(m => parseFloat(m.match(/(\d+\.?\d*)/)[1])).filter(v => v > 0.5 && v < 3); if (vals.length) data.rsi = vals[0]; }
-        const rfdMatch = text.match(/(\d+)\s*N\/s/gi);
-        if (rfdMatch) { const vals = rfdMatch.map(m => parseInt(m.match(/(\d+)/)[1])); if (vals.length) data.rfd = Math.max(...vals); }
-        const asymMatch = text.match(/(\d+(?:\.\d+)?)\%\s*(?:Asymmetry|Asym)/gi);
-        if (asymMatch) { const vals = asymMatch.map(m => parseFloat(m.match(/(\d+(?:\.\d+)?)/)[1])); data.asymmetry = Math.max(...vals); }
-        const ctMatch = text.match(/(\d+\.\d+)\s*s\b/g);
-        if (ctMatch) { const vals = ctMatch.map(m => parseFloat(m.match(/(\d+\.\d+)/)[1])); if (vals.length) data.contactTime = vals[0]; }
-        const powerMatch = text.match(/Peak Power[\s\S]*?(\d+\.?\d*)\s*W\/kg/i);
-        if (powerMatch) data.power = parseFloat(powerMatch[1]);
-        return data;
-    }
-    
-    function generateDetailedTrainingPlan(data) {
-        let plan = "";
-        plan += `<div class="plan-detail"><span class="plan-title">🔬 TENDON GELİŞİMİ:</span><br>`;
-        if (data.rfd && data.rfd > 800) plan += `• RFD değeriniz (${data.rfd} N/s) yüksek. Tendon sertliğini korumak için plyometrik egzersizler (drop jump, countermovement jump) haftada 2 kez.<br>`;
-        else plan += `• RFD gelişimi için izometrik tendon egzersizleri.<br>`;
-        plan += `• Aşil tendonu için: Tek bacak baldır kaldırma (3x12), eksantrik aşil egzersizleri.<br></div>`;
-        plan += `<div class="plan-detail"><span class="plan-title">💪 KAS FİBRİL TİPİ GELİŞİMİ:</span><br>`;
-        if (data.cmj && data.cmj > 45) plan += `• Tip II (hızlı kasılan) lifler baskın. Patlayıcılık korunmalı: squat jump, bounding.<br>`;
-        else plan += `• Tip II lif gelişimi için sprint, box jump.<br>`;
-        plan += `</div><div class="plan-detail"><span class="plan-title">⚡ SİNİR SİSTEMİ & NÖROMÜSKÜLER:</span><br>`;
-        plan += `• Reaktif kuvvet indeksi (RSI: ${data.rsi || '?'}) için: Drop jumps (30-40 cm), 3x5 tekrar.<br>`;
-        plan += `• Nöromüsküler adaptasyon: Hızlı SSC egzersizleri.<br></div>`;
-        plan += `<div class="plan-detail"><span class="plan-title">🦵 AŞİL TENDONU ÖZEL:</span><br>`;
-        plan += `• Eksantrik aşil egzersizleri: Düz ve diz bükük pozisyonda (3x15).<br>`;
-        if (data.asymmetry && data.asymmetry > 20) plan += `⚠️ ASİMETRİ %${data.asymmetry} YÜKSEK! Sağ-sol farkını kapatmak için tek bacak çalışmaları ekleyin.<br>`;
-        plan += `</div>`;
-        return plan;
-    }
-    
-    async function readPDF(file) {
-        try {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            let fullText = "";
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const textContent = await page.getTextContent();
-                fullText += textContent.items.map(item => item.str).join(" ") + "\n";
-            }
-            currentPdfText = fullText;
-            currentData = extractRealVALDData(fullText);
-            
-            document.getElementById('pdfStatus').innerHTML = `✅ OKUNDU: ${pdf.numPages} sayfa | ${currentData.name || 'İsim bulunamadı'}`;
-            document.getElementById('namesList').innerHTML = currentData.name ? `<span class="name-highlight">${currentData.name}</span>` : "İsim bulunamadı";
-            
-            let paramsHtml = "";
-            if (currentData.cmj) paramsHtml += `<span class="param-highlight">CMJ: ${currentData.cmj} cm</span> `;
-            if (currentData.rsi) paramsHtml += `<span class="param-highlight">RSI: ${currentData.rsi}</span> `;
-            if (currentData.rfd) paramsHtml += `<span class="param-highlight">RFD: ${currentData.rfd} N/s</span> `;
-            if (currentData.asymmetry) paramsHtml += `<span class="param-highlight">Asimetri: %${currentData.asymmetry}</span> `;
-            document.getElementById('paramsList').innerHTML = paramsHtml || "Veri bulunamadı";
-            
-            document.getElementById('fullPdfText').textContent = fullText.substring(0, 1500);
-            document.getElementById('fullPdfContainer').style.display = "block";
-            document.getElementById('extractedInfo').style.display = "block";
-            document.getElementById('valdMetrics').style.display = "block";
-            
-            getInjuryRiskScore();
-            addLearning("Sistem", "PDF Okuma", `${currentData.name || 'Sporcu'} verileri işlendi`);
-            await zoeComment();
-        } catch (error) {
-            document.getElementById('pdfStatus').innerHTML = `❌ Hata: ${error.message}`;
-        }
-    }
-    
-    async function zoeComment() {
-        if (!currentPdfText) return;
-        const commentDiv = document.getElementById('zoeComment');
-        commentDiv.innerHTML = "💜 Zoe AI derinlemesine nöromüsküler analiz yapıyor...<br>🔬 Kas grupları, mevki uygunluğu, egzersiz önerileri ve gelişim hedefleri hesaplanıyor...<br>🧠 Chain-of-Thought aktif - adım adım düşünüyorum...<br>🔍 Gerçek embedding ve RAG ile geçmiş öğrenmeler taranıyor...";
-        
-        let correctionContext = "";
-        if (correctionPairs.length > 0) {
-            correctionContext = "\n\n📚 ÖNCEKİ DÜZELTMELER (Bunlara KESİNLİKLE UY):\n" + 
-                correctionPairs.slice(-3).map(c => `- YANLIŞ: "${c.wrong}" → DOĞRU: "${c.correct}"`).join('\n');
-        }
-        
-        const prompt = `Sen Zoe AI, dünyaca ünlü bir nöromüsküler performans uzmanısın. Aşağıdaki sporcu verilerini DETAYLI, PROFESYONEL ve ÇÖZÜM ODAKLI analiz et.
-
-=== SPORCU VERİLERİ ===
-İsim: ${currentData.name || 'Belirtilmemiş'}
-CMJ (Dikey Sıçrama): ${currentData.cmj || '?'} cm
-RSI (Reaktif Kuvvet İndeksi): ${currentData.rsi || '?'}
-RFD (Kuvvet Üretim Hızı): ${currentData.rfd || '?'} N/s
-Asimetri (Sağ-Sol Farkı): %${currentData.asymmetry || '?'}
-${correctionContext}
-
-LÜTFEN AŞAĞIDAKİ 5 SORUYA MADDELER HALİNDE CEVAP VER:
-
-1. 🎯 GÜÇLÜ ve ZAYIF YÖNLER: 
-2. ⚽ MEVKİ ÖNERİSİ:
-3. ⚠️ SAKATLIK RİSKİ ANALİZİ:
-4. 🏋️ ÖZEL EGZERSİZ REÇETESİ:
-5. 📈 3 AYLIK GELİŞİM HEDEFİ:`;
-
-        const answer = await callOpenAI(prompt, "Zoe AI", agents.find(a => a.id === "zoe")?.systemPrompt);
-        let formattedAnswer = answer.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        commentDiv.innerHTML = `💜 <strong>Zoe AI - Derin Nöromüsküler Analiz (Chain-of-Thought + RAG Aktif)</strong><br><br>${formattedAnswer}`;
-        addToHistory("Zoe AI", "DERİN NÖROMÜSKÜLER ANALİZ", answer.substring(0, 400));
-        addLearning("Zoe AI", "Derin Analiz", `${currentData.name} için detaylı analiz yapıldı`);
-    }
-    
-    async function askZoe() {
-        const q = document.getElementById('zoeQuestion').value;
-        if (!q) return;
-        const commentDiv = document.getElementById('zoeComment');
-        commentDiv.innerHTML = "💜 Zoe AI düşünüyor ve cevaplıyor... (Chain-of-Thought + Few-Shot + RAG aktif)";
-        const prompt = `Sen Zoe AI, nöromüsküler performans uzmanısın. Kullanıcının sorusu: "${q}" Mevcut sporcu verileri: CMJ: ${currentData.cmj || '?'} cm, RSI: ${currentData.rsi || '?'}, RFD: ${currentData.rfd || '?'} N/s, Asimetri: %${currentData.asymmetry || '?'}. Bu verilere DAYANARAK soruyu cevapla. Uzman, detaylı ve çözüm odaklı ol.`;
-        const answer = await callOpenAI(prompt, "Zoe AI", agents.find(a => a.id === "zoe")?.systemPrompt);
-        let formattedAnswer = answer.replace(/\n/g, '<br>');
-        commentDiv.innerHTML = `💜 <strong>Zoe AI Cevaplıyor (Gelişmiş Prompt Mühendisliği + RAG):</strong><br><br>${formattedAnswer}`;
-        addToHistory("Zoe AI", q, answer);
-        addLearning("Zoe AI", "Soru", q);
-    }
-    
-    function showTrainingPlan() {
-        const panel = document.getElementById('trainingPlanPanel');
-        const content = document.getElementById('trainingPlanContent');
-        content.innerHTML = generateDetailedTrainingPlan(currentData);
-        panel.style.display = "block";
-        addLearning("Sistem", "Antrenman Planı", "Detaylı nöromüsküler plan oluşturuldu");
-    }
-    
-    async function askAgent(agent, question, responseDiv) {
-        let correctionsInfo = "";
-        if (correctionPairs.length > 0) {
-            correctionsInfo = "\n\n📚 DÜZELTİLMİŞ BİLGİLER (BUNLARI KESİN KULLAN):\n" + 
-                correctionPairs.slice(-3).map(c => `- "${c.wrong}" → "${c.correct}"`).join('\n');
-        }
-        
-        let syncInfo = "";
-        if (agentSharedKnowledge[agent.name]) {
-            syncInfo = "\n\n📖 DİĞER AGENT'LARDAN ÖĞRENDİKLERİM:\n" + 
-                agentSharedKnowledge[agent.name].slice(-3).map(k => `- ${k.info}`).join('\n');
-        }
-        
-        const prompt = `Sen bir ${agent.role} olarak görev yapıyorsun. ${question}\n\nVERİLER: CMJ:${currentData.cmj || '?'}cm, RSI:${currentData.rsi || '?'}, RFD:${currentData.rfd || '?'}N/s, Asimetri:%${currentData.asymmetry || '?'}${syncInfo}${correctionsInfo}\n\nDetaylı ve profesyonel cevap ver:`;
-        
-        responseDiv.innerHTML = "🧠 Öğreniyor ve analiz ediyor... (Gelişmiş Prompt Mühendisliği + RAG Aktif)";
-        const answer = await callOpenAI(prompt, agent.name, agent.systemPrompt);
-        responseDiv.innerHTML = `💬 ${answer}`;
-        addToHistory(agent.name, question, answer);
-        addLearning(agent.name, "Sorgu", question);
-    }
-    
-    function buildAgents() {
-        const grid = document.getElementById('agentGrid');
-        grid.innerHTML = '';
-        agents.forEach(agent => {
-            const card = document.createElement('div');
-            card.className = `agent-card agent-${agent.color}`;
-            const newBadge = agent.new ? '<span class="new-badge">YENİ</span>' : '';
-            card.innerHTML = `<div class="agent-title">${agent.name} ${newBadge} <span style="font-size:10px;background:#8b5cf6;padding:2px 6px;border-radius:10px;">CoT+Few-Shot+RAG</span></div><input type="text" class="agent-question" id="q-${agent.id}" value="${agent.q.replace(/"/g, '&quot;')}"><button class="agent-ask-btn" data-id="${agent.id}">🔮 Analiz Yap (Öğren)</button><div class="agent-response" id="r-${agent.id}">Cevap burada...</div>`;
-            grid.appendChild(card);
-        });
-        document.querySelectorAll('.agent-ask-btn').forEach(btn => {
-            btn.onclick = async (e) => {
-                const id = btn.getAttribute('data-id');
-                const agent = agents.find(a => a.id === id);
-                const question = document.getElementById(`q-${id}`).value;
-                const respDiv = document.getElementById(`r-${id}`);
-                await askAgent(agent, question, respDiv);
-            };
-        });
     }
     
     // ========== SCOUT VERİTABANI ==========
@@ -997,16 +845,16 @@ LÜTFEN AŞAĞIDAKİ 5 SORUYA MADDELER HALİNDE CEVAP VER:
     }
     
     function addScoutPlayer() {
-        const name = prompt("Oyuncu Adı Soyadı:", "Örn: Arda Güler");
+        const name = prompt("Oyuncu Adı Soyadı:", currentData.name || "Örn: Arda Güler");
         if (!name) return;
-        const age = parseInt(prompt("Yaş:", "19")) || 19;
-        const position = prompt("Mevki (Kaleci/Defans/Orta/Kanat/Forvet):", "Orta");
+        const age = parseInt(prompt("Yaş:", currentData.age || "19")) || 19;
+        const position = prompt("Mevki:", "Orta");
         const club = prompt("Kulübü:", "Fenerbahçe");
         const scoutNote = prompt("Scout Notu:", "Genç yetenek");
         const newPlayer = { id: Date.now(), name: name, age: age, position: position, club: club, scoutNote: scoutNote || "-", valdScore: getPlayerScoreFromCurrentData(), dateAdded: new Date().toLocaleString() };
         scoutPlayers.push(newPlayer);
         saveScoutDatabase();
-        addAudit(`🔍 SCOUT: ${name} eklendi (${position}, ${age} yaş, Puan: ${newPlayer.valdScore})`);
+        addAudit(`🔍 SCOUT: ${name} eklendi`);
         alert(`✅ ${name} scout havuzuna eklendi!`);
     }
     
@@ -1024,7 +872,7 @@ LÜTFEN AŞAĞIDAKİ 5 SORUYA MADDELER HALİNDE CEVAP VER:
         const player = scoutPlayers.find(p => p.id === id);
         if (!player) return;
         const newNote = prompt("Scout notunu güncelle:", player.scoutNote);
-        if (newNote !== null) { player.scoutNote = newNote; saveScoutDatabase(); addAudit(`📝 SCOUT: ${player.name} notu güncellendi`); alert(`✅ Not güncellendi.`); }
+        if (newNote !== null) { player.scoutNote = newNote; saveScoutDatabase(); alert(`✅ Not güncellendi.`); }
     }
     
     let scoutFilter = { position: "all", ageMin: 0, ageMax: 99 };
@@ -1034,59 +882,49 @@ LÜTFEN AŞAĞIDAKİ 5 SORUYA MADDELER HALİNDE CEVAP VER:
         if (!container) return;
         let filtered = scoutPlayers.filter(p => { if (scoutFilter.position !== "all" && p.position !== scoutFilter.position) return false; if (p.age < scoutFilter.ageMin || p.age > scoutFilter.ageMax) return false; return true; });
         filtered.sort((a, b) => b.valdScore - a.valdScore);
-        if (filtered.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;">📭 Henüz oyuncu yok. "Yeni Oyuncu Ekle" butonuna tıkla.</div>'; return; }
-        let html = `<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:12px;background:#f8fafc;border-radius:12px;"><select id="scoutFilterPosition" style="padding:6px 12px;border-radius:20px;"><option value="all">Tüm Mevkiler</option><option value="Kaleci">Kaleci</option><option value="Defans">Defans</option><option value="Orta">Orta Saha</option><option value="Kanat">Kanat</option><option value="Forvet">Forvet</option></select><input type="number" id="scoutFilterAgeMin" placeholder="Min Yaş" style="width:80px;padding:6px;border-radius:20px;"><input type="number" id="scoutFilterAgeMax" placeholder="Max Yaş" style="width:80px;padding:6px;border-radius:20px;"><button id="applyScoutFilterBtn" style="background:#3b82f6;padding:6px 16px;">🔍 Filtrele</button><button id="resetScoutFilterBtn" style="background:#64748b;padding:6px 16px;">🔄 Sıfırla</button></div><div style="display:grid;gap:12px;">`;
+        if (filtered.length === 0) { container.innerHTML = '<div style="text-align:center;padding:40px;color:#64748b;">📭 Henüz oyuncu yok.</div>'; return; }
+        let html = `<div style="display:flex;gap:12px;margin-bottom:16px;"><select id="scoutFilterPosition"><option value="all">Tüm Mevkiler</option><option value="Kaleci">Kaleci</option><option value="Defans">Defans</option><option value="Orta">Orta Saha</option><option value="Kanat">Kanat</option><option value="Forvet">Forvet</option></select><input type="number" id="scoutFilterAgeMin" placeholder="Min Yaş"><input type="number" id="scoutFilterAgeMax" placeholder="Max Yaş"><button id="applyScoutFilterBtn">🔍 Filtrele</button><button id="resetScoutFilterBtn">🔄 Sıfırla</button></div><div>`;
         for (let p of filtered) {
             let scoreColor = p.valdScore >= 75 ? "#10b981" : (p.valdScore >= 50 ? "#f59e0b" : "#ef4444");
-            let statusBadge = p.valdScore >= 75 ? "🏆 TRANSFER LİSTESİ" : (p.valdScore >= 50 ? "⭐ TAKİP EDİLİYOR" : "⚠️ GELİŞMELİ");
-            html += `<div style="background:white;border-radius:16px;padding:16px;border-left:4px solid ${scoreColor};box-shadow:0 1px 3px rgba(0,0,0,0.1);"><div style="display:flex;justify-content:space-between;flex-wrap:wrap;align-items:start;"><div><strong style="font-size:18px;">${p.name}</strong><span style="background:${scoreColor};color:white;padding:2px 10px;border-radius:20px;font-size:12px;margin-left:10px;">${p.valdScore} Puan</span><span style="background:#e2e8f0;color:#1e293b;padding:2px 10px;border-radius:20px;font-size:12px;margin-left:8px;">${p.age} yaş</span></div><div style="display:flex;gap:8px;"><button onclick="updateScoutNote(${p.id})" style="background:#8b5cf6;padding:4px 12px;font-size:12px;">📝 Not</button><button onclick="deleteScoutPlayer(${p.id})" style="background:#ef4444;padding:4px 12px;font-size:12px;">🗑️ Sil</button></div></div><div style="margin-top:8px;"><span>📍 ${p.position} | 🏟️ ${p.club}</span><span style="margin-left:12px;background:#f1f5f9;padding:2px 8px;border-radius:12px;font-size:11px;">${statusBadge}</span></div><div style="margin-top:8px;font-size:12px;color:#475569;">📝 ${p.scoutNote}</div><div style="margin-top:6px;font-size:10px;color:#94a3b8;">🕐 ${p.dateAdded}</div></div>`;
+            html += `<div style="background:white;border-radius:16px;padding:16px;margin-bottom:12px;border-left:4px solid ${scoreColor};"><div><strong>${p.name}</strong> <span style="background:${scoreColor};color:white;padding:2px 10px;border-radius:20px;">${p.valdScore} Puan</span> <span>${p.age} yaş</span></div><div>📍 ${p.position} | 🏟️ ${p.club}</div><div>📝 ${p.scoutNote}</div><div><button onclick="updateScoutNote(${p.id})">📝 Not</button> <button onclick="deleteScoutPlayer(${p.id})">🗑️ Sil</button></div></div>`;
         }
-        html += `</div><div style="margin-top:12px;text-align:center;font-size:12px;color:#64748b;">📊 Toplam ${filtered.length} oyuncu | ⭐ Puan: VALD verilerine göre | 🧠 Gelişmiş Prompt Müh. + RAG Aktif</div>`;
         container.innerHTML = html;
-        const posSelect = document.getElementById('scoutFilterPosition');
-        if (posSelect) posSelect.value = scoutFilter.position;
-        const ageMinInput = document.getElementById('scoutFilterAgeMin');
-        if (ageMinInput) ageMinInput.value = scoutFilter.ageMin === 0 ? "" : scoutFilter.ageMin;
-        const ageMaxInput = document.getElementById('scoutFilterAgeMax');
-        if (ageMaxInput) ageMaxInput.value = scoutFilter.ageMax === 99 ? "" : scoutFilter.ageMax;
-        const applyBtn = document.getElementById('applyScoutFilterBtn');
-        if (applyBtn) { applyBtn.onclick = () => { scoutFilter.position = document.getElementById('scoutFilterPosition').value; scoutFilter.ageMin = parseInt(document.getElementById('scoutFilterAgeMin').value) || 0; scoutFilter.ageMax = parseInt(document.getElementById('scoutFilterAgeMax').value) || 99; renderScoutList(); }; }
-        const resetBtn = document.getElementById('resetScoutFilterBtn');
-        if (resetBtn) { resetBtn.onclick = () => { scoutFilter = { position: "all", ageMin: 0, ageMax: 99 }; renderScoutList(); }; }
+        document.getElementById('applyScoutFilterBtn')?.addEventListener('click', () => {
+            scoutFilter.position = document.getElementById('scoutFilterPosition').value;
+            scoutFilter.ageMin = parseInt(document.getElementById('scoutFilterAgeMin').value) || 0;
+            scoutFilter.ageMax = parseInt(document.getElementById('scoutFilterAgeMax').value) || 99;
+            renderScoutList();
+        });
+        document.getElementById('resetScoutFilterBtn')?.addEventListener('click', () => {
+            scoutFilter = { position: "all", ageMin: 0, ageMax: 99 };
+            renderScoutList();
+        });
     }
     
-    // ========== VOICE RECOGNITION ==========
-    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'tr-TR';
-    recognition.onresult = (event) => { document.getElementById('zoeQuestion').value = event.results[0][0].transcript; askZoe(); };
-    
     // ========== EVENT LİSTENERLAR ==========
-    document.getElementById('saveApiBtn').onclick = () => { openaiKey = document.getElementById('apiKey').value.trim(); alert(openaiKey ? "Anahtar kaydedildi" : "Anahtar gir"); };
+    document.getElementById('saveApiBtn').onclick = () => { openaiKey = document.getElementById('apiKey').value.trim(); alert(openaiKey ? "OpenAI anahtarı kaydedildi" : "Anahtar gir"); };
     document.getElementById('sendToZoe').onclick = () => zoeComment();
     document.getElementById('askZoeBtn').onclick = askZoe;
-    document.getElementById('voiceInputBtn').onclick = () => recognition.start();
+    document.getElementById('voiceInputBtn').onclick = () => { const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)(); r.lang = 'tr-TR'; r.onresult = (e) => { document.getElementById('zoeQuestion').value = e.results[0][0].transcript; askZoe(); }; r.start(); };
     document.getElementById('trainingPlanBtn').onclick = showTrainingPlan;
-    document.getElementById('matchReportBtn').onclick = () => { let report = `MAÇ RAPORU\nOyuncu: ${currentData.name || 'Belirtilmemiş'}\nCMJ: ${currentData.cmj || '?'} cm\nRSI: ${currentData.rsi || '?'}\nRFD: ${currentData.rfd || '?'} N/s\nAsimetri: %${currentData.asymmetry || '?'}\nRisk Skoru: ${getInjuryRiskScore()}/10`; addLearning("Sistem", "Maç Raporu", report); alert(report); };
-    document.getElementById('clearMemoryBtn').onclick = () => { learningMemory = []; conversationHistory = []; agentSharedKnowledge = {}; corrections = []; vectorMemory = []; correctionPairs = []; realVectorMemory = { vectors: [], ids: [] }; saveMemory(); saveVectorMemory(); localStorage.removeItem('toaperform_real_vector_memory_v2'); addAudit("Tüm hafıza (gerçek embedding dahil) temizlendi"); alert("Hafıza temizlendi"); updateVectorDisplay(); };
-    document.getElementById('exportMemoryBtn').onclick = () => { const exportData = { learningMemory, conversationHistory, agentSharedKnowledge, corrections, scoutPlayers, vectorMemory, correctionPairs, realVectorMemory, masteryLevel: calculateMasteryLevel(), riskScore: getInjuryRiskScore() }; const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'toaperform_ogrenen_ai_rag.json'; a.click(); URL.revokeObjectURL(url); };
-    document.getElementById('showHistoryBtn').onclick = () => { const historyDiv = document.getElementById('conversationHistory'); historyDiv.style.display = historyDiv.style.display === 'none' ? 'block' : 'none'; updateLearningDisplay(); };
-    document.getElementById('syncAgentsBtn').onclick = () => { const syncMsg = syncAgents(); alert(syncMsg.substring(0, 300)); };
-    document.getElementById('recallHistoryBtn').onclick = () => { const history = recallRecentHistory(); alert(history); };
-    document.getElementById('correctLearningBtn').onclick = () => { const wrong = prompt("Yanlış öğrendiği bilgi nedir?"); if (!wrong) return; const correct = prompt("Doğrusu nedir?"); if (!correct) return; const result = correctLearning(wrong, correct); alert(result); };
-    document.getElementById('trainFromCorrectionsBtn').onclick = () => { trainFromCorrections(); };
+    document.getElementById('matchReportBtn').onclick = () => { let report = `MAÇ RAPORU\nOyuncu: ${currentData.name || 'Belirtilmemiş'}\nRisk: ${getInjuryRiskScore()}/10`; alert(report); };
+    document.getElementById('clearMemoryBtn').onclick = () => { learningMemory = []; conversationHistory = []; agentSharedKnowledge = {}; corrections = []; vectorMemory = []; correctionPairs = []; realVectorMemory = { vectors: [], ids: [] }; localStorage.removeItem('toaperform_real_vector_memory_v3'); saveMemory(); saveVectorMemory(); alert("Tüm hafıza temizlendi"); updateLearningDisplay(); };
+    document.getElementById('exportMemoryBtn').onclick = () => { const exportData = { learningMemory, conversationHistory, agentSharedKnowledge, corrections, scoutPlayers, vectorMemory, correctionPairs, realVectorMemory, masteryLevel: calculateMasteryLevel() }; const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'toaperform_rag_memory.json'; a.click(); };
+    document.getElementById('showHistoryBtn').onclick = () => { const historyDiv = document.getElementById('conversationHistory'); historyDiv.style.display = historyDiv.style.display === 'none' ? 'block' : 'none'; };
+    document.getElementById('syncAgentsBtn').onclick = () => syncAgents();
+    document.getElementById('recallHistoryBtn').onclick = () => recallRecentHistory();
+    document.getElementById('correctLearningBtn').onclick = () => { const wrong = prompt("Yanlış bilgi?"); if (wrong) { const correct = prompt("Doğrusu?"); if (correct) correctLearning(wrong, correct); } };
+    document.getElementById('trainFromCorrectionsBtn').onclick = () => trainFromCorrections();
     document.getElementById('addScoutPlayerBtn').onclick = addScoutPlayer;
     document.getElementById('ragSearchBtn').onclick = async () => {
-        if (!realEmbeddingReady) { alert("Gerçek embedding yükleniyor, biraz bekleyin..."); return; }
-        const query = prompt("🔍 Anlamlı bellek araması yap:\nÖrn: 'sakatlık riski yüksek olanlar' veya 'CMJ değeri düşük sporcular'");
+        if (!realEmbeddingReady) { alert("Embedding modeli yükleniyor, biraz bekleyin..."); return; }
+        const query = prompt("🔍 Anlamlı bellek araması yap:\nÖrn: 'sakatlık riski yüksek'");
         if (query) {
             const result = await ragSearch(query);
-            if (result.results.length === 0) {
-                alert("🔍 Benzer anlamlı bellek bulunamadı. Henüz yeterli veri yok.");
-            } else {
-                let msg = "🔍 **ANLAMLI BELLEK SONUÇLARI (Gerçek Embedding ile):**\n\n";
-                for (let r of result.results) {
-                    msg += `📌 ${(r.score * 100).toFixed(0)}% anlam benzerliği: ${r.id.text.substring(0, 150)}...\n\n`;
-                }
+            if (result.results.length === 0) alert("Benzer anlamlı bellek bulunamadı.");
+            else {
+                let msg = "🔍 ANLAMLI BELLEK SONUÇLARI:\n\n";
+                for (let r of result.results) msg += `📌 ${(r.score * 100).toFixed(0)}% benzer: ${r.id.text.substring(0, 150)}...\n\n`;
                 alert(msg);
             }
         }
@@ -1106,16 +944,15 @@ LÜTFEN AŞAĞIDAKİ 5 SORUYA MADDELER HALİNDE CEVAP VER:
     loadVectorMemory();
     buildAgents();
     loadScoutDatabase();
-    
     initRealEmbedding();
     
-    addAudit("✅ 6 GELİŞMİŞ PROMPT MÜHENDİSLİĞİ ÖZELLİĞİ + GERÇEK EMBEDDING (384 BOYUTLU) + RAG AKTİF!");
+    addAudit("✅ TOAPERFORM AI - OpenAI GPT-3.5 + Transformers.js Embedding + RAG başlatıldı!");
 </script>
 
 <p style="margin-top: 20px; font-size: 11px; color: #64748b; text-align: center;">
-    🧠 GERÇEK ÖĞRENEN AI | 384 Boyutlu Embedding (all-MiniLM-L6-v2) | RAG (Retrieval-Augmented Generation) | Cosine Similarity | Doğru/Yanlış Çiftleri | Otomatik Düzeltme | 🔄 Agent Senkronizasyonu | 💜 Gelişmiş Zoe
+    🧠 OpenAI GPT-3.5 (Sohbet) + Transformers.js (384 Boyutlu Embedding - Ücretsiz) | RAG Aktif | Cosine Similarity | 7 Agent
     <br>
-    ✨ <strong>YENİ: Gerçek Embedding Modeli | RAG Aktif | Anlamlı Bellek Arama | 384 Boyutlu Vektörler</strong>
+    ✨ <strong>Sohbet için OpenAI API (ücretli) | Embedding için Transformers.js (ücretsiz, local)</strong>
 </p>
 </body>
 </html>
