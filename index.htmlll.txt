@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOA SCOUT PRO | Scout Rapor Sistemi</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0c15;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: #f1f5f9;
+            padding: 20px;
+        }
+        .header {
+            background: #0f172a;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .logo { font-size: 24px; font-weight: bold; color: #facc15; }
+        .btn {
+            background: #facc15;
+            color: #0f172a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-secondary { background: #334155; color: white; }
+        .card {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 20px;
+        }
+        .plan-card {
+            background: #0f172a;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .plan-card.selected { border-color: #facc15; background: #1a2a3a; }
+        .plan-price { font-size: 28px; font-weight: bold; color: #facc15; }
+        input, select {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            width: 100%;
+            margin: 5px 0;
+        }
+        .player-item {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .flex { display: flex; gap: 10px; flex-wrap: wrap; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+        }
+        @media (max-width: 700px) { .grid-3 { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">⚡ TOA SCOUT PRO</div>
+        <div id="userInfo">👤 Misafir</div>
+    </div>
+
+    <div id="plansSection" class="card">
+        <h2>📋 ABONELİK PLANLARI</h2>
+        <div class="grid-3">
+            <div class="plan-card" data-plan="amateur">
+                <div class="plan-price">₺999<span style="font-size:14px;">/ay</span></div>
+                <p>📊 20 rapor/ay</p>
+                <p>📄 PDF rapor</p>
+                <p>✅ Temel analiz</p>
+            </div>
+            <div class="plan-card" data-plan="professional">
+                <div class="plan-price">€499<span style="font-size:14px;">/ay</span></div>
+                <p>📊 100 rapor/ay</p>
+                <p>📄 PDF + JSON</p>
+                <p>🧠 AI analiz</p>
+            </div>
+            <div class="plan-card" data-plan="elite">
+                <div class="plan-price">€1499<span style="font-size:14px;">/ay</span></div>
+                <p>📊 Sınırsız rapor</p>
+                <p>🔬 Full AI</p>
+                <p>👑 VIP destek</p>
+            </div>
+        </div>
+        <div id="planInfo" style="margin-top:15px;text-align:center;padding:12px;background:#0f172a;border-radius:12px;">
+            💡 Bir plan seçin ve kayıt olun
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>🔐 KAYIT OL</h2>
+        <div class="flex">
+            <input type="text" id="userName" placeholder="Ad Soyad">
+            <input type="email" id="userEmail" placeholder="E-posta">
+            <input type="text" id="userClub" placeholder="Kulüp Adı">
+            <button id="registerBtn" class="btn">✅ KAYIT OL</button>
+        </div>
+        <div id="userStatus" style="margin-top:10px;font-size:12px;"></div>
+    </div>
+
+    <div id="mainPanel" style="display:none;">
+        <div class="card">
+            <div class="flex-between">
+                <h2>👥 OYUNCULARIM</h2>
+                <button id="addPlayerBtn" class="btn">➕ Yeni Oyuncu</button>
+            </div>
+            <div id="playersList" style="margin-top:15px;"></div>
+        </div>
+    </div>
+
+    <div id="playerModal" class="modal">
+        <div class="modal-content">
+            <h3>➕ Yeni Oyuncu</h3>
+            <input type="text" id="playerName" placeholder="Oyuncu Adı">
+            <select id="playerPosition">
+                <option value="striker">Forvet</option>
+                <option value="winger">Kanat</option>
+                <option value="midfielder">Orta Saha</option>
+                <option value="defender">Defans</option>
+                <option value="gk">Kaleci</option>
+            </select>
+            <input type="number" id="playerCMJ" placeholder="CMJ (cm)" value="44">
+            <input type="number" id="playerForce" placeholder="Kuvvet (N/kg)" value="4.3" step="0.1">
+            <input type="number" id="playerRSI" placeholder="RSI" value="1.62" step="0.05">
+            <div class="flex" style="justify-content:flex-end;">
+                <button id="closeModalBtn" class="btn-secondary">İptal</button>
+                <button id="savePlayerBtn" class="btn">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reportModal" class="modal">
+        <div class="modal-content" style="max-width:700px;">
+            <div class="flex-between"><h3 id="reportTitle">Scout Raporu</h3><button id="closeReportBtn" style="background:none;font-size:24px;">&times;</button></div>
+            <div id="reportContent" style="margin:15px 0;"></div>
+            <button id="downloadPDFBtn" class="btn">📄 PDF İndir</button>
+        </div>
+    </div>
+
+    <script>
+        let selectedPlan = null;
+        let currentUser = null;
+        let players = [];
+        let reports = [];
+
+        const PLANS = {
+            amateur: { name: "Amatör", limit: 20 },
+            professional: { name: "Profesyonel", limit: 100 },
+            elite: { name: "Elite", limit: 999999 }
+        };
+
+        function calculateTOAScore(cmj, force, rsi) {
+            return Math.round((cmj/55)*35 + (force/5.5)*35 + (rsi/2.2)*30);
+        }
+
+        function getAnalysis(score) {
+            if(score>=85) return { grade:"🏆 ELİT", comment:"Dünya klasında. Hemen transfer edilmeli.", color:"#facc15" };
+            if(score>=70) return { grade:"⭐ YILDIZ", comment:"Yüksek potansiyel.", color:"#3b82f6" };
+            if(score>=55) return { grade:"📈 GELİŞEN", comment:"Gelişime açık.", color:"#10b981" };
+            return { grade:"⚠️ ORTA", comment:"Alt ligler için uygun.", color:"#f59e0b" };
+        }
+
+        function generateReportHTML(player) {
+            const score = calculateTOAScore(player.cmj, player.force, player.rsi);
+            const analysis = getAnalysis(score);
+            return `
+                <div style="padding:20px;background:white;color:#0f172a;border-radius:16px;">
+                    <h2 style="color:#facc15;">TOA SCOUT PRO RAPORU</h2>
+                    <p>${new Date().toLocaleString('tr-TR')}</p>
+                    <hr>
+                    <h3>${player.name}</h3>
+                    <p>Pozisyon: ${player.position}</p>
+                    <hr>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <div><strong>CMJ:</strong> ${player.cmj} cm</div>
+                        <div><strong>Kuvvet:</strong> ${player.force} N/kg</div>
+                        <div><strong>RSI:</strong> ${player.rsi} m/s</div>
+                        <div><strong>TOA SKOR:</strong> <span style="font-size:28px;color:${analysis.color};">${score}</span>/100</div>
+                    </div>
+                    <div style="background:${analysis.color}20;padding:12px;border-radius:12px;margin-top:12px;">
+                        <strong>AI YORUM:</strong> ${analysis.comment}
+                    </div>
+                    <hr>
+                    <div style="font-size:10px;">TOA SCOUT PRO | Bu rapor AI desteklidir</div>
+                </div>
+            `;
+        }
+
+        function updateUI() {
+            if(!currentUser) return;
+            document.getElementById('userInfo').innerHTML = `👤 ${currentUser.name}`;
+            document.getElementById('plansSection').style.display = 'none';
+            document.getElementById('mainPanel').style.display = 'block';
+
+            const playersDiv = document.getElementById('playersList');
+            if(players.length === 0) {
+                playersDiv.innerHTML = '<div style="text-align:center;padding:20px;">Henüz oyuncu yok</div>';
+            } else {
+                playersDiv.innerHTML = players.map(p => `
+                    <div class="player-item">
+                        <div><strong>${p.name}</strong><br>${p.position}</div>
+                        <div><button class="report-btn" data-id="${p.id}" style="background:#facc15;color:#000;padding:6px 12px;">📄 Rapor</button>
+                        <button class="delete-btn" data-id="${p.id}" style="background:#ef4444;padding:6px 12px;">🗑️</button></div>
+                    </div>
+                `).join('');
+            }
+
+            document.querySelectorAll('.report-btn').forEach(btn => btn.onclick = () => generateReport(parseInt(btn.dataset.id)));
+            document.querySelectorAll('.delete-btn').forEach(btn => btn.onclick = () => deletePlayer(parseInt(btn.dataset.id)));
+        }
+
+        function generateReport(playerId) {
+            const player = players.find(p => p.id === playerId);
+            if(!player) return;
+            const score = calculateTOAScore(player.cmj, player.force, player.rsi);
+            const html = generateReportHTML(player);
+            const newReport = { id: Date.now(), playerName: player.name, content: html, toaScore: score };
+            reports.unshift(newReport);
+            showReport(newReport);
+        }
+
+        function showReport(report) {
+            document.getElementById('reportTitle').innerHTML = `${report.playerName} - Scout Raporu`;
+            document.getElementById('reportContent').innerHTML = report.content;
+            document.getElementById('reportModal').style.display = 'flex';
+            document.getElementById('downloadPDFBtn').onclick = () => {
+                const el = document.createElement('div');
+                el.innerHTML = report.content;
+                html2pdf().set({margin:1, filename:`scout_${report.playerName}.pdf`}).from(el).save();
+            };
+        }
+
+        function deletePlayer(playerId) {
+            if(confirm('Oyuncuyu silmek istediğinize emin misiniz?')) {
+                players = players.filter(p => p.id !== playerId);
+                saveToLocal();
+                updateUI();
+            }
+        }
+
+        function saveToLocal() {
+            if(currentUser) {
+                currentUser.players = players;
+                localStorage.setItem('toa_user', JSON.stringify(currentUser));
+            }
+        }
+
+        function register() {
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const club = document.getElementById('userClub').value;
+            if(!name || !email) { alert('Ad ve e-posta gerekli'); return; }
+            if(!selectedPlan) { alert('Plan seçin'); return; }
+            
+            currentUser = { id: Date.now(), name, email, club, plan: selectedPlan };
+            players = [];
+            reports = [];
+            saveToLocal();
+            updateUI();
+            document.getElementById('userStatus').innerHTML = `✅ Hoş geldin ${name}! ${PLANS[selectedPlan].name} plan aktif.`;
+        }
+
+        document.querySelectorAll('.plan-card').forEach(card => {
+            card.onclick = () => {
+                document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                selectedPlan = card.dataset.plan;
+                document.getElementById('planInfo').innerHTML = `✅ Seçilen plan: ${PLANS[selectedPlan].name}`;
+            };
+        });
+
+        document.getElementById('registerBtn').onclick = register;
+        document.getElementById('addPlayerBtn').onclick = () => document.getElementById('playerModal').style.display = 'flex';
+        document.getElementById('savePlayerBtn').onclick = () => {
+            const name = document.getElementById('playerName').value;
+            if(!name) { alert('Oyuncu adı girin'); return; }
+            const newPlayer = {
+                id: Date.now(),
+                name: name,
+                position: document.getElementById('playerPosition').value,
+                cmj: parseFloat(document.getElementById('playerCMJ').value),
+                force: parseFloat(document.getElementById('playerForce').value),
+                rsi: parseFloat(document.getElementById('playerRSI').value)
+            };
+            players.push(newPlayer);
+            saveToLocal();
+            updateUI();
+            document.getElementById('playerModal').style.display = 'none';
+            document.getElementById('playerName').value = '';
+        };
+        document.getElementById('closeModalBtn').onclick = () => document.getElementById('playerModal').style.display = 'none';
+        document.getElementById('closeReportBtn').onclick = () => document.getElementById('reportModal').style.display = 'none';
+
+        const saved = localStorage.getItem('toa_user');
+        if(saved) {
+            currentUser = JSON.parse(saved);
+            players = currentUser.players || [];
+            updateUI();
+        }
+    </script>
+</body>
+</html>
