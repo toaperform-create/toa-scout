@@ -4,117 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>TOAPERFORM V7.9 + Duyusal Scouting Pro</title>
-    <!-- Chart.js için CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- html2pdf.js için CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0a2e1c 0%, #1a4a2a 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #eee;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0a2e1c 0%, #1a4a2a 100%); min-height: 100vh; padding: 20px; color: #eee; }
         .container { max-width: 1500px; margin: 0 auto; }
-        .header {
-            text-align: center; margin-bottom: 20px; padding: 15px;
-            background: rgba(0,0,0,0.4); border-radius: 20px;
-        }
-        .header h1 {
-            font-size: 1.8rem;
-            background: linear-gradient(135deg, #ffd700, #ff8c00);
-            -webkit-background-clip: text; background-clip: text; color: transparent;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 20px; margin-bottom: 20px;
-        }
-        .card {
-            background: rgba(0,0,0,0.55); backdrop-filter: blur(5px);
-            border-radius: 20px; padding: 18px;
-            border: 1px solid rgba(255,215,0,0.3);
-        }
-        .card h2 {
-            font-size: 1.2rem; margin-bottom: 12px;
-            border-left: 4px solid #ffd700; padding-left: 10px; color: #ffd700;
-        }
+        .header { text-align: center; margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.4); border-radius: 20px; }
+        .header h1 { font-size: 1.8rem; background: linear-gradient(135deg, #ffd700, #ff8c00); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .card { background: rgba(0,0,0,0.55); backdrop-filter: blur(5px); border-radius: 20px; padding: 18px; border: 1px solid rgba(255,215,0,0.3); }
+        .card h2 { font-size: 1.2rem; margin-bottom: 12px; border-left: 4px solid #ffd700; padding-left: 10px; color: #ffd700; }
         .slider-group { margin-bottom: 15px; }
-        .slider-group label {
-            display: flex; justify-content: space-between;
-            margin-bottom: 5px; font-size: 0.9rem;
-        }
-        input[type="range"] {
-            width: 100%; height: 5px; -webkit-appearance: none;
-            background: #2c5a3a; border-radius: 3px;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            width: 16px; height: 16px; border-radius: 50%;
-            background: #ffd700; cursor: pointer;
-        }
-        .score-value {
-            font-size: 1rem; font-weight: bold; color: #ffd700;
-            background: #00000040; padding: 2px 8px; border-radius: 20px;
-        }
-        button {
-            background: #ffd700; color: #0a2e1c; border: none;
-            padding: 8px 16px; font-weight: bold; border-radius: 30px;
-            cursor: pointer; margin: 5px 3px;
-        }
+        .slider-group label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
+        input[type="range"] { width: 100%; height: 5px; -webkit-appearance: none; background: #2c5a3a; border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { width: 16px; height: 16px; border-radius: 50%; background: #ffd700; cursor: pointer; }
+        .score-value { font-size: 1rem; font-weight: bold; color: #ffd700; background: #00000040; padding: 2px 8px; border-radius: 20px; }
+        button { background: #ffd700; color: #0a2e1c; border: none; padding: 8px 16px; font-weight: bold; border-radius: 30px; cursor: pointer; margin: 5px 3px; }
         button:hover { background: #ff8c00; }
-        .result-area {
-            background: #0a2a18; border-radius: 15px;
-            padding: 15px; margin-top: 12px; text-align: center;
-        }
-        .player-list {
-            max-height: 200px; overflow-y: auto;
-            font-size: 0.7rem; text-align: left;
-        }
-        .player-item {
-            background: #1a3a2a; margin: 4px 0;
-            padding: 6px; border-radius: 8px; cursor: pointer;
-        }
+        .result-area { background: #0a2a18; border-radius: 15px; padding: 15px; margin-top: 12px; text-align: center; }
+        .player-list { max-height: 200px; overflow-y: auto; font-size: 0.7rem; text-align: left; }
+        .player-item { background: #1a3a2a; margin: 4px 0; padding: 6px; border-radius: 8px; cursor: pointer; }
         .elite { color: #ffd700; font-weight: bold; }
         .medium { color: #ffaa33; }
         .average { color: #88aa88; }
         .radar-container { max-width: 280px; margin: 0 auto; }
-
-        .toa-menu {
-            display: flex; gap: 10px; justify-content: center;
-            margin-bottom: 20px; flex-wrap: wrap;
-        }
-        .toa-menu button {
-            background: rgba(255,215,0,0.2); border: 1px solid #ffd700;
-            color: #ffd700; padding: 10px 20px;
-        }
-        .toa-menu button.active {
-            background: #ffd700; color: #0a2e1c;
-        }
+        .toa-menu { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+        .toa-menu button { background: rgba(255,215,0,0.2); border: 1px solid #ffd700; color: #ffd700; padding: 10px 20px; }
+        .toa-menu button.active { background: #ffd700; color: #0a2e1c; }
         .module-section { display: none; }
         .module-section.active { display: block; }
-
-        .compare-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 1000;
-            display: none; justify-content: center; align-items: center;
-            flex-direction: column; padding: 20px;
-        }
+        .compare-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; }
         .compare-overlay.active { display: flex; }
-        .compare-grid {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 30px; width: 100%; max-width: 900px;
-        }
-        .close-btn {
-            position: absolute; top: 20px; right: 20px;
-            font-size: 2rem; background: none; border: none;
-            color: #ffd700; cursor: pointer;
-        }
-        @media (max-width: 700px) {
-            .grid { grid-template-columns: 1fr; }
-            .compare-grid { grid-template-columns: 1fr; }
-        }
+        .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; width: 100%; max-width: 900px; }
+        .close-btn { position: absolute; top: 20px; right: 20px; font-size: 2rem; background: none; border: none; color: #ffd700; cursor: pointer; }
+        @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } .compare-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -131,47 +55,21 @@
         <button onclick="showModule('report')" id="btn-report">📄 Raporlar</button>
     </div>
 
-    <!-- DUYUSAL SCOUTING MODÜLÜ -->
+    <!-- DUYUSAL SCOUTING -->
     <div id="module-sensory" class="module-section active">
         <div class="grid">
             <div class="card">
                 <h2>🎯 OYUNCU DEĞERLENDİR</h2>
-                <div class="slider-group">
-                    <label>🧠 Görsel Tarama <span id="visual_val" class="score-value">5</span></label>
-                    <input type="range" id="visual" min="0" max="10" step="1" value="5">
-                </div>
-                <div class="slider-group">
-                    <label>👂 İşitsel Reaksiyon <span id="auditory_val" class="score-value">5</span></label>
-                    <input type="range" id="auditory" min="0" max="10" step="1" value="5">
-                </div>
-                <div class="slider-group">
-                    <label>🧍 Denge (Vestibüler) <span id="vestibular_val" class="score-value">5</span></label>
-                    <input type="range" id="vestibular" min="0" max="10" step="1" value="5">
-                </div>
-                <div class="slider-group">
-                    <label>🦶 Dokunsal + Pas <span id="haptic_val" class="score-value">5</span></label>
-                    <input type="range" id="haptic" min="0" max="10" step="1" value="5">
-                </div>
-                <div class="slider-group">
-                    <label>🏃 Mekansal + Sahte Koşu <span id="spatial_val" class="score-value">5</span></label>
-                    <input type="range" id="spatial" min="0" max="10" step="1" value="5">
-                </div>
-                <div style="display:flex; gap:5px; margin-top:10px;">
-                    <input type="text" id="playerName" placeholder="Oyuncu Adı" style="flex:2; padding:6px; border-radius:20px; border:none; text-indent:8px; font-size:0.9rem;">
-                    <button id="saveBtn">💾 Kaydet</button>
-                    <button id="evaluateBtn">🔍 Rapor</button>
-                </div>
-                <div class="result-area" id="resultArea">
-                    <div>Toplam: <strong id="totalScore">0</strong>/50</div>
-                    <div id="levelText">—</div>
-                    <div id="positionAdvice"></div>
-                    <div id="percentileText"></div>
-                    <div id="detailAnalysis" style="font-size:0.65rem; text-align:left; margin-top:8px;"></div>
-                </div>
+                <div class="slider-group"><label>🧠 Görsel Tarama <span id="visual_val" class="score-value">5</span></label><input type="range" id="visual" min="0" max="10" step="1" value="5"></div>
+                <div class="slider-group"><label>👂 İşitsel Reaksiyon <span id="auditory_val" class="score-value">5</span></label><input type="range" id="auditory" min="0" max="10" step="1" value="5"></div>
+                <div class="slider-group"><label>🧍 Denge (Vestibüler) <span id="vestibular_val" class="score-value">5</span></label><input type="range" id="vestibular" min="0" max="10" step="1" value="5"></div>
+                <div class="slider-group"><label>🦶 Dokunsal + Pas <span id="haptic_val" class="score-value">5</span></label><input type="range" id="haptic" min="0" max="10" step="1" value="5"></div>
+                <div class="slider-group"><label>🏃 Mekansal + Sahte Koşu <span id="spatial_val" class="score-value">5</span></label><input type="range" id="spatial" min="0" max="10" step="1" value="5"></div>
+                <div style="display:flex; gap:5px; margin-top:10px;"><input type="text" id="playerName" placeholder="Oyuncu Adı" style="flex:2; padding:6px; border-radius:20px; border:none; text-indent:8px;"><button id="saveBtn">💾 Kaydet</button><button id="evaluateBtn">🔍 Rapor</button></div>
+                <div class="result-area" id="resultArea"><div>Toplam: <strong id="totalScore">0</strong>/50</div><div id="levelText">—</div><div id="positionAdvice"></div><div id="percentileText"></div><div id="detailAnalysis" style="font-size:0.65rem; text-align:left; margin-top:8px;"></div></div>
             </div>
-
             <div class="card">
-                <h2>📊 RADAR GRAFİK (5 Duyu)</h2>
+                <h2>📊 RADAR GRAFİK</h2>
                 <div class="radar-container"><canvas id="radarChart" width="250" height="250"></canvas></div>
                 <h2>📋 KAYITLI OYUNCULAR</h2>
                 <div id="playerListDiv" class="player-list">Kayıtlı oyuncu yok.</div>
@@ -180,513 +78,122 @@
                 <button id="pdfBtn">📄 PDF Rapor İndir</button>
                 <button id="trendBtn">📈 Trend Analizi</button>
             </div>
-
             <div class="card">
                 <h2>🔬 BİLİMSEL TEMEL</h2>
-                <div style="font-size:0.7rem; line-height:1.6;">
-                    <strong>🧠 Görsel:</strong> 0.3-0.5 sn tarama, periferik 120°<br>
-                    <strong>👂 İşitsel:</strong> 140-160ms (görselden 30-50ms hızlı)<br>
-                    <strong>🧍 Denge:</strong> Muscle spindle, Golgi tendon organı<br>
-                    <strong>🦶 Dokunsal:</strong> Afferent 40-60ms / Efferent 60-80ms<br>
-                    <strong>🏃 Mekansal:</strong> Rakip COG okuma, decoy detection<br>
-                </div>
-                <div style="margin-top:15px; background:#1a3a2a; padding:10px; border-radius:12px;">
-                    <strong>🤖 AI ÖNERİ (Zoe):</strong><br>
-                    <span id="aiSuggestion">Oyuncu puanlarını girip Rapor'a bas.</span>
-                </div>
-                <div style="margin-top:12px; font-size:0.65rem; background:#00000040; padding:6px; border-radius:10px;">
-                    <strong>🌍 Dünya Sıralaması:</strong><br>
-                    <span id="worldRank">Veri girişi bekleniyor...</span>
-                </div>
-                <div style="margin-top:12px; font-size:0.65rem; background:#00000040; padding:6px; border-radius:10px;">
-                    <strong>🇹🇷 Türkiye Sıralaması:</strong><br>
-                    <span id="trRank">Veri girişi bekleniyor...</span>
-                </div>
+                <div style="font-size:0.7rem; line-height:1.6;"><strong>🧠 Görsel:</strong> 0.3-0.5 sn tarama, periferik 120°<br><strong>👂 İşitsel:</strong> 140-160ms<br><strong>🧍 Denge:</strong> Muscle spindle, Golgi tendon organı<br><strong>🦶 Dokunsal:</strong> Afferent 40-60ms / Efferent 60-80ms<br><strong>🏃 Mekansal:</strong> Rakip COG okuma</div>
+                <div style="margin-top:15px; background:#1a3a2a; padding:10px; border-radius:12px;"><strong>🤖 AI ÖNERİ:</strong><br><span id="aiSuggestion">Oyuncu puanlarını girip Rapor'a bas.</span></div>
+                <div style="margin-top:12px; background:#00000040; padding:6px; border-radius:10px;"><strong>🌍 Dünya Sıralaması:</strong><br><span id="worldRank">Bekleniyor...</span></div>
+                <div style="margin-top:12px; background:#00000040; padding:6px; border-radius:10px;"><strong>🇹🇷 Türkiye Sıralaması:</strong><br><span id="trRank">Bekleniyor...</span></div>
             </div>
         </div>
     </div>
 
-    <!-- VALD MODÜLÜ -->
+    <!-- VALD -->
     <div id="module-vald" class="module-section">
-        <div class="card" style="padding:20px;">
-            <h2>📊 VALD ForceDeck Entegrasyonu</h2>
-            <input type="file" id="valdFile" accept=".csv,.json,.xlsx" style="margin:15px 0; padding:8px;">
-            <button id="loadValdBtn">Veriyi Yükle</button>
-            <div id="valdPreview" style="margin-top:15px; font-size:0.7rem; color:#aaa;"></div>
-        </div>
+        <div class="card"><h2>📊 VALD ForceDeck</h2><input type="file" id="valdFileInput" accept=".csv,.json"><button id="valdLoadBtn">Yükle</button><div id="valdStatus" style="margin-top:10px;"></div></div>
     </div>
 
-    <!-- AI CHAT MODÜLÜ -->
+    <!-- AI CHAT -->
     <div id="module-ai" class="module-section">
-        <div class="card" style="padding:20px;">
-            <h2>🤖 Zoe AI Chat Asistanı</h2>
-            <div id="chatMessages" style="height:300px; overflow-y:auto; background:#0a2a18; border-radius:12px; padding:10px; margin-bottom:10px;">
-                <div style="color:#ffd700;">🤖 Zoe: Merhaba! Oyuncu hakkında sorularını yanıtlayabilirim.</div>
-            </div>
-            <div style="display:flex; gap:5px;">
-                <input type="text" id="chatInput" placeholder="Sorunu yaz..." style="flex:3; padding:8px; border-radius:20px; border:none; text-indent:10px;">
-                <button id="sendChatBtn">Gönder</button>
-            </div>
-        </div>
+        <div class="card"><h2>🤖 Zoe AI Chat</h2><div id="chatBox" style="height:250px; overflow-y:auto; background:#0a2a18; border-radius:10px; padding:10px; margin-bottom:10px;"><div>🤖: Merhaba! Sorularını yanıtlayabilirim.</div></div><div style="display:flex;"><input type="text" id="chatInput" style="flex:3; padding:8px; border-radius:20px; border:none;"><button id="chatSendBtn">Gönder</button></div></div>
     </div>
 
-    <!-- RAPORLAR MODÜLÜ -->
+    <!-- RAPORLAR -->
     <div id="module-report" class="module-section">
-        <div class="grid">
-            <div class="card">
-                <h2>📄 Duyusal Scouting Raporları</h2>
-                <div id="reportList" class="player-list">Henüz rapor yok.</div>
-            </div>
-            <div class="card">
-                <h2>📈 İstatistikler</h2>
-                <div id="statsArea" style="font-size:0.8rem;">
-                    Toplam oyuncu: 0<br>
-                    Elite oyuncu: 0<br>
-                    Ortalama skor: 0
-                </div>
-            </div>
-        </div>
+        <div class="grid"><div class="card"><h2>📄 Raporlar</h2><div id="reportList">Henüz rapor yok.</div></div><div class="card"><h2>📈 İstatistikler</h2><div id="statsArea">Toplam: 0<br>Elite: 0<br>Ortalama: 0</div></div></div>
     </div>
 
-    <!-- Karşılaştırma Overlay -->
-    <div id="compareOverlay" class="compare-overlay">
-        <button class="close-btn" onclick="closeCompare()">×</button>
-        <h2 style="margin-bottom:20px;">📊 Oyuncu Karşılaştırma</h2>
-        <div class="compare-grid">
-            <div>
-                <h3 id="compareName1">Oyuncu 1</h3>
-                <div class="radar-container"><canvas id="radarCompare1" width="200" height="200"></canvas></div>
-                <div id="compareStats1" style="font-size:0.7rem; margin-top:10px;"></div>
-            </div>
-            <div>
-                <h3 id="compareName2">Oyuncu 2</h3>
-                <div class="radar-container"><canvas id="radarCompare2" width="200" height="200"></canvas></div>
-                <div id="compareStats2" style="font-size:0.7rem; margin-top:10px;"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="footer" style="text-align:center; font-size:0.6rem; margin-top:10px;">
-        TOAPERFORM V7.9 + Duyusal Scouting Pro | Bilimsel Temel | Veri Kaydı | Çoklu Oyuncu | Görsel Grafik | PDF Rapor | AI Öneri | Dünya Sıralaması
-    </div>
+    <!-- KARŞILAŞTIRMA OVERLAY -->
+    <div id="compareOverlay" class="compare-overlay"><button class="close-btn" onclick="closeCompare()">×</button><h2>📊 Karşılaştırma</h2><div class="compare-grid"><div><h3 id="compName1">Oyuncu 1</h3><canvas id="compRadar1" width="200" height="200"></canvas><div id="compStats1"></div></div><div><h3 id="compName2">Oyuncu 2</h3><canvas id="compRadar2" width="200" height="200"></canvas><div id="compStats2"></div></div></div></div>
 </div>
 
 <script>
-// ============================================================
-// TOAPERFORM V7.9 + DUYUSAL SCOUTING PRO - TAM EKSİKSİZ KOD
-// ============================================================
+// ========== MODÜL ==========
+function showModule(m) { document.querySelectorAll('.module-section').forEach(el=>el.classList.remove('active')); document.querySelectorAll('.toa-menu button').forEach(btn=>btn.classList.remove('active')); document.getElementById('module-'+m).classList.add('active'); document.getElementById('btn-'+m).classList.add('active'); }
 
-// ---------- MODÜL YÖNETİMİ ----------
-function showModule(moduleName) {
-    document.querySelectorAll('.module-section').forEach(m => m.classList.remove('active'));
-    document.querySelectorAll('.toa-menu button').forEach(b => b.classList.remove('active'));
-    document.getElementById('module-' + moduleName).classList.add('active');
-    document.getElementById('btn-' + moduleName).classList.add('active');
-}
+// ========== BİLİMSEL METİN ==========
+function getScientific(d,p){p=parseInt(p); if(d=='visual'){if(p>=9)return"✅ 0.3-0.5 sn, periferik 120°";if(p>=7)return"📌 0.5-0.8 sn";if(p>=5)return"⚡ 0.8-1.2 sn";if(p>=3)return"⚠️ 1.2-1.5 sn";return"❌ >1.5 sn";}
+if(d=='auditory'){if(p>=9)return"✅ 140-160ms";if(p>=7)return"📌 160-200ms";if(p>=5)return"⚡ 200-250ms";if(p>=3)return"⚠️ 250-300ms";return"❌ >300ms";}
+if(d=='vestibular'){if(p>=9)return"✅ Diz 20°+, Muscle spindle";if(p>=7)return"📌 Diz 15-20°";if(p>=5)return"⚡ Diz 10-15°";if(p>=3)return"⚠️ Diz 5-10°";return"❌ Diz <5°";}
+if(d=='haptic'){if(p>=9)return"✅ Temas <0.1sn, afferent 40-60ms";if(p>=7)return"📌 Temas 0.1-0.15sn";if(p>=5)return"⚡ Temas 0.15-0.2sn";if(p>=3)return"⚠️ Temas 0.2-0.3sn";return"❌ >0.3sn";}
+if(d=='spatial'){if(p>=9)return"✅ COG okur, decoy detection";if(p>=7)return"📌 %70 yanıltma";if(p>=5)return"⚡ %50 yanıltma";if(p>=3)return"⚠️ Etkisiz";return"❌ COG okuyamaz";} return"";}
 
-// ---------- BİLİMSEL METİN (0-10 Skalası) ----------
-function getScientificText(duyu, p) {
-    p = parseInt(p);
-    if(duyu === 'visual') {
-        if(p >= 9) return "✅ ELİT: 0.3-0.5 sn tarama, periferik 120°";
-        if(p >= 7) return "📌 İYİ: 0.5-0.8 sn tarama, periferik 100°";
-        if(p >= 5) return "⚡ ORTA: 0.8-1.2 sn, periferik 80°";
-        if(p >= 3) return "⚠️ GELİŞİM: 1.2-1.5 sn, periferik 60°";
-        return "❌ ZAYIF: >1.5 sn, periferik <60°";
-    }
-    if(duyu === 'auditory') {
-        if(p >= 9) return "✅ ELİT: 140-160ms, görselden 30-50ms hızlı";
-        if(p >= 7) return "📌 İYİ: 160-200ms";
-        if(p >= 5) return "⚡ ORTA: 200-250ms";
-        if(p >= 3) return "⚠️ GELİŞİM: 250-300ms";
-        return "❌ ZAYIF: >300ms";
-    }
-    if(duyu === 'vestibular') {
-        if(p >= 9) return "✅ ELİT: Diz 20°+, Muscle spindle + Golgi tendon organı";
-        if(p >= 7) return "📌 İYİ: Diz 15-20°";
-        if(p >= 5) return "⚡ ORTA: Diz 10-15°";
-        if(p >= 3) return "⚠️ GELİŞİM: Diz 5-10°";
-        return "❌ ZAYIF: Diz <5°";
-    }
-    if(duyu === 'haptic') {
-        if(p >= 9) return "✅ ELİT: Temas <0.1sn, afferent 40-60ms";
-        if(p >= 7) return "📌 İYİ: Temas 0.1-0.15sn";
-        if(p >= 5) return "⚡ ORTA: Temas 0.15-0.2sn";
-        if(p >= 3) return "⚠️ GELİŞİM: Temas 0.2-0.3sn";
-        return "❌ ZAYIF: >0.3sn";
-    }
-    if(duyu === 'spatial') {
-        if(p >= 9) return "✅ ELİT: COG okur, decoy detection, kinesthetic";
-        if(p >= 7) return "📌 İYİ: %70 yanıltma başarısı";
-        if(p >= 5) return "⚡ ORTA: %50 yanıltma";
-        if(p >= 3) return "⚠️ GELİŞİM: Etkisiz sahte koşu";
-        return "❌ ZAYIF: COG okuyamaz";
-    }
-    return "";
-}
+// ========== PERCENTILE ==========
+function getPercentile(t){let w=Math.min(99,Math.max(1,Math.round(t*2))); let tr=Math.min(99,Math.max(1,Math.round(t*1.6))); return{w,tr};}
+function getRankText(p){if(p>=95)return"🥇 ELİT (İlk 5%)";if(p>=85)return"🥈 ÜST DÜZEY";if(p>=70)return"🥉 İYİ";if(p>=50)return"📊 ORTA";if(p>=30)return"⚠️ GELİŞİM";return"❌ ALT";}
 
-// ---------- PERCENTILE HESAPLAMA ----------
-function calculatePercentile(total) {
-    if(total >= 45) { return { world: Math.min(99, Math.round(98 + (total-45)*0.4)), tr: Math.min(99, Math.round(97 + (total-45)*0.6)) }; }
-    if(total >= 40) { return { world: Math.min(99, Math.round(90 + (total-40)*1.6)), tr: Math.min(99, Math.round(85 + (total-40)*2.4)) }; }
-    if(total >= 35) { return { world: Math.min(99, Math.round(75 + (total-35)*3)), tr: Math.min(99, Math.round(65 + (total-35)*4)) }; }
-    if(total >= 30) { return { world: Math.min(99, Math.round(55 + (total-30)*4)), tr: Math.min(99, Math.round(45 + (total-30)*4)) }; }
-    if(total >= 25) { return { world: Math.min(99, Math.round(35 + (total-25)*4)), tr: Math.min(99, Math.round(25 + (total-25)*4)) }; }
-    if(total >= 20) { return { world: Math.min(99, Math.round(18 + (total-20)*3.4)), tr: Math.min(99, Math.round(10 + (total-20)*3)) }; }
-    if(total >= 15) { return { world: Math.min(99, Math.round(8 + (total-15)*2)), tr: Math.min(99, Math.round(4 + (total-15)*1.2)) }; }
-    return { world: Math.max(1, Math.min(99, Math.round(total * 0.5))), tr: Math.max(1, Math.min(99, Math.round(total * 0.3))) };
-}
+// ========== DOM ==========
+let sliders={visual:document.getElementById('visual'),auditory:document.getElementById('auditory'),vestibular:document.getElementById('vestibular'),haptic:document.getElementById('haptic'),spatial:document.getElementById('spatial')};
+let spans={visual:document.getElementById('visual_val'),auditory:document.getElementById('auditory_val'),vestibular:document.getElementById('vestibular_val'),haptic:document.getElementById('haptic_val'),spatial:document.getElementById('spatial_val')};
+for(let k in sliders){sliders[k].addEventListener('input',(e)=>{spans[k].innerText=e.target.value; updateAll();});}
+function getScores(){return{visual:parseInt(sliders.visual.value),auditory:parseInt(sliders.auditory.value),vestibular:parseInt(sliders.vestibular.value),haptic:parseInt(sliders.haptic.value),spatial:parseInt(sliders.spatial.value)};}
 
-function getRankText(percentile) {
-    if(percentile >= 95) return "🥇 ELİT (İlk 5%)";
-    if(percentile >= 85) return "🥈 ÜST DÜZEY (İlk 15%)";
-    if(percentile >= 70) return "🥉 İYİ (İlk 30%)";
-    if(percentile >= 50) return "📊 ORTA (Ortalama)";
-    if(percentile >= 30) return "⚠️ GELİŞİM GEREKİR";
-    return "❌ ALT ORTA";
-}
-
-// ---------- DOM ELEMENTLERİ ----------
-const sliders = {
-    visual: document.getElementById('visual'), auditory: document.getElementById('auditory'),
-    vestibular: document.getElementById('vestibular'), haptic: document.getElementById('haptic'),
-    spatial: document.getElementById('spatial')
-};
-const spans = {
-    visual: document.getElementById('visual_val'), auditory: document.getElementById('auditory_val'),
-    vestibular: document.getElementById('vestibular_val'), haptic: document.getElementById('haptic_val'),
-    spatial: document.getElementById('spatial_val')
-};
-
-for(let k in sliders) {
-    sliders[k].addEventListener('input', (e) => {
-        spans[k].innerText = e.target.value;
-        updatePreview();
-        updateRadarFromCurrent();
-        updateAISuggestion();
-    });
-}
-
-function getCurrentScores() {
-    return {
-        visual: parseInt(sliders.visual.value), auditory: parseInt(sliders.auditory.value),
-        vestibular: parseInt(sliders.vestibular.value), haptic: parseInt(sliders.haptic.value),
-        spatial: parseInt(sliders.spatial.value)
-    };
-}
-
-// ---------- ANA DEĞERLENDİRME ----------
-function updatePreview() {
-    let scores = getCurrentScores();
-    let total = scores.visual + scores.auditory + scores.vestibular + scores.haptic + scores.spatial;
-    document.getElementById('totalScore').innerText = total;
-
-    let levelDiv = document.getElementById('levelText');
-    let percentage = (total / 50) * 100;
-
-    if(percentage >= 85) { levelDiv.innerHTML = "🔴 ELİT SEVİYE (85%+)"; levelDiv.className = "elite"; }
-    else if(percentage >= 70) { levelDiv.innerHTML = "🟡 ÜST POTANSİYEL (70-84%)"; levelDiv.className = "medium"; }
-    else if(percentage >= 50) { levelDiv.innerHTML = "⚡ ORTA SEVİYE (50-69%)"; levelDiv.className = "average"; }
-    else { levelDiv.innerHTML = "⚪ GELİŞİM GEREKİR (<50%)"; levelDiv.className = "average"; }
-
-    let pos = "";
-    let posScores = {
-        stoper: scores.visual + scores.vestibular,
-        kanat: scores.auditory + scores.spatial,
-        ortasaha: scores.haptic + scores.visual,
-        forvet: scores.spatial + scores.haptic,
-        kaleci: scores.visual + scores.vestibular + scores.auditory
-    };
-    let bestPos = Object.keys(posScores).reduce((a, b) => posScores[a] > posScores[b] ? a : b);
-    switch(bestPos) {
-        case 'stoper': pos = "🛡️ Stoper (Görsel+Denge dominant)"; break;
-        case 'kanat': pos = "⚡ Kanat/Bek (İşitsel+Mekansal dominant)"; break;
-        case 'ortasaha': pos = "🧠 Orta Saha (Dokunsal+Görsel dominant)"; break;
-        case 'forvet': pos = "🎯 Forvet (Mekansal+Dokunsal dominant)"; break;
-        case 'kaleci': pos = "🧤 Kaleci (Görsel+Denge+İşitsel)"; break;
-    }
-    document.getElementById('positionAdvice').innerHTML = "📍 " + pos;
-
-    let pct = calculatePercentile(total);
-    document.getElementById('percentileText').innerHTML = `🌍 Dünya: %${pct.world} | 🇹🇷 Türkiye: %${pct.tr}`;
-    document.getElementById('worldRank').innerHTML = getRankText(pct.world);
-    document.getElementById('trRank').innerHTML = getRankText(pct.tr);
-
-    let detail = `<strong>Detaylı Analiz:</strong><br>`;
-    detail += `Görsel:${scores.visual}/10 | İşitsel:${scores.auditory}/10 | Denge:${scores.vestibular}/10 | Dokunsal:${scores.haptic}/10 | Mekansal:${scores.spatial}/10<br><br>`;
-    detail += `🧠 ${getScientificText('visual', scores.visual)}<br>`;
-    detail += `👂 ${getScientificText('auditory', scores.auditory)}<br>`;
-    detail += `🧍 ${getScientificText('vestibular', scores.vestibular)}<br>`;
-    detail += `🦶 ${getScientificText('haptic', scores.haptic)}<br>`;
-    detail += `🏃 ${getScientificText('spatial', scores.spatial)}`;
-    document.getElementById('detailAnalysis').innerHTML = detail;
-    return total;
-}
-
-// ---------- RADAR GRAFİK ----------
+// ========== GÜNCELLEME ==========
 let radarChart;
-function initRadar() { updateRadarFromCurrent(); }
-function updateRadarFromCurrent() {
-    let s = getCurrentScores();
-    let data = [s.visual, s.auditory, s.vestibular, s.haptic, s.spatial];
-    if(radarChart) radarChart.destroy();
-    const ctx = document.getElementById('radarChart').getContext('2d');
-    radarChart = new Chart(ctx, {
-        type: 'radar',
-        data: { labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'], datasets: [{ label: 'Duyu Skoru', data: data, backgroundColor: 'rgba(255,215,0,0.3)', borderColor: '#ffd700', pointBackgroundColor: '#ffd700', pointBorderColor: '#fff' }] },
-        options: { responsive: true, maintainAspectRatio: true, scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#ddd' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#ffd700' } } }, plugins: { legend: { labels: { color: '#ffd700' } } } }
-    });
+function updateAll(){
+    let s=getScores(); let total=s.visual+s.auditory+s.vestibular+s.haptic+s.spatial; document.getElementById('totalScore').innerText=total;
+    let pct=total/50*100; let lvlDiv=document.getElementById('levelText');
+    if(pct>=85){lvlDiv.innerHTML="🔴 ELİT SEVİYE";lvlDiv.className="elite";}else if(pct>=70){lvlDiv.innerHTML="🟡 ÜST POTANSİYEL";lvlDiv.className="medium";}else if(pct>=50){lvlDiv.innerHTML="⚡ ORTA SEVİYE";lvlDiv.className="average";}else{lvlDiv.innerHTML="⚪ GELİŞİM GEREKİR";lvlDiv.className="average";}
+    let posScores={stoper:s.visual+s.vestibular, kanat:s.auditory+s.spatial, ortasaha:s.haptic+s.visual, forvet:s.spatial+s.haptic, kaleci:s.visual+s.vestibular+s.auditory};
+    let best=Object.keys(posScores).reduce((a,b)=>posScores[a]>posScores[b]?a:b);
+    let pos=""; if(best=='stoper')pos="🛡️ Stoper";else if(best=='kanat')pos="⚡ Kanat/Bek";else if(best=='ortasaha')pos="🧠 Orta Saha";else if(best=='forvet')pos="🎯 Forvet";else pos="🧤 Kaleci";
+    document.getElementById('positionAdvice').innerHTML="📍 "+pos;
+    let pctVal=getPercentile(total); document.getElementById('percentileText').innerHTML=`🌍 Dünya: %${pctVal.world} | 🇹🇷: %${pctVal.tr}`;
+    document.getElementById('worldRank').innerHTML=getRankText(pctVal.world); document.getElementById('trRank').innerHTML=getRankText(pctVal.tr);
+    let det=`G:${s.visual} İ:${s.auditory} D:${s.vestibular} Dok:${s.haptic} M:${s.spatial}<br><br>🧠 ${getScientific('visual',s.visual)}<br>👂 ${getScientific('auditory',s.auditory)}<br>🧍 ${getScientific('vestibular',s.vestibular)}<br>🦶 ${getScientific('haptic',s.haptic)}<br>🏃 ${getScientific('spatial',s.spatial)}`;
+    document.getElementById('detailAnalysis').innerHTML=det;
+    if(radarChart)radarChart.destroy(); radarChart=new Chart(document.getElementById('radarChart'),{type:'radar',data:{labels:['Görsel','İşitsel','Denge','Dokunsal','Mekansal'],datasets:[{label:'Skor',data:[s.visual,s.auditory,s.vestibular,s.haptic,s.spatial],backgroundColor:'rgba(255,215,0,0.3)',borderColor:'#ffd700'}]},options:{scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'#ddd'},pointLabels:{color:'#ffd700'}}}}});
+    let ai=""; if(pct>=85)ai="🏆 ELİT TRANSFER ADAYI";else if(pct>=70)ai="📌 ÜST POTANSİYEL";else if(pct>=50)ai="⚡ ORTA SEVİYE";else ai="⚪ GELİŞİM GEREKİR";
+    if(s.visual+s.vestibular>=16)ai+=" 🛡️ Stoper/Kaleci";else if(s.auditory+s.spatial>=16)ai+=" ⚡ Kanat/Bek";else if(s.haptic+s.visual>=16)ai+=" 🧠 Orta Saha";else if(s.spatial+s.haptic>=16)ai+=" 🎯 Forvet";
+    document.getElementById('aiSuggestion').innerHTML=ai;
 }
 
-// ---------- VERİ KAYDI (HISTORY DESTEKLİ) ----------
-let players = JSON.parse(localStorage.getItem('toa_scoutPlayers')) || [];
+// ========== VERİ KAYDI ==========
+let players=JSON.parse(localStorage.getItem('toa_players'))||[];
+function savePlayer(){let name=document.getElementById('playerName').value.trim(); if(!name){alert("İsim girin");return;} let s=getScores(); let total=s.visual+s.auditory+s.vestibular+s.haptic+s.spatial; let pct=getPercentile(total); let idx=players.findIndex(p=>p.name===name); let hist={date:new Date().toISOString(),scores:{...s},total};
+if(idx!==-1){players[idx].history=players[idx].history||[]; players[idx].history.push(hist); players[idx].visual=s.visual; players[idx].auditory=s.auditory; players[idx].vestibular=s.vestibular; players[idx].haptic=s.haptic; players[idx].spatial=s.spatial; players[idx].total=total; players[idx].worldPct=pct.world; players[idx].trPct=pct.tr; players[idx].date=new Date().toLocaleString();}
+else{players.push({id:Date.now(),name,...s,total,worldPct:pct.world,trPct:pct.tr,date:new Date().toLocaleString(),history:[hist]});}
+localStorage.setItem('toa_players',JSON.stringify(players)); renderList(); updateStats(); alert("Kaydedildi");}
+function renderList(){let div=document.getElementById('playerListDiv'); if(!players.length){div.innerHTML="Kayıt yok";return;}
+div.innerHTML=players.map(p=>`<div class="player-item ${p.total>=40?'elite':p.total>=30?'medium':'average'}">📌 ${p.name} | ${p.total}/50 | 🌍%${p.worldPct}<br><button class="loadBtn" data-id="${p.id}">Yükle</button> <button class="compBtn" data-id="${p.id}">Karşılaştır</button> <button class="delBtn" data-id="${p.id}">Sil</button></div>`).join('');
+document.querySelectorAll('.loadBtn').forEach(btn=>btn.addEventListener('click',()=>loadPlayer(parseInt(btn.dataset.id))));
+document.querySelectorAll('.compBtn').forEach(btn=>btn.addEventListener('click',()=>comparePlayer(parseInt(btn.dataset.id))));
+document.querySelectorAll('.delBtn').forEach(btn=>btn.addEventListener('click',()=>{if(confirm('Sil?')){players=players.filter(p=>p.id!==parseInt(btn.dataset.id)); localStorage.setItem('toa_players',JSON.stringify(players)); renderList(); updateStats();}}));}
+function loadPlayer(id){let p=players.find(p=>p.id===id); if(p){sliders.visual.value=p.visual;sliders.auditory.value=p.auditory;sliders.vestibular.value=p.vestibular;sliders.haptic.value=p.haptic;sliders.spatial.value=p.spatial; for(let k in spans)spans[k].innerText=sliders[k].value; document.getElementById('playerName').value=p.name; updateAll();}}
+function updateStats(){let statsDiv=document.getElementById('statsArea'); let reportDiv=document.getElementById('reportList'); if(!players.length){statsDiv.innerHTML="Toplam: 0<br>Elite: 0<br>Ortalama: 0"; reportDiv.innerHTML="Henüz rapor yok"; return;}
+let total=players.reduce((s,p)=>s+p.total,0); let elite=players.filter(p=>p.total>=40).length; let avg=(total/players.length).toFixed(1); statsDiv.innerHTML=`Toplam: ${players.length}<br>Elite: ${elite}<br>Ortalama: ${avg}/50`;
+reportDiv.innerHTML=players.map(p=>`<div>📄 ${p.name} - ${p.total}/50 - ${p.date}</div>`).join('');}
 
-function savePlayer() {
-    let name = document.getElementById('playerName').value.trim();
-    if(!name) { alert("Oyuncu adı girin"); return; }
-    let scores = getCurrentScores();
-    let total = scores.visual + scores.auditory + scores.vestibular + scores.haptic + scores.spatial;
-    let pct = calculatePercentile(total);
-    
-    let existingIndex = players.findIndex(p => p.name === name);
-    let newHistoryEntry = { date: new Date().toISOString(), scores: {...scores}, total };
-    
-    if(existingIndex !== -1) {
-        players[existingIndex].history = players[existingIndex].history || [];
-        players[existingIndex].history.push(newHistoryEntry);
-        players[existingIndex].visual = scores.visual;
-        players[existingIndex].auditory = scores.auditory;
-        players[existingIndex].vestibular = scores.vestibular;
-        players[existingIndex].haptic = scores.haptic;
-        players[existingIndex].spatial = scores.spatial;
-        players[existingIndex].total = total;
-        players[existingIndex].worldPct = pct.world;
-        players[existingIndex].trPct = pct.tr;
-        players[existingIndex].date = new Date().toLocaleString('tr-TR');
-    } else {
-        let newPlayer = { id: Date.now(), name, ...scores, total, worldPct: pct.world, trPct: pct.tr, date: new Date().toLocaleString('tr-TR'), history: [newHistoryEntry] };
-        players.push(newPlayer);
-    }
-    localStorage.setItem('toa_scoutPlayers', JSON.stringify(players));
-    renderPlayerList();
-    updateStats();
-    document.getElementById('playerName').value = '';
-    alert(`${name} kaydedildi! Dünya: %${pct.world}, Türkiye: %${pct.tr}`);
-}
+// ========== KARŞILAŞTIRMA ==========
+let compChart1=null,compChart2=null;
+function comparePlayer(id){let p=players.find(p=>p.id===id); if(!p)return; let cur=getScores(); let curName=document.getElementById('playerName').value.trim()||"Mevcut"; document.getElementById('compName1').innerText=curName; document.getElementById('compName2').innerText=p.name;
+if(compChart1)compChart1.destroy(); compChart1=new Chart(document.getElementById('compRadar1'),{type:'radar',data:{labels:['Görsel','İşitsel','Denge','Dokunsal','Mekansal'],datasets:[{label:curName,data:[cur.visual,cur.auditory,cur.vestibular,cur.haptic,cur.spatial],backgroundColor:'rgba(255,215,0,0.3)',borderColor:'#ffd700'}]},options:{scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'#ddd'},pointLabels:{color:'#ffd700'}}}}});
+if(compChart2)compChart2.destroy(); compChart2=new Chart(document.getElementById('compRadar2'),{type:'radar',data:{labels:['Görsel','İşitsel','Denge','Dokunsal','Mekansal'],datasets:[{label:p.name,data:[p.visual,p.auditory,p.vestibular,p.haptic,p.spatial],backgroundColor:'rgba(0,255,255,0.3)',borderColor:'#0ff'}]},options:{scales:{r:{min:0,max:10,ticks:{stepSize:2,color:'#ddd'},pointLabels:{color:'#0ff'}}}}});
+let curTotal=cur.visual+cur.auditory+cur.vestibular+cur.haptic+cur.spatial; document.getElementById('compStats1').innerHTML=`Toplam: ${curTotal}/50`; document.getElementById('compStats2').innerHTML=`Toplam: ${p.total}/50<br>🌍%${p.worldPct}`;
+document.getElementById('compareOverlay').classList.add('active');}
+function closeCompare(){if(compChart1){compChart1.destroy();compChart1=null;} if(compChart2){compChart2.destroy();compChart2=null;} document.getElementById('compareOverlay').classList.remove('active');}
+function compareAll(){if(players.length<2){alert("En az 2 oyuncu gerekli");return;} let html='<h3>Tüm Oyuncular</h3><table border=1><tr><th>Oyuncu</th><th>Toplam</th><th>G</th><th>İ</th><th>D</th><th>Dok</th><th>M</th><th>🌍</th></tr>'+players.map(p=>`<tr><td>${p.name}</td><td>${p.total}</td><td>${p.visual}</td><td>${p.auditory}</td><td>${p.vestibular}</td><td>${p.haptic}</td><td>${p.spatial}</td><td>%${p.worldPct}</td></tr>`).join('')+'</table>';
+let w=window.open('','_blank'); w.document.write(html);}
+function downloadPDF(){let s=getScores(); let total=s.visual+s.auditory+s.vestibular+s.haptic+s.spatial; let pct=getPercentile(total); let name=document.getElementById('playerName').value.trim()||"Oyuncu"; let html=`<div style="padding:20px"><h1>Duyusal Rapor</h1><h2>${name}</h2><p>Toplam: ${total}/50 | Dünya: %${pct.world}</p><p>G:${s.visual} İ:${s.auditory} D:${s.vestibular} Dok:${s.haptic} M:${s.spatial}</p></div>`; html2pdf().from(html).save();}
+function showTrend(){let html='<h3>Trend Analizi</h3>'; let has=false; players.forEach(p=>{if(p.history&&p.history.length){has=true; html+=`<h4>${p.name}</h4><table border=1><tr><th>Tarih</th><th>Toplam</th><th>G</th><th>İ</th><th>D</th><th>Dok</th><th>M</th></tr>`+p.history.map(h=>`<tr><td>${new Date(h.date).toLocaleDateString()}</td><td>${h.total}</td><td>${h.scores.visual}</td><td>${h.scores.auditory}</td><td>${h.scores.vestibular}</td><td>${h.scores.haptic}</td><td>${h.scores.spatial}</td></tr>`).join('')+'</table><br>';}}); if(!has)html+='<p>Trend verisi yok</p>'; let w=window.open('','_blank'); w.document.write(html);}
 
-function renderPlayerList() {
-    let div = document.getElementById('playerListDiv');
-    if(!players.length) { div.innerHTML = "Kayıtlı oyuncu yok."; return; }
-    div.innerHTML = players.map(p => {
-        let cls = p.total >= 40 ? 'elite' : p.total >= 30 ? 'medium' : 'average';
-        return `<div class="player-item ${cls}" data-id="${p.id}">
-            📌 <strong>${p.name}</strong> | Skor:${p.total}/50 | 🌍%${p.worldPct} 🇹🇷%${p.trPct}<br>
-            G${p.visual} İ${p.auditory} D${p.vestibular} Dok${p.haptic} M${p.spatial}<br>
-            <small>${p.date}</small><br>
-            <button class="loadPlayerBtn" data-id="${p.id}">Yükle</button>
-            <button class="comparePlayerBtn" data-id="${p.id}">Karşılaştır</button>
-            <button class="deletePlayerBtn" data-id="${p.id}">Sil</button>
-        </div>`;
-    }).join('');
-    document.querySelectorAll('.loadPlayerBtn').forEach(btn => btn.addEventListener('click', (e) => { loadPlayer(parseInt(btn.getAttribute('data-id'))); }));
-    document.querySelectorAll('.comparePlayerBtn').forEach(btn => btn.addEventListener('click', (e) => { comparePlayer(parseInt(btn.getAttribute('data-id'))); }));
-    document.querySelectorAll('.deletePlayerBtn').forEach(btn => btn.addEventListener('click', (e) => { deletePlayer(parseInt(btn.getAttribute('data-id'))); }));
-}
+// ========== VALD ==========
+document.getElementById('valdLoadBtn')?.addEventListener('click',()=>{let f=document.getElementById('valdFileInput').files[0]; if(f){document.getElementById('valdStatus').innerHTML=`✅ ${f.name} yüklendi`;}else{alert("Dosya seç");}});
 
-function loadPlayer(id) {
-    let p = players.find(p => p.id === id);
-    if(p) {
-        sliders.visual.value = p.visual; spans.visual.innerText = p.visual;
-        sliders.auditory.value = p.auditory; spans.auditory.innerText = p.auditory;
-        sliders.vestibular.value = p.vestibular; spans.vestibular.innerText = p.vestibular;
-        sliders.haptic.value = p.haptic; spans.haptic.innerText = p.haptic;
-        sliders.spatial.value = p.spatial; spans.spatial.innerText = p.spatial;
-        document.getElementById('playerName').value = p.name;
-        updatePreview(); updateRadarFromCurrent(); updateAISuggestion();
-    }
-}
+// ========== AI CHAT ==========
+function chatResponse(q){let t=q.toLowerCase(); if(t.includes('görsel'))return "Görsel tarama: 0.3-0.5 sn elit seviye"; if(t.includes('işitsel'))return "İşitsel reaksiyon: 140-160ms"; if(t.includes('denge'))return "Denge: Muscle spindle ve Golgi tendon organı"; return "Duyusal skorları yükleyip rapor alabilirsin.";}
+document.getElementById('chatSendBtn')?.addEventListener('click',()=>{let inp=document.getElementById('chatInput'); let msg=inp.value.trim(); if(!msg)return; let box=document.getElementById('chatBox'); box.innerHTML+=`<div>👤: ${msg}</div>`; box.innerHTML+=`<div>🤖: ${chatResponse(msg)}</div>`; box.scrollTop=box.scrollHeight; inp.value='';});
 
-function deletePlayer(id) {
-    if(!confirm('Bu oyuncuyu silmek istediğinize emin misiniz?')) return;
-    players = players.filter(p => p.id !== id);
-    localStorage.setItem('toa_scoutPlayers', JSON.stringify(players));
-    renderPlayerList();
-    updateStats();
-}
+// ========== EVENTLER ==========
+document.getElementById('evaluateBtn').addEventListener('click',updateAll);
+document.getElementById('saveBtn').addEventListener('click',savePlayer);
+document.getElementById('compareBtn').addEventListener('click',()=>{if(players.length)alert("Listeden Karşılaştır butonuna tıklayın"); else alert("Kayıtlı oyuncu yok");});
+document.getElementById('compareAllBtn').addEventListener('click',compareAll);
+document.getElementById('pdfBtn').addEventListener('click',downloadPDF);
+document.getElementById('trendBtn').addEventListener('click',showTrend);
 
-// ---------- KARŞILAŞTIRMA ----------
-let compareChart1 = null, compareChart2 = null;
-
-function comparePlayer(id) {
-    let p = players.find(p => p.id === id);
-    if(!p) return;
-    let current = getCurrentScores();
-    let currentTotal = current.visual + current.auditory + current.vestibular + current.haptic + current.spatial;
-    let currentName = document.getElementById('playerName').value.trim() || "Mevcut Oyuncu";
-
-    document.getElementById('compareName1').innerText = currentName;
-    document.getElementById('compareName2').innerText = p.name;
-
-    if(compareChart1) compareChart1.destroy();
-    compareChart1 = new Chart(document.getElementById('radarCompare1').getContext('2d'), {
-        type: 'radar', data: { labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'], datasets: [{ label: currentName, data: [current.visual, current.auditory, current.vestibular, current.haptic, current.spatial], backgroundColor: 'rgba(255,215,0,0.3)', borderColor: '#ffd700' }] },
-        options: { scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#ddd' }, pointLabels: { color: '#ffd700' } } }, plugins: { legend: { labels: { color: '#ffd700' } } } }
-    });
-    if(compareChart2) compareChart2.destroy();
-    compareChart2 = new Chart(document.getElementById('radarCompare2').getContext('2d'), {
-        type: 'radar', data: { labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'], datasets: [{ label: p.name, data: [p.visual, p.auditory, p.vestibular, p.haptic, p.spatial], backgroundColor: 'rgba(0,255,255,0.3)', borderColor: '#00ffff' }] },
-        options: { scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#ddd' }, pointLabels: { color: '#00ffff' } } }, plugins: { legend: { labels: { color: '#00ffff' } } } }
-    });
-    document.getElementById('compareStats1').innerHTML = `Toplam: ${currentTotal}/50<br>G${current.visual} İ${current.auditory} D${current.vestibular} Dok${current.haptic} M${current.spatial}`;
-    document.getElementById('compareStats2').innerHTML = `Toplam: ${p.total}/50<br>G${p.visual} İ${p.auditory} D${p.vestibular} Dok${p.haptic} M${p.spatial}<br>🌍%${p.worldPct} 🇹🇷%${p.trPct}`;
-    document.getElementById('compareOverlay').classList.add('active');
-}
-
-function closeCompare() {
-    if(compareChart1) { compareChart1.destroy(); compareChart1 = null; }
-    if(compareChart2) { compareChart2.destroy(); compareChart2 = null; }
-    document.getElementById('compareOverlay').classList.remove('active');
-}
-
-function compareSelected() {
-    if(players.length < 1) { alert("Karşılaştırma için en az 1 kayıtlı oyuncu gerekli."); return; }
-    alert("Oyuncu listesinden 'Karşılaştır' butonuna tıklayın.");
-}
-
-function compareAll() {
-    if(players.length < 2) { alert("Tümünü karşılaştırmak için en az 2 oyuncu gerekli."); return; }
-    let html = '<h3>Tüm Oyuncu Karşılaştırması</h3><table style="width:100%; font-size:0.7rem; border-collapse:collapse;"><tr style="background:#1a3a2a;"><th>Oyuncu</th><th>Toplam</th><th>G</th><th>İ</th><th>D</th><th>Dok</th><th>M</th><th>🌍</th><th>🇹🇷</th></tr>';
-    players.forEach(p => { let cls = p.total >= 40 ? 'elite' : p.total >= 30 ? 'medium' : 'average'; html += `<tr class="${cls}"><td>${p.name}</td><td><strong>${p.total}</strong></td><td>${p.visual}</td><td>${p.auditory}</td><td>${p.vestibular}</td><td>${p.haptic}</td><td>${p.spatial}</td><td>%${p.worldPct}</td><td>%${p.trPct}</td></tr>`; });
-    html += '</table>';
-    let win = window.open('', '_blank');
-    win.document.write('<html><head><title>Karşılaştırma</title><style>body{background:#0a2e1c;color:#eee;font-family:sans-serif;padding:20px;} .elite{color:#ffd700;} .medium{color:#ffaa33;} .average{color:#88aa88;} th,td{padding:5px;border:1px solid #333;} table{border-collapse:collapse;width:100%;}</style></head><body>' + html + '</body></html>');
-}
-
-// ---------- PDF RAPOR ----------
-function downloadPDF() {
-    let scores = getCurrentScores();
-    let total = scores.visual + scores.auditory + scores.vestibular + scores.haptic + scores.spatial;
-    let pct = calculatePercentile(total);
-    let name = document.getElementById('playerName').value.trim() || "Oyuncu";
-    let pos = document.getElementById('positionAdvice').innerHTML;
-    let ai = document.getElementById('aiSuggestion').innerHTML;
-    let htmlContent = `<div style="font-family:sans-serif; padding:30px; background:#fff; color:#333;"><h1 style="color:#0a2e1c; border-bottom:3px solid #ffd700;">⚽ Duyusal Scouting Raporu</h1><h2>${name}</h2><p><strong>Tarih:</strong> ${new Date().toLocaleString('tr-TR')}</p><hr><h3>📊 Skorlar (0-10)</h3><table style="width:100%; border-collapse:collapse;"><tr style="background:#0a2e1c; color:#ffd700;"><th style="padding:8px; border:1px solid #ddd;">Duyu</th><th style="padding:8px; border:1px solid #ddd;">Skor</th><th style="padding:8px; border:1px solid #ddd;">Bilimsel</th></tr>`;
-    htmlContent += `<tr><td>🧠 Görsel Tarama</td><td>${scores.visual}/10</td><td>${getScientificText('visual', scores.visual)}</td></tr>`;
-    htmlContent += `<tr><td>👂 İşitsel Reaksiyon</td><td>${scores.auditory}/10</td><td>${getScientificText('auditory', scores.auditory)}</td></tr>`;
-    htmlContent += `<tr><td>🧍 Denge</td><td>${scores.vestibular}/10</td><td>${getScientificText('vestibular', scores.vestibular)}</td></tr>`;
-    htmlContent += `<tr><td>🦶 Dokunsal + Pas</td><td>${scores.haptic}/10</td><td>${getScientificText('haptic', scores.haptic)}</td></tr>`;
-    htmlContent += `<tr><td>🏃 Mekansal + Sahte</td><td>${scores.spatial}/10</td><td>${getScientificText('spatial', scores.spatial)}</td></tr></table>`;
-    htmlContent += `<h3>📈 Özet</h3><p><strong>Toplam:</strong> ${total}/50 (${(total/50*100).toFixed(1)}%)</p><p>${pos}</p><p><strong>🌍 Dünya:</strong> %${pct.world} - ${getRankText(pct.world)}</p><p><strong>🇹🇷 Türkiye:</strong> %${pct.tr} - ${getRankText(pct.tr)}</p><h3>🤖 AI Öneri</h3><p style="background:#f5f5f5; padding:10px;">${ai}</p><hr><p style="text-align:center;">TOAPERFORM V7.9</p></div>`;
-    let opt = { margin: 0.5, filename: `TOA_Scout_${name.replace(/\s+/g, '_')}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4' } };
-    html2pdf().set(opt).from(htmlContent).save();
-}
-
-// ---------- TREND ANALİZİ ----------
-function showTrend() {
-    if(players.length < 1) { alert("Trend analizi için en az 1 oyuncu gerekli."); return; }
-    let html = '<h3>Oyuncu Trend Analizi</h3>';
-    let hasHistory = false;
-    players.forEach(p => {
-        if(p.history && p.history.length > 0) {
-            hasHistory = true;
-            html += `<h4>${p.name}</h4><table style="width:100%; font-size:0.7rem;"><tr style="background:#1a3a2a;"><th>Tarih</th><th>Toplam</th><th>G</th><th>İ</th><th>D</th><th>Dok</th><th>M</th></tr>`;
-            p.history.forEach(h => {
-                let s = h.scores;
-                html += `<tr><td>${new Date(h.date).toLocaleDateString('tr-TR')}</td><td><strong>${h.total}</strong></td><td>${s.visual}</td><td>${s.auditory}</td><td>${s.vestibular}</td><td>${s.haptic}</td><td>${s.spatial}</td></tr>`;
-            });
-            html += '</table><br>';
-        }
-    });
-    if(!hasHistory) html += '<p>Henüz trend verisi yok. Aynı oyuncuyu tekrar kaydederek geçmiş oluşturun.</p>';
-    let win = window.open('', '_blank');
-    win.document.write('<html><head><title>Trend Analizi</title><style>body{background:#0a2e1c;color:#eee;padding:20px;} th,td{padding:5px;border:1px solid #333;} table{border-collapse:collapse;}</style></head><body>' + html + '</body></html>');
-}
-
-// ---------- AI ÖNERİ ----------
-function updateAISuggestion() {
-    let s = getCurrentScores();
-    let total = s.visual + s.auditory + s.vestibular + s.haptic + s.spatial;
-    let pct = (total / 50) * 100;
-    let suggestion = "";
-    if(pct >= 85) suggestion = "🏆 ELİT TRANSFER ADAYI: Baskı altında karar verebilir, rakip COG okur. Hemen transfer listesine ekle. ";
-    else if(pct >= 70) suggestion = "📌 ÜST POTANSİYEL: İzlemeye devam et. Duyusal antrenmanlarla geliştirilebilir. ";
-    else if(pct >= 50) suggestion = "⚡ ORTA SEVİYE: Profesyonel liglerde oynar ama elit takımlarda rotasyon olur. ";
-    else suggestion = "⚪ GELİŞİM GEREKİR: Elit seviyede oynaması için duyusal temel çok zayıf. ";
-    if(s.visual + s.vestibular >= 16) suggestion += "<br><br>🛡️ Stoper/Kaleci Profili: Görsel+Denge dominant.";
-    else if(s.auditory + s.spatial >= 16) suggestion += "<br><br>⚡ Kanat/Bek Profili: Hızlı işitsel reaksiyon ve mekansal farkındalık.";
-    else if(s.haptic + s.visual >= 16) suggestion += "<br><br>🧠 Orta Saha Yapıcı: Dokunsal his ve görsel tarama yüksek.";
-    else if(s.spatial + s.haptic >= 16) suggestion += "<br><br>🎯 Forvet Profili: Mekansal zeka ve dokunsal bitiricilik.";
-    suggestion += "<br><br>📋 Antrenman Önerisi:<br>";
-    if(s.visual < 7) suggestion += "• Görsel tarama: 3-5 sn periferik egzersizler<br>";
-    if(s.auditory < 7) suggestion += "• İşitsel reaksiyon: Sesli stimulus drill'leri<br>";
-    if(s.vestibular < 7) suggestion += "• Denge: Tek bacak, BOSU, propriosepsiyon<br>";
-    if(s.haptic < 7) suggestion += "• Dokunsal: Ayak içi/dışı pas, haptic feedback<br>";
-    if(s.spatial < 7) suggestion += "• Mekansal: Sahte koşu, rakip COG okuma drill'leri<br>";
-    document.getElementById('aiSuggestion').innerHTML = suggestion;
-}
-
-// ---------- İSTATİSTİKLER ----------
-function updateStats() {
-    if(!players.length) { document.getElementById('statsArea').innerHTML = 'Toplam oyuncu: 0<br>Elite oyuncu: 0<br>Ortalama skor: 0'; document.getElementById('reportList').innerHTML = 'Henüz rapor yok.'; return; }
-    let total = players.reduce((sum, p) => sum + p.total, 0);
-    let elite = players.filter(p => p.total >= 40).length;
-    let avg = (total / players.length).toFixed(1);
-    document.getElementById('statsArea').innerHTML = `Toplam oyuncu: ${players.length}<br>Elite oyuncu: ${elite}<br>Ortalama skor: ${avg}/50`;
-    document.getElementById('reportList').innerHTML = players.map(p => `<div class="player-item ${p.total >= 40 ? 'elite' : p.total >= 30 ? 'medium' : 'average'}">📄 ${p.name} - ${p.total}/50 - ${p.date}</div>`).join('');
-}
-
-// ---------- VALD MODÜLÜ ----------
-setTimeout(() => {
-    let loadBtn = document.getElementById('loadValdBtn');
-    if(loadBtn) loadBtn.addEventListener('click', function() {
-        let file = document.getElementById('valdFile').files[0];
-        if(file) { document.getElementById('valdPreview').innerHTML = `✅ ${file.name} yüklendi. ForceDeck verileri işleniyor...<br>📊 Çıkış kuvveti, denge, reaksiyon verileri analiz edilecek.`; }
-        else { alert('Lütfen bir dosya seçin'); }
-    });
-}, 100);
-
-// ---------- AI CHAT ----------
-function getAIResponse(question) {
-    let q = question.toLowerCase();
-    if(q.includes('görsel') || q.includes('tarama')) return "Görsel tarama için elite seviye 0.3-0.5 sn'dir. Periferik görüş açısı ~120° olmalıdır.";
-    if(q.includes('işitsel') || q.includes('ses')) return "İşitsel reaksiyon süresi elite oyuncularda 140-160ms civarındadır.";
-    if(q.includes('denge') || q.includes('vestibüler')) return "Denge için muscle spindle ve Golgi tendon organı kritiktir. Diz fleksiyonu 15-20° idealdir.";
-    if(q.includes('dokunsal') || q.includes('pas')) return "Dokunsal his için afferent 40-60ms, efferent 60-80ms optimaldir.";
-    if(q.includes('mekansal') || q.includes('sahte')) return "Mekansal farkındalık için rakip COG (ağırlık merkezi) okuma kritiktir.";
-    return "Oyuncunun duyusal skorlarını yükleyip rapor alabilirsin.";
-}
-setTimeout(() => {
-    let sendBtn = document.getElementById('sendChatBtn');
-    let chatInput = document.getElementById('chatInput');
-    let chatDiv = document.getElementById('chatMessages');
-    if(sendBtn && chatInput && chatDiv) {
-        sendBtn.addEventListener('click', function() {
-            let msg = chatInput.value.trim();
-            if(!msg) return;
-            chatDiv.innerHTML += `<div style="margin-top:8px;">👤 Sen: ${msg}</div>`;
-            chatDiv.innerHTML += `<div style="color:#ffd700; margin-top:5px;">🤖 Zoe: ${getAIResponse(msg)}</div>`;
-            chatDiv.scrollTop = chatDiv.scrollHeight;
-            chatInput.value = '';
-        });
-        chatInput.addEventListener('keypress', function(e) { if(e.key === 'Enter') sendBtn.click(); });
-    }
-}, 100);
-
-// ---------- EVENT LISTENER ----------
-document.getElementById('evaluateBtn').addEventListener('click', () => { updatePreview(); updateRadarFromCurrent(); updateAISuggestion(); });
-document.getElementById('saveBtn').addEventListener('click', savePlayer);
-document.getElementById('compareBtn').addEventListener('click', compareSelected);
-document.getElementById('compareAllBtn').addEventListener('click', compareAll);
-document.getElementById('pdfBtn').addEventListener('click', downloadPDF);
-document.getElementById('trendBtn').addEventListener('click', showTrend);
-
-// ---------- BAŞLANGIÇ ----------
-renderPlayerList();
-updatePreview();
-initRadar();
-updateAISuggestion();
-updateStats();
-console.log('✅ TOAPERFORM V7.9 + Duyusal Scouting Pro eksiksiz yüklendi');
+// ========== BAŞLAT ==========
+renderList(); updateAll(); updateStats();
 </script>
 </body>
 </html>
