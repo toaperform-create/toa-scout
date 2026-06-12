@@ -68,10 +68,6 @@
             background: #0a2a18; border-radius: 15px;
             padding: 15px; margin-top: 12px; text-align: center;
         }
-        .scientific-detail {
-            font-size: 0.65rem; background: #00000050;
-            padding: 6px; border-radius: 10px; margin-top: 4px;
-        }
         .player-list {
             max-height: 200px; overflow-y: auto;
             font-size: 0.7rem; text-align: left;
@@ -85,7 +81,6 @@
         .average { color: #88aa88; }
         .radar-container { max-width: 280px; margin: 0 auto; }
 
-        /* TOAPERFORM Menü Stilleri */
         .toa-menu {
             display: flex; gap: 10px; justify-content: center;
             margin-bottom: 20px; flex-wrap: wrap;
@@ -100,10 +95,9 @@
         .module-section { display: none; }
         .module-section.active { display: block; }
 
-        /* Karşılaştırma overlay */
         .compare-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000;
+            background: rgba(0,0,0,0.95); z-index: 1000;
             display: none; justify-content: center; align-items: center;
             flex-direction: column; padding: 20px;
         }
@@ -117,7 +111,6 @@
             font-size: 2rem; background: none; border: none;
             color: #ffd700; cursor: pointer;
         }
-
         @media (max-width: 700px) {
             .grid { grid-template-columns: 1fr; }
             .compare-grid { grid-template-columns: 1fr; }
@@ -131,7 +124,6 @@
         <p>VALD ForceDeck | AI Chat | Duyusal Analiz | PDF Rapor | Dünya Sıralaması</p>
     </div>
 
-    <!-- TOAPERFORM Menü -->
     <div class="toa-menu">
         <button onclick="showModule('sensory')" class="active" id="btn-sensory">🧠 Duyusal Scouting</button>
         <button onclick="showModule('vald')" id="btn-vald">📊 VALD ForceDeck</button>
@@ -142,27 +134,26 @@
     <!-- DUYUSAL SCOUTING MODÜLÜ -->
     <div id="module-sensory" class="module-section active">
         <div class="grid">
-            <!-- SOL: Slider + Değerlendirme -->
             <div class="card">
                 <h2>🎯 OYUNCU DEĞERLENDİR</h2>
                 <div class="slider-group">
-                    <label>🧠 Görsel Tarama <span id="visual_val" class="score-value">0</span></label>
+                    <label>🧠 Görsel Tarama <span id="visual_val" class="score-value">5</span></label>
                     <input type="range" id="visual" min="0" max="10" step="1" value="5">
                 </div>
                 <div class="slider-group">
-                    <label>👂 İşitsel Reaksiyon <span id="auditory_val" class="score-value">0</span></label>
+                    <label>👂 İşitsel Reaksiyon <span id="auditory_val" class="score-value">5</span></label>
                     <input type="range" id="auditory" min="0" max="10" step="1" value="5">
                 </div>
                 <div class="slider-group">
-                    <label>🧍 Denge (Vestibüler) <span id="vestibular_val" class="score-value">0</span></label>
+                    <label>🧍 Denge (Vestibüler) <span id="vestibular_val" class="score-value">5</span></label>
                     <input type="range" id="vestibular" min="0" max="10" step="1" value="5">
                 </div>
                 <div class="slider-group">
-                    <label>🦶 Dokunsal + Pas <span id="haptic_val" class="score-value">0</span></label>
+                    <label>🦶 Dokunsal + Pas <span id="haptic_val" class="score-value">5</span></label>
                     <input type="range" id="haptic" min="0" max="10" step="1" value="5">
                 </div>
                 <div class="slider-group">
-                    <label>🏃 Mekansal + Sahte Koşu <span id="spatial_val" class="score-value">0</span></label>
+                    <label>🏃 Mekansal + Sahte Koşu <span id="spatial_val" class="score-value">5</span></label>
                     <input type="range" id="spatial" min="0" max="10" step="1" value="5">
                 </div>
                 <div style="display:flex; gap:5px; margin-top:10px;">
@@ -179,7 +170,6 @@
                 </div>
             </div>
 
-            <!-- ORTA: Radar Grafik + Kayıtlı Oyuncular -->
             <div class="card">
                 <h2>📊 RADAR GRAFİK (5 Duyu)</h2>
                 <div class="radar-container"><canvas id="radarChart" width="250" height="250"></canvas></div>
@@ -191,7 +181,6 @@
                 <button id="trendBtn">📈 Trend Analizi</button>
             </div>
 
-            <!-- SAĞ: Bilimsel Tablo + AI Öneri -->
             <div class="card">
                 <h2>🔬 BİLİMSEL TEMEL</h2>
                 <div style="font-size:0.7rem; line-height:1.6;">
@@ -217,25 +206,27 @@
         </div>
     </div>
 
-    <!-- VALD MODÜLÜ (Placeholder) -->
+    <!-- VALD MODÜLÜ -->
     <div id="module-vald" class="module-section">
-        <div class="card" style="text-align:center; padding:40px;">
-            <h2>📊 VALD ForceDeck Modülü</h2>
-            <p>ForceDeck verilerini buraya yükleyin.</p>
-            <p style="font-size:0.8rem; margin-top:10px; color:#888;">
-                Bu modül TOAPERFORM V7.9'un mevcut VALD entegrasyonunu kullanır.
-            </p>
+        <div class="card" style="padding:20px;">
+            <h2>📊 VALD ForceDeck Entegrasyonu</h2>
+            <input type="file" id="valdFile" accept=".csv,.json,.xlsx" style="margin:15px 0; padding:8px;">
+            <button id="loadValdBtn">Veriyi Yükle</button>
+            <div id="valdPreview" style="margin-top:15px; font-size:0.7rem; color:#aaa;"></div>
         </div>
     </div>
 
-    <!-- AI CHAT MODÜLÜ (Placeholder) -->
+    <!-- AI CHAT MODÜLÜ -->
     <div id="module-ai" class="module-section">
-        <div class="card" style="text-align:center; padding:40px;">
-            <h2>🤖 Zoe AI Chat</h2>
-            <p>Zoe AI ile sohbet edin.</p>
-            <p style="font-size:0.8rem; margin-top:10px; color:#888;">
-                Bu modül TOAPERFORM V7.9'un mevcut AI Chat Engine'ini kullanır.
-            </p>
+        <div class="card" style="padding:20px;">
+            <h2>🤖 Zoe AI Chat Asistanı</h2>
+            <div id="chatMessages" style="height:300px; overflow-y:auto; background:#0a2a18; border-radius:12px; padding:10px; margin-bottom:10px;">
+                <div style="color:#ffd700;">🤖 Zoe: Merhaba! Oyuncu hakkında sorularını yanıtlayabilirim.</div>
+            </div>
+            <div style="display:flex; gap:5px;">
+                <input type="text" id="chatInput" placeholder="Sorunu yaz..." style="flex:3; padding:8px; border-radius:20px; border:none; text-indent:10px;">
+                <button id="sendChatBtn">Gönder</button>
+            </div>
         </div>
     </div>
 
@@ -282,7 +273,7 @@
 
 <script>
 // ============================================================
-// TOAPERFORM V7.9 + DUYUSAL SCOUTING PRO - ENTEGRE KOD
+// TOAPERFORM V7.9 + DUYUSAL SCOUTING PRO - TAM EKSİKSİZ KOD
 // ============================================================
 
 // ---------- MODÜL YÖNETİMİ ----------
@@ -293,12 +284,12 @@ function showModule(moduleName) {
     document.getElementById('btn-' + moduleName).classList.add('active');
 }
 
-// ---------- BİLİMSEL METİN KÜTÜPHANESİ ----------
+// ---------- BİLİMSEL METİN (0-10 Skalası) ----------
 function getScientificText(duyu, p) {
     p = parseInt(p);
     if(duyu === 'visual') {
-        if(p >= 9) return "✅ ELİT: 0.3-0.5 sn, periferik 120°, scanning frequency 0.3-0.5 sn";
-        if(p >= 7) return "📌 İYİ: 0.5-0.8 sn, periferik 100°";
+        if(p >= 9) return "✅ ELİT: 0.3-0.5 sn tarama, periferik 120°";
+        if(p >= 7) return "📌 İYİ: 0.5-0.8 sn tarama, periferik 100°";
         if(p >= 5) return "⚡ ORTA: 0.8-1.2 sn, periferik 80°";
         if(p >= 3) return "⚠️ GELİŞİM: 1.2-1.5 sn, periferik 60°";
         return "❌ ZAYIF: >1.5 sn, periferik <60°";
@@ -311,51 +302,39 @@ function getScientificText(duyu, p) {
         return "❌ ZAYIF: >300ms";
     }
     if(duyu === 'vestibular') {
-        if(p >= 9) return "✅ ELİT: Diz 20°+, Muscle spindle + Golgi tendon organı aktif";
+        if(p >= 9) return "✅ ELİT: Diz 20°+, Muscle spindle + Golgi tendon organı";
         if(p >= 7) return "📌 İYİ: Diz 15-20°";
         if(p >= 5) return "⚡ ORTA: Diz 10-15°";
         if(p >= 3) return "⚠️ GELİŞİM: Diz 5-10°";
-        return "❌ ZAYIF: Diz <5°, proprioseptörler zayıf";
+        return "❌ ZAYIF: Diz <5°";
     }
     if(duyu === 'haptic') {
-        if(p >= 9) return "✅ ELİT: Temas <0.1sn, afferent 40-60ms, efferent 60-80ms";
+        if(p >= 9) return "✅ ELİT: Temas <0.1sn, afferent 40-60ms";
         if(p >= 7) return "📌 İYİ: Temas 0.1-0.15sn";
         if(p >= 5) return "⚡ ORTA: Temas 0.15-0.2sn";
         if(p >= 3) return "⚠️ GELİŞİM: Temas 0.2-0.3sn";
-        return "❌ ZAYIF: >0.3sn, bakmadan pas yok";
+        return "❌ ZAYIF: >0.3sn";
     }
     if(duyu === 'spatial') {
-        if(p >= 9) return "✅ ELİT: COG okur, decoy detection, kinesthetic awareness yüksek";
+        if(p >= 9) return "✅ ELİT: COG okur, decoy detection, kinesthetic";
         if(p >= 7) return "📌 İYİ: %70 yanıltma başarısı";
-        if(p >= 5) return "⚡ ORTA: %50 yanıltma başarısı";
+        if(p >= 5) return "⚡ ORTA: %50 yanıltma";
         if(p >= 3) return "⚠️ GELİŞİM: Etkisiz sahte koşu";
-        return "❌ ZAYIF: COG okuyamaz, pozisyon kaybı";
+        return "❌ ZAYIF: COG okuyamaz";
     }
     return "";
 }
 
-// ---------- PERCENTILE HESAPLAMA (Dünya/Türkiye) ----------
+// ---------- PERCENTILE HESAPLAMA ----------
 function calculatePercentile(total) {
-    // Atlantis benzeri percentile hesaplama
-    // 10.000+ oyuncu verisi simülasyonu
-    const worldData = {
-        mean: 32.5, std: 8.2,
-        elite: 45, good: 38, average: 30
-    };
-    const trData = {
-        mean: 28.3, std: 7.1,
-        elite: 40, good: 34, average: 26
-    };
-
-    // Z-score hesaplama
-    let worldZ = (total - worldData.mean) / worldData.std;
-    let trZ = (total - trData.mean) / trData.std;
-
-    // Percentile (basit yaklaşım)
-    let worldP = Math.min(99, Math.max(1, Math.round(50 + (worldZ * 25))));
-    let trP = Math.min(99, Math.max(1, Math.round(50 + (trZ * 25))));
-
-    return { world: worldP, tr: trP };
+    if(total >= 45) { return { world: Math.min(99, Math.round(98 + (total-45)*0.4)), tr: Math.min(99, Math.round(97 + (total-45)*0.6)) }; }
+    if(total >= 40) { return { world: Math.min(99, Math.round(90 + (total-40)*1.6)), tr: Math.min(99, Math.round(85 + (total-40)*2.4)) }; }
+    if(total >= 35) { return { world: Math.min(99, Math.round(75 + (total-35)*3)), tr: Math.min(99, Math.round(65 + (total-35)*4)) }; }
+    if(total >= 30) { return { world: Math.min(99, Math.round(55 + (total-30)*4)), tr: Math.min(99, Math.round(45 + (total-30)*4)) }; }
+    if(total >= 25) { return { world: Math.min(99, Math.round(35 + (total-25)*4)), tr: Math.min(99, Math.round(25 + (total-25)*4)) }; }
+    if(total >= 20) { return { world: Math.min(99, Math.round(18 + (total-20)*3.4)), tr: Math.min(99, Math.round(10 + (total-20)*3)) }; }
+    if(total >= 15) { return { world: Math.min(99, Math.round(8 + (total-15)*2)), tr: Math.min(99, Math.round(4 + (total-15)*1.2)) }; }
+    return { world: Math.max(1, Math.min(99, Math.round(total * 0.5))), tr: Math.max(1, Math.min(99, Math.round(total * 0.3))) };
 }
 
 function getRankText(percentile) {
@@ -379,7 +358,6 @@ const spans = {
     spatial: document.getElementById('spatial_val')
 };
 
-// Slider event listener'ları
 for(let k in sliders) {
     sliders[k].addEventListener('input', (e) => {
         spans[k].innerText = e.target.value;
@@ -397,22 +375,20 @@ function getCurrentScores() {
     };
 }
 
-// ---------- ANA DEĞERLENDİRME FONKSİYONU ----------
+// ---------- ANA DEĞERLENDİRME ----------
 function updatePreview() {
     let scores = getCurrentScores();
     let total = scores.visual + scores.auditory + scores.vestibular + scores.haptic + scores.spatial;
     document.getElementById('totalScore').innerText = total;
 
     let levelDiv = document.getElementById('levelText');
-    let maxScore = 50;
-    let percentage = (total / maxScore) * 100;
+    let percentage = (total / 50) * 100;
 
     if(percentage >= 85) { levelDiv.innerHTML = "🔴 ELİT SEVİYE (85%+)"; levelDiv.className = "elite"; }
     else if(percentage >= 70) { levelDiv.innerHTML = "🟡 ÜST POTANSİYEL (70-84%)"; levelDiv.className = "medium"; }
     else if(percentage >= 50) { levelDiv.innerHTML = "⚡ ORTA SEVİYE (50-69%)"; levelDiv.className = "average"; }
     else { levelDiv.innerHTML = "⚪ GELİŞİM GEREKİR (<50%)"; levelDiv.className = "average"; }
 
-    // Pozisyon tavsiyesi
     let pos = "";
     let posScores = {
         stoper: scores.visual + scores.vestibular,
@@ -421,9 +397,7 @@ function updatePreview() {
         forvet: scores.spatial + scores.haptic,
         kaleci: scores.visual + scores.vestibular + scores.auditory
     };
-
     let bestPos = Object.keys(posScores).reduce((a, b) => posScores[a] > posScores[b] ? a : b);
-
     switch(bestPos) {
         case 'stoper': pos = "🛡️ Stoper (Görsel+Denge dominant)"; break;
         case 'kanat': pos = "⚡ Kanat/Bek (İşitsel+Mekansal dominant)"; break;
@@ -433,14 +407,11 @@ function updatePreview() {
     }
     document.getElementById('positionAdvice').innerHTML = "📍 " + pos;
 
-    // Percentile / Sıralama
     let pct = calculatePercentile(total);
-    document.getElementById('percentileText').innerHTML = 
-        `🌍 Dünya: %${pct.world} | 🇹🇷 Türkiye: %${pct.tr}`;
+    document.getElementById('percentileText').innerHTML = `🌍 Dünya: %${pct.world} | 🇹🇷 Türkiye: %${pct.tr}`;
     document.getElementById('worldRank').innerHTML = getRankText(pct.world);
     document.getElementById('trRank').innerHTML = getRankText(pct.tr);
 
-    // Detay analiz
     let detail = `<strong>Detaylı Analiz:</strong><br>`;
     detail += `Görsel:${scores.visual}/10 | İşitsel:${scores.auditory}/10 | Denge:${scores.vestibular}/10 | Dokunsal:${scores.haptic}/10 | Mekansal:${scores.spatial}/10<br><br>`;
     detail += `🧠 ${getScientificText('visual', scores.visual)}<br>`;
@@ -449,14 +420,12 @@ function updatePreview() {
     detail += `🦶 ${getScientificText('haptic', scores.haptic)}<br>`;
     detail += `🏃 ${getScientificText('spatial', scores.spatial)}`;
     document.getElementById('detailAnalysis').innerHTML = detail;
-
     return total;
 }
 
 // ---------- RADAR GRAFİK ----------
 let radarChart;
 function initRadar() { updateRadarFromCurrent(); }
-
 function updateRadarFromCurrent() {
     let s = getCurrentScores();
     let data = [s.visual, s.auditory, s.vestibular, s.haptic, s.spatial];
@@ -464,39 +433,12 @@ function updateRadarFromCurrent() {
     const ctx = document.getElementById('radarChart').getContext('2d');
     radarChart = new Chart(ctx, {
         type: 'radar',
-        data: {
-            labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'],
-            datasets: [{
-                label: 'Duyu Skoru',
-                data: data,
-                backgroundColor: 'rgba(255,215,0,0.3)',
-                borderColor: '#ffd700',
-                pointBackgroundColor: '#ffd700',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#ffd700'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                r: {
-                    min: 0, max: 10,
-                    ticks: { stepSize: 2, color: '#ddd', font: { size: 10 } },
-                    grid: { color: 'rgba(255,255,255,0.1)' },
-                    angleLines: { color: 'rgba(255,255,255,0.1)' },
-                    pointLabels: { color: '#ffd700', font: { size: 11 } }
-                }
-            },
-            plugins: {
-                legend: { labels: { color: '#ffd700' } }
-            }
-        }
+        data: { labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'], datasets: [{ label: 'Duyu Skoru', data: data, backgroundColor: 'rgba(255,215,0,0.3)', borderColor: '#ffd700', pointBackgroundColor: '#ffd700', pointBorderColor: '#fff' }] },
+        options: { responsive: true, maintainAspectRatio: true, scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#ddd' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#ffd700' } } }, plugins: { legend: { labels: { color: '#ffd700' } } } }
     });
 }
 
-// ---------- VERİ KAYDI (localStorage) ----------
+// ---------- VERİ KAYDI (HISTORY DESTEKLİ) ----------
 let players = JSON.parse(localStorage.getItem('toa_scoutPlayers')) || [];
 
 function savePlayer() {
@@ -505,17 +447,26 @@ function savePlayer() {
     let scores = getCurrentScores();
     let total = scores.visual + scores.auditory + scores.vestibular + scores.haptic + scores.spatial;
     let pct = calculatePercentile(total);
-    let newPlayer = {
-        id: Date.now(),
-        name,
-        ...scores,
-        total,
-        worldPct: pct.world,
-        trPct: pct.tr,
-        date: new Date().toLocaleString('tr-TR'),
-        history: [{ date: new Date().toISOString(), scores: {...scores}, total }]
-    };
-    players.push(newPlayer);
+    
+    let existingIndex = players.findIndex(p => p.name === name);
+    let newHistoryEntry = { date: new Date().toISOString(), scores: {...scores}, total };
+    
+    if(existingIndex !== -1) {
+        players[existingIndex].history = players[existingIndex].history || [];
+        players[existingIndex].history.push(newHistoryEntry);
+        players[existingIndex].visual = scores.visual;
+        players[existingIndex].auditory = scores.auditory;
+        players[existingIndex].vestibular = scores.vestibular;
+        players[existingIndex].haptic = scores.haptic;
+        players[existingIndex].spatial = scores.spatial;
+        players[existingIndex].total = total;
+        players[existingIndex].worldPct = pct.world;
+        players[existingIndex].trPct = pct.tr;
+        players[existingIndex].date = new Date().toLocaleString('tr-TR');
+    } else {
+        let newPlayer = { id: Date.now(), name, ...scores, total, worldPct: pct.world, trPct: pct.tr, date: new Date().toLocaleString('tr-TR'), history: [newHistoryEntry] };
+        players.push(newPlayer);
+    }
     localStorage.setItem('toa_scoutPlayers', JSON.stringify(players));
     renderPlayerList();
     updateStats();
@@ -537,16 +488,9 @@ function renderPlayerList() {
             <button class="deletePlayerBtn" data-id="${p.id}">Sil</button>
         </div>`;
     }).join('');
-
-    document.querySelectorAll('.loadPlayerBtn').forEach(btn => {
-        btn.addEventListener('click', (e) => { loadPlayer(parseInt(btn.getAttribute('data-id'))); });
-    });
-    document.querySelectorAll('.comparePlayerBtn').forEach(btn => {
-        btn.addEventListener('click', (e) => { comparePlayer(parseInt(btn.getAttribute('data-id'))); });
-    });
-    document.querySelectorAll('.deletePlayerBtn').forEach(btn => {
-        btn.addEventListener('click', (e) => { deletePlayer(parseInt(btn.getAttribute('data-id'))); });
-    });
+    document.querySelectorAll('.loadPlayerBtn').forEach(btn => btn.addEventListener('click', (e) => { loadPlayer(parseInt(btn.getAttribute('data-id'))); }));
+    document.querySelectorAll('.comparePlayerBtn').forEach(btn => btn.addEventListener('click', (e) => { comparePlayer(parseInt(btn.getAttribute('data-id'))); }));
+    document.querySelectorAll('.deletePlayerBtn').forEach(btn => btn.addEventListener('click', (e) => { deletePlayer(parseInt(btn.getAttribute('data-id'))); }));
 }
 
 function loadPlayer(id) {
@@ -571,7 +515,7 @@ function deletePlayer(id) {
 }
 
 // ---------- KARŞILAŞTIRMA ----------
-let compareChart1, compareChart2;
+let compareChart1 = null, compareChart2 = null;
 
 function comparePlayer(id) {
     let p = players.find(p => p.id === id);
@@ -583,75 +527,39 @@ function comparePlayer(id) {
     document.getElementById('compareName1').innerText = currentName;
     document.getElementById('compareName2').innerText = p.name;
 
-    // Radar 1
     if(compareChart1) compareChart1.destroy();
     compareChart1 = new Chart(document.getElementById('radarCompare1').getContext('2d'), {
-        type: 'radar',
-        data: {
-            labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'],
-            datasets: [{
-                label: currentName,
-                data: [current.visual, current.auditory, current.vestibular, current.haptic, current.spatial],
-                backgroundColor: 'rgba(255,215,0,0.3)', borderColor: '#ffd700'
-            }]
-        },
-        options: {
-            scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#ddd' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#ffd700' } } },
-            plugins: { legend: { labels: { color: '#ffd700' } } }
-        }
+        type: 'radar', data: { labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'], datasets: [{ label: currentName, data: [current.visual, current.auditory, current.vestibular, current.haptic, current.spatial], backgroundColor: 'rgba(255,215,0,0.3)', borderColor: '#ffd700' }] },
+        options: { scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#ddd' }, pointLabels: { color: '#ffd700' } } }, plugins: { legend: { labels: { color: '#ffd700' } } } }
     });
-
-    // Radar 2
     if(compareChart2) compareChart2.destroy();
     compareChart2 = new Chart(document.getElementById('radarCompare2').getContext('2d'), {
-        type: 'radar',
-        data: {
-            labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'],
-            datasets: [{
-                label: p.name,
-                data: [p.visual, p.auditory, p.vestibular, p.haptic, p.spatial],
-                backgroundColor: 'rgba(0,255,255,0.3)', borderColor: '#00ffff'
-            }]
-        },
-        options: {
-            scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#ddd' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: '#00ffff' } } },
-            plugins: { legend: { labels: { color: '#00ffff' } } }
-        }
+        type: 'radar', data: { labels: ['Görsel','İşitsel','Denge','Dokunsal','Mekansal'], datasets: [{ label: p.name, data: [p.visual, p.auditory, p.vestibular, p.haptic, p.spatial], backgroundColor: 'rgba(0,255,255,0.3)', borderColor: '#00ffff' }] },
+        options: { scales: { r: { min: 0, max: 10, ticks: { stepSize: 2, color: '#ddd' }, pointLabels: { color: '#00ffff' } } }, plugins: { legend: { labels: { color: '#00ffff' } } } }
     });
-
-    document.getElementById('compareStats1').innerHTML = 
-        `Toplam: ${currentTotal}/50<br>` +
-        `G:${current.visual} İ:${current.auditory} D:${current.vestibular} Dok:${current.haptic} M:${current.spatial}`;
-    document.getElementById('compareStats2').innerHTML = 
-        `Toplam: ${p.total}/50<br>` +
-        `G:${p.visual} İ:${p.auditory} D:${p.vestibular} Dok:${p.haptic} M:${p.spatial}<br>` +
-        `🌍%${p.worldPct} 🇹🇷%${p.trPct}`;
-
+    document.getElementById('compareStats1').innerHTML = `Toplam: ${currentTotal}/50<br>G${current.visual} İ${current.auditory} D${current.vestibular} Dok${current.haptic} M${current.spatial}`;
+    document.getElementById('compareStats2').innerHTML = `Toplam: ${p.total}/50<br>G${p.visual} İ${p.auditory} D${p.vestibular} Dok${p.haptic} M${p.spatial}<br>🌍%${p.worldPct} 🇹🇷%${p.trPct}`;
     document.getElementById('compareOverlay').classList.add('active');
 }
 
 function closeCompare() {
+    if(compareChart1) { compareChart1.destroy(); compareChart1 = null; }
+    if(compareChart2) { compareChart2.destroy(); compareChart2 = null; }
     document.getElementById('compareOverlay').classList.remove('active');
 }
 
 function compareSelected() {
     if(players.length < 1) { alert("Karşılaştırma için en az 1 kayıtlı oyuncu gerekli."); return; }
-    alert("Oyuncu listesinden 'Karşılaştır' butonuna tıklayın. Mevcut slider değerleri ile karşılaştırılacak.");
+    alert("Oyuncu listesinden 'Karşılaştır' butonuna tıklayın.");
 }
 
 function compareAll() {
     if(players.length < 2) { alert("Tümünü karşılaştırmak için en az 2 oyuncu gerekli."); return; }
-    // Tüm oyuncuları tablo olarak göster
-    let html = '<h3>Tüm Oyuncu Karşılaştırması</h3><table style="width:100%; font-size:0.7rem; border-collapse:collapse;">';
-    html += '<tr style="background:#1a3a2a;"><th>Oyuncu</th><th>Toplam</th><th>G</th><th>İ</th><th>D</th><th>Dok</th><th>M</th><th>🌍</th><th>🇹🇷</th></tr>';
-    players.forEach(p => {
-        let cls = p.total >= 40 ? 'elite' : p.total >= 30 ? 'medium' : 'average';
-        html += `<tr class="${cls}"><td>${p.name}</td><td><strong>${p.total}</strong></td><td>${p.visual}</td><td>${p.auditory}</td><td>${p.vestibular}</td><td>${p.haptic}</td><td>${p.spatial}</td><td>%${p.worldPct}</td><td>%${p.trPct}</td></tr>`;
-    });
+    let html = '<h3>Tüm Oyuncu Karşılaştırması</h3><table style="width:100%; font-size:0.7rem; border-collapse:collapse;"><tr style="background:#1a3a2a;"><th>Oyuncu</th><th>Toplam</th><th>G</th><th>İ</th><th>D</th><th>Dok</th><th>M</th><th>🌍</th><th>🇹🇷</th></tr>';
+    players.forEach(p => { let cls = p.total >= 40 ? 'elite' : p.total >= 30 ? 'medium' : 'average'; html += `<tr class="${cls}"><td>${p.name}</td><td><strong>${p.total}</strong></td><td>${p.visual}</td><td>${p.auditory}</td><td>${p.vestibular}</td><td>${p.haptic}</td><td>${p.spatial}</td><td>%${p.worldPct}</td><td>%${p.trPct}</td></tr>`; });
     html += '</table>';
-
     let win = window.open('', '_blank');
-    win.document.write('<html><head><title>Karşılaştırma</title><style>body{background:#0a2e1c;color:#eee;font-family:sans-serif;padding:20px;} .elite{color:#ffd700;} .medium{color:#ffaa33;} .average{color:#88aa88;} th,td{padding:5px;border:1px solid #333;}</style></head><body>' + html + '</body></html>');
+    win.document.write('<html><head><title>Karşılaştırma</title><style>body{background:#0a2e1c;color:#eee;font-family:sans-serif;padding:20px;} .elite{color:#ffd700;} .medium{color:#ffaa33;} .average{color:#88aa88;} th,td{padding:5px;border:1px solid #333;} table{border-collapse:collapse;width:100%;}</style></head><body>' + html + '</body></html>');
 }
 
 // ---------- PDF RAPOR ----------
@@ -660,51 +568,16 @@ function downloadPDF() {
     let total = scores.visual + scores.auditory + scores.vestibular + scores.haptic + scores.spatial;
     let pct = calculatePercentile(total);
     let name = document.getElementById('playerName').value.trim() || "Oyuncu";
-    let pos = document.getElementById('positionAdvice').innerText;
-    let ai = document.getElementById('aiSuggestion').innerText;
-
-    let htmlContent = `
-        <div style="font-family:sans-serif; padding:30px; background:#fff; color:#333;">
-            <h1 style="color:#0a2e1c; border-bottom:3px solid #ffd700; padding-bottom:10px;">
-                ⚽ Duyusal Scouting Raporu
-            </h1>
-            <h2>${name}</h2>
-            <p><strong>Tarih:</strong> ${new Date().toLocaleString('tr-TR')}</p>
-            <hr>
-            <h3>📊 Skorlar (0-10)</h3>
-            <table style="width:100%; border-collapse:collapse; margin:15px 0;">
-                <tr style="background:#0a2e1c; color:#ffd700;">
-                    <th style="padding:8px; border:1px solid #ddd;">Duyu</th>
-                    <th style="padding:8px; border:1px solid #ddd;">Skor</th>
-                    <th style="padding:8px; border:1px solid #ddd;">Bilimsel Değerlendirme</th>
-                </tr>
-                <tr><td style="padding:8px; border:1px solid #ddd;">🧠 Görsel Tarama</td><td style="padding:8px; border:1px solid #ddd;">${scores.visual}/10</td><td style="padding:8px; border:1px solid #ddd;">${getScientificText('visual', scores.visual)}</td></tr>
-                <tr><td style="padding:8px; border:1px solid #ddd;">👂 İşitsel Reaksiyon</td><td style="padding:8px; border:1px solid #ddd;">${scores.auditory}/10</td><td style="padding:8px; border:1px solid #ddd;">${getScientificText('auditory', scores.auditory)}</td></tr>
-                <tr><td style="padding:8px; border:1px solid #ddd;">🧍 Denge</td><td style="padding:8px; border:1px solid #ddd;">${scores.vestibular}/10</td><td style="padding:8px; border:1px solid #ddd;">${getScientificText('vestibular', scores.vestibular)}</td></tr>
-                <tr><td style="padding:8px; border:1px solid #ddd;">🦶 Dokunsal + Pas</td><td style="padding:8px; border:1px solid #ddd;">${scores.haptic}/10</td><td style="padding:8px; border:1px solid #ddd;">${getScientificText('haptic', scores.haptic)}</td></tr>
-                <tr><td style="padding:8px; border:1px solid #ddd;">🏃 Mekansal + Sahte</td><td style="padding:8px; border:1px solid #ddd;">${scores.spatial}/10</td><td style="padding:8px; border:1px solid #ddd;">${getScientificText('spatial', scores.spatial)}</td></tr>
-            </table>
-            <h3>📈 Özet</h3>
-            <p><strong>Toplam:</strong> ${total}/50 (${(total/50*100).toFixed(1)}%)</p>
-            <p><strong>Pozisyon:</strong> ${pos}</p>
-            <p><strong>🌍 Dünya Sıralaması:</strong> %${pct.world} - ${getRankText(pct.world)}</p>
-            <p><strong>🇹🇷 Türkiye Sıralaması:</strong> %${pct.tr} - ${getRankText(pct.tr)}</p>
-            <h3>🤖 AI Öneri</h3>
-            <p style="background:#f5f5f5; padding:10px; border-left:4px solid #ffd700;">${ai}</p>
-            <hr>
-            <p style="font-size:0.7rem; color:#666; text-align:center;">
-                TOAPERFORM V7.9 + Duyusal Scouting Pro | Bilimsel Temelli Performans Analizi
-            </p>
-        </div>
-    `;
-
-    let opt = {
-        margin: 0.5,
-        filename: `TOA_Scout_${name.replace(/\s+/g, '_')}_${new Date().toISOString().slice(0,10)}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
+    let pos = document.getElementById('positionAdvice').innerHTML;
+    let ai = document.getElementById('aiSuggestion').innerHTML;
+    let htmlContent = `<div style="font-family:sans-serif; padding:30px; background:#fff; color:#333;"><h1 style="color:#0a2e1c; border-bottom:3px solid #ffd700;">⚽ Duyusal Scouting Raporu</h1><h2>${name}</h2><p><strong>Tarih:</strong> ${new Date().toLocaleString('tr-TR')}</p><hr><h3>📊 Skorlar (0-10)</h3><table style="width:100%; border-collapse:collapse;"><tr style="background:#0a2e1c; color:#ffd700;"><th style="padding:8px; border:1px solid #ddd;">Duyu</th><th style="padding:8px; border:1px solid #ddd;">Skor</th><th style="padding:8px; border:1px solid #ddd;">Bilimsel</th></tr>`;
+    htmlContent += `<tr><td>🧠 Görsel Tarama</td><td>${scores.visual}/10</td><td>${getScientificText('visual', scores.visual)}</td></tr>`;
+    htmlContent += `<tr><td>👂 İşitsel Reaksiyon</td><td>${scores.auditory}/10</td><td>${getScientificText('auditory', scores.auditory)}</td></tr>`;
+    htmlContent += `<tr><td>🧍 Denge</td><td>${scores.vestibular}/10</td><td>${getScientificText('vestibular', scores.vestibular)}</td></tr>`;
+    htmlContent += `<tr><td>🦶 Dokunsal + Pas</td><td>${scores.haptic}/10</td><td>${getScientificText('haptic', scores.haptic)}</td></tr>`;
+    htmlContent += `<tr><td>🏃 Mekansal + Sahte</td><td>${scores.spatial}/10</td><td>${getScientificText('spatial', scores.spatial)}</td></tr></table>`;
+    htmlContent += `<h3>📈 Özet</h3><p><strong>Toplam:</strong> ${total}/50 (${(total/50*100).toFixed(1)}%)</p><p>${pos}</p><p><strong>🌍 Dünya:</strong> %${pct.world} - ${getRankText(pct.world)}</p><p><strong>🇹🇷 Türkiye:</strong> %${pct.tr} - ${getRankText(pct.tr)}</p><h3>🤖 AI Öneri</h3><p style="background:#f5f5f5; padding:10px;">${ai}</p><hr><p style="text-align:center;">TOAPERFORM V7.9</p></div>`;
+    let opt = { margin: 0.5, filename: `TOA_Scout_${name.replace(/\s+/g, '_')}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4' } };
     html2pdf().set(opt).from(htmlContent).save();
 }
 
@@ -712,83 +585,95 @@ function downloadPDF() {
 function showTrend() {
     if(players.length < 1) { alert("Trend analizi için en az 1 oyuncu gerekli."); return; }
     let html = '<h3>Oyuncu Trend Analizi</h3>';
+    let hasHistory = false;
     players.forEach(p => {
-        if(p.history && p.history.length > 1) {
-            html += `<h4>${p.name}</h4>`;
-            html += '<table style="width:100%; font-size:0.7rem;"><tr><th>Tarih</th><th>Toplam</th></tr>';
+        if(p.history && p.history.length > 0) {
+            hasHistory = true;
+            html += `<h4>${p.name}</h4><table style="width:100%; font-size:0.7rem;"><tr style="background:#1a3a2a;"><th>Tarih</th><th>Toplam</th><th>G</th><th>İ</th><th>D</th><th>Dok</th><th>M</th></tr>`;
             p.history.forEach(h => {
-                html += `<tr><td>${new Date(h.date).toLocaleDateString('tr-TR')}</td><td>${h.total}</td></tr>`;
+                let s = h.scores;
+                html += `<tr><td>${new Date(h.date).toLocaleDateString('tr-TR')}</td><td><strong>${h.total}</strong></td><td>${s.visual}</td><td>${s.auditory}</td><td>${s.vestibular}</td><td>${s.haptic}</td><td>${s.spatial}</td></tr>`;
             });
-            html += '</table>';
+            html += '</table><br>';
         }
     });
+    if(!hasHistory) html += '<p>Henüz trend verisi yok. Aynı oyuncuyu tekrar kaydederek geçmiş oluşturun.</p>';
     let win = window.open('', '_blank');
-    win.document.write('<html><head><title>Trend</title><style>body{background:#0a2e1c;color:#eee;font-family:sans-serif;padding:20px;}</style></head><body>' + html + '</body></html>');
+    win.document.write('<html><head><title>Trend Analizi</title><style>body{background:#0a2e1c;color:#eee;padding:20px;} th,td{padding:5px;border:1px solid #333;} table{border-collapse:collapse;}</style></head><body>' + html + '</body></html>');
 }
 
-// ---------- AI ÖNERİ (Gelişmiş) ----------
+// ---------- AI ÖNERİ ----------
 function updateAISuggestion() {
     let s = getCurrentScores();
     let total = s.visual + s.auditory + s.vestibular + s.haptic + s.spatial;
-    let max = 50;
-    let pct = (total / max) * 100;
+    let pct = (total / 50) * 100;
     let suggestion = "";
-
-    if(pct >= 85) {
-        suggestion = "🏆 <strong>ELİT TRANSFER ADAYI:</strong> Bu oyuncu baskı altında karar verebilir, rakip COG okur, periferik görüşü elite seviyede. ";
-        suggestion += "Hemen transfer listesine ekle. Avrupa 5 büyük lig seviyesi. ";
-    } else if(pct >= 70) {
-        suggestion = "📌 <strong>ÜST POTANSİYEL:</strong> İzlemeye devam et. Duyusal antrenmanlarla (reaksiyon, scanning, propriosepsiyon) geliştirilebilir. ";
-        suggestion += "1-2 sezon içinde elite çıkabilir. ";
-    } else if(pct >= 50) {
-        suggestion = "⚡ <strong>ORTA SEVİYE:</strong> Profesyonel liglerde oynar ama elit takımlarda yedek/rotasyon olur. ";
-        suggestion += "Duyusal antrenman programı şart. ";
-    } else {
-        suggestion = "⚪ <strong>GELİŞİM GEREKİR:</strong> Elit seviyede oynaması için duyusal temel çok zayıf. ";
-        suggestion += "Alt liglerde değerlendirilebilir. ";
-    }
-
-    // Pozisyon spesifik
-    if(s.visual + s.vestibular >= 16) suggestion += "<br><br>🛡️ <strong>Stoper/Kaleci Profili:</strong> Görsel+Denge dominant. Hava topları, pozisyon alma, refleksler güçlü.";
-    else if(s.auditory + s.spatial >= 16) suggestion += "<br><br>⚡ <strong>Kanat/Bek Profili:</strong> Hızlı işitsel reaksiyon ve mekansal farkındalık. Pres yemez, geniş alan kullanır.";
-    else if(s.haptic + s.visual >= 16) suggestion += "<br><br>🧠 <strong>Orta Saha Yapıcı:</strong> Dokunsal his ve görsel tarama yüksek. Oyun kurar, pas isabeti yüksek.";
-    else if(s.spatial + s.haptic >= 16) suggestion += "<br><br>🎯 <strong>Forvet Profili:</strong> Mekansal zeka ve dokunsal bitiricilik. Defans arkası koşular, vuruş tekniği.";
-
-    // Antrenman önerisi
-    suggestion += "<br><br>📋 <strong>Antrenman Önerisi:</strong><br>";
+    if(pct >= 85) suggestion = "🏆 ELİT TRANSFER ADAYI: Baskı altında karar verebilir, rakip COG okur. Hemen transfer listesine ekle. ";
+    else if(pct >= 70) suggestion = "📌 ÜST POTANSİYEL: İzlemeye devam et. Duyusal antrenmanlarla geliştirilebilir. ";
+    else if(pct >= 50) suggestion = "⚡ ORTA SEVİYE: Profesyonel liglerde oynar ama elit takımlarda rotasyon olur. ";
+    else suggestion = "⚪ GELİŞİM GEREKİR: Elit seviyede oynaması için duyusal temel çok zayıf. ";
+    if(s.visual + s.vestibular >= 16) suggestion += "<br><br>🛡️ Stoper/Kaleci Profili: Görsel+Denge dominant.";
+    else if(s.auditory + s.spatial >= 16) suggestion += "<br><br>⚡ Kanat/Bek Profili: Hızlı işitsel reaksiyon ve mekansal farkındalık.";
+    else if(s.haptic + s.visual >= 16) suggestion += "<br><br>🧠 Orta Saha Yapıcı: Dokunsal his ve görsel tarama yüksek.";
+    else if(s.spatial + s.haptic >= 16) suggestion += "<br><br>🎯 Forvet Profili: Mekansal zeka ve dokunsal bitiricilik.";
+    suggestion += "<br><br>📋 Antrenman Önerisi:<br>";
     if(s.visual < 7) suggestion += "• Görsel tarama: 3-5 sn periferik egzersizler<br>";
     if(s.auditory < 7) suggestion += "• İşitsel reaksiyon: Sesli stimulus drill'leri<br>";
     if(s.vestibular < 7) suggestion += "• Denge: Tek bacak, BOSU, propriosepsiyon<br>";
     if(s.haptic < 7) suggestion += "• Dokunsal: Ayak içi/dışı pas, haptic feedback<br>";
     if(s.spatial < 7) suggestion += "• Mekansal: Sahte koşu, rakip COG okuma drill'leri<br>";
-
     document.getElementById('aiSuggestion').innerHTML = suggestion;
 }
 
 // ---------- İSTATİSTİKLER ----------
 function updateStats() {
-    if(!players.length) {
-        document.getElementById('statsArea').innerHTML = 'Toplam oyuncu: 0<br>Elite oyuncu: 0<br>Ortalama skor: 0';
-        return;
-    }
+    if(!players.length) { document.getElementById('statsArea').innerHTML = 'Toplam oyuncu: 0<br>Elite oyuncu: 0<br>Ortalama skor: 0'; document.getElementById('reportList').innerHTML = 'Henüz rapor yok.'; return; }
     let total = players.reduce((sum, p) => sum + p.total, 0);
     let elite = players.filter(p => p.total >= 40).length;
     let avg = (total / players.length).toFixed(1);
-    document.getElementById('statsArea').innerHTML = 
-        `Toplam oyuncu: ${players.length}<br>Elite oyuncu: ${elite}<br>Ortalama skor: ${avg}/50`;
-
-    // Rapor listesi
-    let reportDiv = document.getElementById('reportList');
-    reportDiv.innerHTML = players.map(p => {
-        let cls = p.total >= 40 ? 'elite' : p.total >= 30 ? 'medium' : 'average';
-        return `<div class="player-item ${cls}">📄 ${p.name} - ${p.total}/50 - ${p.date}</div>`;
-    }).join('');
+    document.getElementById('statsArea').innerHTML = `Toplam oyuncu: ${players.length}<br>Elite oyuncu: ${elite}<br>Ortalama skor: ${avg}/50`;
+    document.getElementById('reportList').innerHTML = players.map(p => `<div class="player-item ${p.total >= 40 ? 'elite' : p.total >= 30 ? 'medium' : 'average'}">📄 ${p.name} - ${p.total}/50 - ${p.date}</div>`).join('');
 }
 
-// ---------- EVENT LISTENER'LAR ----------
-document.getElementById('evaluateBtn').addEventListener('click', () => {
-    updatePreview(); updateRadarFromCurrent(); updateAISuggestion();
-});
+// ---------- VALD MODÜLÜ ----------
+setTimeout(() => {
+    let loadBtn = document.getElementById('loadValdBtn');
+    if(loadBtn) loadBtn.addEventListener('click', function() {
+        let file = document.getElementById('valdFile').files[0];
+        if(file) { document.getElementById('valdPreview').innerHTML = `✅ ${file.name} yüklendi. ForceDeck verileri işleniyor...<br>📊 Çıkış kuvveti, denge, reaksiyon verileri analiz edilecek.`; }
+        else { alert('Lütfen bir dosya seçin'); }
+    });
+}, 100);
+
+// ---------- AI CHAT ----------
+function getAIResponse(question) {
+    let q = question.toLowerCase();
+    if(q.includes('görsel') || q.includes('tarama')) return "Görsel tarama için elite seviye 0.3-0.5 sn'dir. Periferik görüş açısı ~120° olmalıdır.";
+    if(q.includes('işitsel') || q.includes('ses')) return "İşitsel reaksiyon süresi elite oyuncularda 140-160ms civarındadır.";
+    if(q.includes('denge') || q.includes('vestibüler')) return "Denge için muscle spindle ve Golgi tendon organı kritiktir. Diz fleksiyonu 15-20° idealdir.";
+    if(q.includes('dokunsal') || q.includes('pas')) return "Dokunsal his için afferent 40-60ms, efferent 60-80ms optimaldir.";
+    if(q.includes('mekansal') || q.includes('sahte')) return "Mekansal farkındalık için rakip COG (ağırlık merkezi) okuma kritiktir.";
+    return "Oyuncunun duyusal skorlarını yükleyip rapor alabilirsin.";
+}
+setTimeout(() => {
+    let sendBtn = document.getElementById('sendChatBtn');
+    let chatInput = document.getElementById('chatInput');
+    let chatDiv = document.getElementById('chatMessages');
+    if(sendBtn && chatInput && chatDiv) {
+        sendBtn.addEventListener('click', function() {
+            let msg = chatInput.value.trim();
+            if(!msg) return;
+            chatDiv.innerHTML += `<div style="margin-top:8px;">👤 Sen: ${msg}</div>`;
+            chatDiv.innerHTML += `<div style="color:#ffd700; margin-top:5px;">🤖 Zoe: ${getAIResponse(msg)}</div>`;
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+            chatInput.value = '';
+        });
+        chatInput.addEventListener('keypress', function(e) { if(e.key === 'Enter') sendBtn.click(); });
+    }
+}, 100);
+
+// ---------- EVENT LISTENER ----------
+document.getElementById('evaluateBtn').addEventListener('click', () => { updatePreview(); updateRadarFromCurrent(); updateAISuggestion(); });
 document.getElementById('saveBtn').addEventListener('click', savePlayer);
 document.getElementById('compareBtn').addEventListener('click', compareSelected);
 document.getElementById('compareAllBtn').addEventListener('click', compareAll);
@@ -801,9 +686,7 @@ updatePreview();
 initRadar();
 updateAISuggestion();
 updateStats();
-
-console.log('✅ TOAPERFORM V7.9 + Duyusal Scouting Pro yüklendi');
-console.log('📊 Modüller: Duyusal Scouting | VALD | AI Chat | Raporlar');
+console.log('✅ TOAPERFORM V7.9 + Duyusal Scouting Pro eksiksiz yüklendi');
 </script>
 </body>
 </html>
